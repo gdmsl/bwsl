@@ -1,0 +1,7 @@
+-Isrc
+-I./
+-Ilibs/pcg-cpp/include
+-Ilibs/spdlog/include
+-Ilibs/catch/include
+-Ilibs/yaml-cpp/include
+-std=c++14
