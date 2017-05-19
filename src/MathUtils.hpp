@@ -204,7 +204,7 @@ choose_between_psums(const T& comul, G& rng)
                                                                comul.back());
   auto rnd = udist(rng);
 
-  typename T::iterator choice =
+  auto choice =
     std::upper_bound(comul.begin(), comul.end(), rnd);
 
   return static_cast<SizeType>(std::distance(comul.begin(), choice));
