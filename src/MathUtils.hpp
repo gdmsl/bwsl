@@ -191,6 +191,27 @@ choose_between(const T& probs, G& rng)
 }
 
 ///
+/// \brief    Choose between the probabilities given
+/// \version  1.0
+/// \author   Guido Masella (guido.masella@gmail.com)
+/// \date     March, 2017
+///
+template<class T = std::vector<double>, typename G>
+inline SizeType
+choose_between_psums(const T& comul, G& rng)
+{
+  std::uniform_real_distribution<typename T::value_type> udist(0.0,
+                                                               comul.back());
+  auto rnd = udist(rng);
+
+  typename T::iterator choice =
+    std::upper_bound(comul.begin(), comul.end(), rnd);
+
+  return static_cast<SizeType>(std::distance(comul.begin(), choice));
+}
+
+
+///
 /// \brief    Choose with given probability
 /// \version  1.0
 /// \author   Guido Masella (guido.masella@gmail.com)
