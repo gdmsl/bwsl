@@ -1,0 +1,15 @@
+bin
+*~
+obj
+*.swp
+*.o
+*.a
+.*~
+dox
+*.gch
+build*
+compile_commands.json
+*.autosave
+release*
+.ipynb_checkpoints
+<Plug>*
