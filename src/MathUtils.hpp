@@ -243,6 +243,24 @@ sum_into(Container& left, const Container& right)
   return left;
 }
 
+///
+/// \brief    Subtract the second array to the first one
+/// \version  1.0
+/// \author   Guido Masella (guido.masella@gmail.com)
+/// \date     May, 2017
+///
+template<class Container>
+inline Container&
+subtract_into(Container& left, const Container& right)
+{
+  std::transform(left.begin(),
+                 left.end(),
+                 right.begin(),
+                 left.begin(),
+                 std::minus<typename Container::value_type>());
+  return left;
+}
+
 } // namespace bwsl
 
 #endif // MATHUTILS_HPP
