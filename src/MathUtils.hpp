@@ -19,6 +19,7 @@
 
 // std
 #include <algorithm>
+#include <array>
 #include <cassert>
 #include <functional>
 #include <numeric>
@@ -210,7 +211,6 @@ choose_between_psums(const T& comul, G& rng)
   return static_cast<SizeType>(std::distance(comul.cbegin(), choice));
 }
 
-
 ///
 /// \brief    Choose with given probability
 /// \version  1.0
@@ -223,6 +223,24 @@ choose_with_probability(T prob, G& rng)
 {
   auto udist = std::uniform_real_distribution<T>{ 0.0, 1.0 };
   return static_cast<bool>(udist(rng) < prob);
+}
+
+///
+/// \brief    Add the second array to the first one
+/// \version  1.0
+/// \author   Guido Masella (guido.masella@gmail.com)
+/// \date     May, 2017
+///
+template<class Container>
+inline Container&
+sum_into(Container& left, const Container& right)
+{
+  std::transform(left.begin(),
+                 left.end(),
+                 right.begin(),
+                 left.begin(),
+                 std::plus<typename Container::value_type>());
+  return left;
 }
 
 } // namespace bwsl
