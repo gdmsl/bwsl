@@ -80,11 +80,11 @@ cube(T x)
 /// \author     Guido Masella (guido.masella@gmail.com)
 /// \date       April, 2016
 ///
-template<class Container, class T>
+template<class Container, class T = typename Container::value_type>
 inline T
 accumulate_product(const Container& v)
 {
-  return (T)std::accumulate(v.begin(), v.end(), 1, std::multiplies<T>());
+  return static_cast<T>(std::accumulate(v.begin(), v.end(), 1, std::multiplies<T>()));
 }
 
 ///
@@ -92,11 +92,11 @@ accumulate_product(const Container& v)
 /// \author     Guido Masella (guido.masella@gmail.com)
 /// \date       May, 2017
 ///
-template<class Container, class T>
+template<class Container, class T = typename Container::value_type>
 inline T
 accumulate_sum(const Container& v)
 {
-  return (T)std::accumulate(v.begin(), v.end(), 0);
+  return static_cast<T>(std::accumulate(v.begin(), v.end(), 0));
 }
 
 ///
