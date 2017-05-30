@@ -100,6 +100,18 @@ accumulate_sum(const Container& v)
 }
 
 ///
+/// \brief      Return the maximum value in a container
+/// \author     Guido Masella (guido.masella@gmail.com)
+/// \date       May, 2017
+///
+template<class Container>
+inline typename Container::value_type
+max(const Container& v)
+{
+  return *std::max_element(v.begin(), v.end());
+}
+
+///
 /// \brief      Square sum of the elements of a container
 /// \author     Guido Masella (guido.masella@gmail.com)
 /// \date       April, 2016
