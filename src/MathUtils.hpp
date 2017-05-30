@@ -51,7 +51,6 @@ using DiffType = long;
 
 ///
 /// \brief      Square functions
-/// \version    2.0
 /// \author     Guido Masella (guido.masella@gmail.com)
 /// \date       June, 2016
 ///
@@ -65,7 +64,6 @@ square(T x)
 
 ///
 /// \brief      Cube functions
-/// \version    2.0
 /// \author     Guido Masella (guido.masella@gmail.com)
 /// \date       June, 2016
 ///
@@ -79,7 +77,6 @@ cube(T x)
 
 ///
 /// \brief      Product of all the elements of a container
-/// \version    1.0
 /// \author     Guido Masella (guido.masella@gmail.com)
 /// \date       April, 2016
 ///
@@ -91,8 +88,19 @@ accumulate_product(const Container& v)
 }
 
 ///
+/// \brief      Sum of all the elements of a container
+/// \author     Guido Masella (guido.masella@gmail.com)
+/// \date       May, 2017
+///
+template<class Container, class T>
+inline T
+accumulate_sum(const Container& v)
+{
+  return (T)std::accumulate(v.begin(), v.end(), 0);
+}
+
+///
 /// \brief      Square sum of the elements of a container
-/// \version    1.0
 /// \author     Guido Masella (guido.masella@gmail.com)
 /// \date       April, 2016
 ///
@@ -109,7 +117,6 @@ sum_squared(const Container& v)
 
 ///
 /// \brief      Do the difference between unsigned types or return abs(a-b)
-/// \version    1.0
 /// \author     Guido Masella (guido.masella@gmail.com)
 /// \date       June, 2016
 ///
@@ -122,7 +129,6 @@ absdiff(T a, T b)
 
 ///
 /// \brief      Do the difference between unsigned types giving signed result
-/// \version    1.0
 /// \author     Guido Masella (guido.masella@gmail.com)
 /// \date       June, 2016
 ///
@@ -140,7 +146,6 @@ signeddiff(T a, T b)
 ///
 /// \brief      Compute the binomial coefficient (n choose k).
 /// \details    Uses a multiplicative formula
-/// \version    1.0
 /// \author     Guido Masella (guido.masella@gmail.com)
 /// \date       October, 2016
 ///
@@ -169,7 +174,6 @@ cbinomial(T n, T k)
 
 ///
 /// \brief    Choose between the probabilities given
-/// \version  1.0
 /// \author   Guido Masella (guido.masella@gmail.com)
 /// \date     March, 2017
 ///
@@ -193,7 +197,6 @@ choose_between(const T& probs, G& rng)
 
 ///
 /// \brief    Choose between the probabilities given
-/// \version  1.0
 /// \author   Guido Masella (guido.masella@gmail.com)
 /// \date     March, 2017
 ///
@@ -213,7 +216,6 @@ choose_between_psums(const T& comul, G& rng)
 
 ///
 /// \brief    Choose with given probability
-/// \version  1.0
 /// \author   Guido Masella (guido.masella@gmail.com)
 /// \date     March, 2017
 ///
@@ -227,7 +229,6 @@ choose_with_probability(T prob, G& rng)
 
 ///
 /// \brief    Add the second array to the first one
-/// \version  1.0
 /// \author   Guido Masella (guido.masella@gmail.com)
 /// \date     May, 2017
 ///
@@ -245,7 +246,6 @@ sum_into(Container& left, const Container& right)
 
 ///
 /// \brief    Subtract the second array to the first one
-/// \version  1.0
 /// \author   Guido Masella (guido.masella@gmail.com)
 /// \date     May, 2017
 ///
