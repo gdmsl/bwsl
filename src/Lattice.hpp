@@ -20,12 +20,11 @@
 // std
 #include <algorithm>
 #include <cassert>
-#include <functional>
-#include <iostream>
-#include <numeric>
+#include <cmath>
 #include <vector>
 
-using namespace std;
+// bwsl
+#include <MathUtils.hpp>
 
 namespace bwsl {
 
@@ -50,11 +49,17 @@ public:
   /// Vector of neighbors
   using neighbors_t = std::vector<offsets_t>;
 
+  /// Type for distacne between a pair
+  using distance_t = std::vector<double>;
+
+  /// Type for distance vector
+  using distances_t = std::vector<distance_t>;
+
   /// Default constructor
   Lattice() = delete;
 
   /// Construct a lattice with given size
-  Lattice(const offsets_t& size, const neighbors_t& neighbors);
+  Lattice(const offsets_t& size, const neighbors_t& neighbors, const distances_t& distances);
 
   /// Copy constructor
   Lattice(const Lattice& that) = default;
@@ -72,7 +77,7 @@ public:
   const offsets_t& GetSize() const { return size_; }
 
   /// Get the number of sites in the lattice
-  size_t GetNumSites() const;
+  size_t GetNumSites() const { return numsites_; };
 
   /// Get nearest neighbors of site i
   const offsets_t& GetNeighbors(size_t i) const { return neighbors_[i]; }
@@ -86,56 +91,102 @@ public:
   coords_t OffsetToCoordinates(size_t offset, const offsets_t& size) const;
 
   /// Distance betweeen two sites of the lattice
-  virtual double GetDistance(size_t a, size_t b) const;
-  virtual double GetDistance(const coords_t& a, const coords_t& b) const = 0;
+  double GetDistance(size_t a, size_t b) const;
+  double GetDistance(size_t a, size_t b, size_t dir) const;
 
   /// Distance betweeen two sites of the lattice
-  virtual double GetDistanceSquared(size_t a, size_t b) const;
-  virtual double GetDistanceSquared(const coords_t& a,
-                                    const coords_t& b) const = 0;
+  double GetDistanceSquared(size_t a, size_t b) const;
+  double GetDistanceSquared(size_t a, size_t b, size_t dir) const;
 
   /// Factory function
   static Lattice* CreateLattice(const std::string& name, const offsets_t& size);
 
-  /// Change a vector so that he will matche the boundaries conditions
+  /// Change a vector so that he will match the boundary conditions
   void EnforceBoundaries(coords_t& coords, const offsets_t& size) const;
 
-  /// Change a vector so that he will matche the boundaries conditions
+  /// Change a vector so that he will match the boundary conditions
   void EnforceBoundaries(coords_t& coords) const;
 
   /// Check if two sites are neighbors
   bool AreNeighbors(size_t a, size_t b) const;
 
+  /// Unique index for pairs of sites
+  size_t PairIndex(size_t a, size_t b) const;
+
+  /// Unique index for pairs of sites
+  static size_t PairIndex(size_t a, size_t b, size_t numsites);
+
 protected:
   /// Create the vector of neighbors
   virtual neighbors_t CreateNeighbors(const offsets_t& size) const = 0;
 
+  /// Create the vector of distances
+  virtual distances_t GenerateDistances(const offsets_t& size) const = 0;
+
   /// Dimensionality of the lattice
-  size_t dim_{};
+  size_t dim_{0};
 
   /// Size of the lattice
   const offsets_t size_{};
 
+  /// Number of sites in the lattice
+  const size_t numsites_{0};
+
 private:
   /// vector of nearest neighbors
   const neighbors_t neighbors_{};
+
+  /// Vector of distances
+  const std::vector<std::vector<double>> distances_;
 }; // class Lattice
 
-Lattice::Lattice(const offsets_t& size, const neighbors_t& neighbors)
+Lattice::Lattice(const offsets_t& size, const neighbors_t& neighbors, const distances_t& distances)
   : dim_(size.size())
   , size_(size)
+  , numsites_(std::accumulate(size.begin(), size.end(), 1ul, std::multiplies<size_t>()))
   , neighbors_(neighbors)
+  , distances_(distances)
 {
+}
+
+size_t Lattice::PairIndex(size_t a, size_t b) const
+{
+  auto an = std::min(a,b);
+  auto bn = std::max(a,b);
+
+  return an * numsites_ + bn -  (an * (an + 1)) / 2;
+}
+
+size_t Lattice::PairIndex(size_t a, size_t b, size_t numsites)
+{
+  auto an = std::min(a,b);
+  auto bn = std::max(a,b);
+
+  return an * numsites + bn -  (an * (an + 1)) / 2;
 }
 
 double Lattice::GetDistance(size_t a, size_t b) const
 {
-  return GetDistance(OffsetToCoordinates(a), OffsetToCoordinates(b));
+  return std::sqrt(GetDistanceSquared(a,b));
+}
+
+double Lattice::GetDistance(size_t a, size_t b, size_t dir) const
+{
+  return distances_[PairIndex(a,b)][dir];
+}
+
+double Lattice::GetDistanceSquared(size_t a, size_t b, size_t dir) const
+{
+  return bwsl::square(GetDistance(a,b,dir));
 }
 
 double Lattice::GetDistanceSquared(size_t a, size_t b) const
 {
-  return GetDistanceSquared(OffsetToCoordinates(a), OffsetToCoordinates(b));
+  auto sum = 0.0;
+  for (auto i=0ul; i < dim_; i++) {
+    sum += GetDistanceSquared(a,b,i);
+  }
+  return sum;
 }
 
 size_t Lattice::CoordinatesToOffset(const coords_t& coords) const
@@ -195,7 +246,6 @@ size_t Lattice::CoordinatesToOffset(const coords_t& coords, const offsets_t& siz
   return offset;
 }
 
-
 Lattice::coords_t Lattice::OffsetToCoordinates(size_t offset) const
 {
   auto prod = 1ul;
@@ -233,7 +283,6 @@ Lattice::coords_t Lattice::OffsetToCoordinates(size_t offset, const offsets_t& s
   return d;
 }
 
-
 void Lattice::EnforceBoundaries(coords_t& coords, const offsets_t& size) const
 {
   auto d = size.size();
@@ -249,12 +298,6 @@ void Lattice::EnforceBoundaries(coords_t& coords, const offsets_t& size) const
 void Lattice::EnforceBoundaries(coords_t& coords) const
 {
   EnforceBoundaries(coords, size_);
-}
-
-size_t Lattice::GetNumSites() const
-{
-  return std::accumulate(
-    size_.begin(), size_.end(), 1ul, std::multiplies<size_t>());
 }
 
 bool Lattice::AreNeighbors(size_t a, size_t b) const

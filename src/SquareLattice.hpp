@@ -24,9 +24,6 @@
 // std
 #include <cmath>
 #include <vector>
-#include <iostream>
-
-using namespace std;
 
 namespace bwsl {
 
@@ -54,45 +51,19 @@ public:
   /// Copy assignment operator
   SquareLattice& operator=(const SquareLattice& that) = default;
 
-  /// Distance betweeen two sites of the lattice
-  virtual double GetDistance(const coords_t& a,
-                             const coords_t& b) const override;
-
-  /// Distance betweeen two sites of the lattice
-  virtual double GetDistanceSquared(const coords_t& a,
-                                    const coords_t& b) const override;
-
 protected:
   /// Create the vector of neighbors
-  virtual neighbors_t CreateNeighbors(const offsets_t& size) const override;
+  neighbors_t CreateNeighbors(const offsets_t& size) const override;
+
+  /// Create the vector of distances
+  distances_t GenerateDistances(const offsets_t& size) const override;
 
 private:
 }; // class SquareLattice
 
 SquareLattice::SquareLattice(const offsets_t& size)
-  : Lattice(size, CreateNeighbors(size))
+  : Lattice(size, CreateNeighbors(size), GenerateDistances(size))
 {
-}
-
-double
-SquareLattice::GetDistance(const coords_t& a, const coords_t& b) const
-{
-  return std::sqrt(GetDistanceSquared(a, b));
-}
-
-double
-SquareLattice::GetDistanceSquared(const coords_t& a, const coords_t& b) const
-{
-  auto dist = 0l;
-  for (auto i = 0ul; i < dim_; i++) {
-    auto tmp = std::abs(a[i]-b[i]);
-    auto l2 = static_cast<long>(size_[i]/2);
-    while (tmp > l2) {
-      tmp -= l2;
-    }
-    dist += bwsl::square(tmp);
-  }
-  return static_cast<double>(dist);
 }
 
 Lattice::neighbors_t
@@ -115,6 +86,27 @@ SquareLattice::CreateNeighbors(const offsets_t& size) const
   }
 
   return neighbors;
+}
+
+/// Create the vector of distances
+Lattice::distances_t SquareLattice::GenerateDistances(const offsets_t& size) const
+{
+  auto numsites = bwsl::accumulate_product(size);
+  auto dim = size.size();
+  auto distances = distances_t(numsites * (numsites+1) / 2, distance_t(dim, 0.0));
+  for (auto i = 0ul; i < numsites; i++) {
+    for (auto j = 0ul; j < numsites; j++) {
+      auto coordi = OffsetToCoordinates(i, size);
+      auto coordj = OffsetToCoordinates(j, size);
+      for (auto k = 0ul; k < dim; k++) {
+        auto dist = std::abs(coordi[k] - coordj[k]);
+        auto l2 = static_cast<long>(size[k]/2);
+        if (dist > l2) dist -= l2;
+        distances[PairIndex(i,j,numsites)][k] = static_cast<double>(dist);
+      }
+    }
+  }
+  return distances;
 }
 
 } // namespace bwsl
