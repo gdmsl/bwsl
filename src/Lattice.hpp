@@ -116,6 +116,9 @@ public:
   /// Unique index for pairs of sites
   static size_t PairIndex(size_t a, size_t b, size_t numsites);
 
+  /// Get the coordination number
+  virtual size_t GetCoordination() const = 0;
+
 protected:
   /// Create the vector of neighbors
   virtual neighbors_t CreateNeighbors(const offsets_t& size) const = 0;

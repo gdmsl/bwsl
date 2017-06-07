@@ -51,6 +51,9 @@ public:
   /// Copy assignment operator
   SquareLattice& operator=(const SquareLattice& that) = default;
 
+  /// Get the coordination number
+  virtual size_t GetCoordination() const override;
+
 protected:
   /// Create the vector of neighbors
   neighbors_t CreateNeighbors(const offsets_t& size) const override;
@@ -107,6 +110,11 @@ Lattice::distances_t SquareLattice::GenerateDistances(const offsets_t& size) con
     }
   }
   return distances;
+}
+
+size_t SquareLattice::GetCoordination() const
+{
+  return dim_*2;
 }
 
 } // namespace bwsl
