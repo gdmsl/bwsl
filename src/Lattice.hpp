@@ -83,12 +83,12 @@ public:
   const offsets_t& GetNeighbors(size_t i) const { return neighbors_[i]; }
 
   /// Convert coordinates to an offset
-  size_t CoordinatesToOffset(const coords_t& coords) const;
-  size_t CoordinatesToOffset(const coords_t& coords, const offsets_t& size) const;
+  size_t GetOffset(const coords_t& coords) const;
+  size_t GetOffset(const coords_t& coords, const offsets_t& size) const;
 
   /// Convert an offset to coordinates
-  coords_t OffsetToCoordinates(size_t offset) const;
-  coords_t OffsetToCoordinates(size_t offset, const offsets_t& size) const;
+  coords_t GetCoordinates(size_t offset) const;
+  coords_t GetCoordinates(size_t offset, const offsets_t& size) const;
 
   /// Distance betweeen two sites of the lattice
   double GetDistance(size_t a, size_t b) const;
@@ -172,7 +172,8 @@ double Lattice::GetDistance(size_t a, size_t b) const
 
 double Lattice::GetDistance(size_t a, size_t b, size_t dir) const
 {
-  return distances_[PairIndex(a,b)][dir];
+  auto sign = (b > a) ? 1.0 : -1.0;
+  return sign * distances_[PairIndex(a,b)][dir];
 }
 
 double Lattice::GetDistanceSquared(size_t a, size_t b, size_t dir) const
@@ -189,7 +190,7 @@ double Lattice::GetDistanceSquared(size_t a, size_t b) const
   return sum;
 }
 
-size_t Lattice::CoordinatesToOffset(const coords_t& coords) const
+size_t Lattice::GetOffset(const coords_t& coords) const
 {
   assert(coords.size() == dim_ && "Dimensions not matching");
 
@@ -217,7 +218,7 @@ size_t Lattice::CoordinatesToOffset(const coords_t& coords) const
   return offset;
 }
 
-size_t Lattice::CoordinatesToOffset(const coords_t& coords, const offsets_t& size) const
+size_t Lattice::GetOffset(const coords_t& coords, const offsets_t& size) const
 {
   auto dim = size.size();
   assert(coords.size() == dim && "Dimensions not matching");
@@ -246,7 +247,7 @@ size_t Lattice::CoordinatesToOffset(const coords_t& coords, const offsets_t& siz
   return offset;
 }
 
-Lattice::coords_t Lattice::OffsetToCoordinates(size_t offset) const
+Lattice::coords_t Lattice::GetCoordinates(size_t offset) const
 {
   auto prod = 1ul;
 
@@ -264,7 +265,7 @@ Lattice::coords_t Lattice::OffsetToCoordinates(size_t offset) const
   return d;
 }
 
-Lattice::coords_t Lattice::OffsetToCoordinates(size_t offset, const offsets_t& size) const
+Lattice::coords_t Lattice::GetCoordinates(size_t offset, const offsets_t& size) const
 {
   auto dim = size.size();
   auto prod = 1ul;

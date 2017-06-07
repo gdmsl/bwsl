@@ -76,12 +76,12 @@ SquareLattice::CreateNeighbors(const offsets_t& size) const
   auto neighbors = neighbors_t(nsites, offsets_t(2ul * dim, 0ul));
 
   for (auto i = 0ul; i < nsites; i++) {
-    auto coords = OffsetToCoordinates(i, size);
+    auto coords = GetCoordinates(i, size);
     for (auto j = 0ul; j < dim * 2; j++) {
       auto neighbor = coords;
       neighbor[j / 2] += static_cast<long>(j % 2) * 2 - 1;
       EnforceBoundaries(neighbor, size);
-      neighbors[i][j] = CoordinatesToOffset(neighbor, size);
+      neighbors[i][j] = GetOffset(neighbor, size);
     }
   }
 
@@ -95,11 +95,11 @@ Lattice::distances_t SquareLattice::GenerateDistances(const offsets_t& size) con
   auto dim = size.size();
   auto distances = distances_t(numsites * (numsites+1) / 2, distance_t(dim, 0.0));
   for (auto i = 0ul; i < numsites; i++) {
-    for (auto j = 0ul; j < numsites; j++) {
-      auto coordi = OffsetToCoordinates(i, size);
-      auto coordj = OffsetToCoordinates(j, size);
+    for (auto j = i; j < numsites; j++) {
+      auto coordi = GetCoordinates(i, size);
+      auto coordj = GetCoordinates(j, size);
       for (auto k = 0ul; k < dim; k++) {
-        auto dist = std::abs(coordi[k] - coordj[k]);
+        auto dist = coordi[k] - coordj[k];
         auto l2 = static_cast<long>(size[k]/2);
         if (dist > l2) dist -= l2;
         distances[PairIndex(i,j,numsites)][k] = static_cast<double>(dist);
