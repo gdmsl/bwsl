@@ -280,14 +280,41 @@ subtract_into(Container& left, const Container& right)
 /// \date     June, 2017
 ///
 inline size_t
-GetPairIndex(size_t a, size_t b, size_t numsites)
+GetPairIndex(size_t a, size_t b, size_t numelems)
 {
   auto an = std::min(a,b);
   auto bn = std::max(a,b);
 
-  return an * numsites + bn -  (an * (an + 1)) / 2;
+  return an * numelems + bn -  (an * (an + 1)) / 2;
 }
 
+///
+/// \brief    Given an unique index to a pair return the pair of corresponding
+///           indices.
+/// \author   Guido Masella (guido.masella@gmail.com)
+/// \date     June, 2017
+///
+inline std::pair<size_t, size_t>
+GetIndividualIndices(size_t pair, size_t numelems)
+{
+  auto i = pair / numelems;
+  auto j = pair % numelems;
+
+  j += (i * (i+1))/2;
+
+  while (j >= numelems) {
+    i +=1;
+    j = j - numelems + i;
+  }
+
+  return std::make_pair(i,j);
+}
+
+///
+/// \brief    Return the number of unordered pairs (i,j).
+/// \author   Guido Masella (guido.masella@gmail.com)
+/// \date     June, 2017
+///
 inline size_t
 GetNumPairs(size_t numvals) {
   return numvals * (numvals+1ul) / 2ul;
