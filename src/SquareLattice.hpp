@@ -56,7 +56,7 @@ public:
 
   /// Get a vector of winding numbers, one for each direction, for
   /// a couple of sites
-  virtual const std::vector<size_t>& GetWinding(size_t a,
+  virtual const std::vector<int>& GetWinding(size_t a,
                                                 size_t b) const override;
 
 protected:
@@ -128,15 +128,15 @@ SquareLattice::GetCoordination() const
   return dim_ * 2;
 }
 
-std::vector<size_t> const&
+std::vector<int> const&
 SquareLattice::GetWinding(size_t a, size_t b) const
 {
   assert(AreNeighbors(a,b));
 
-  auto winding = std::vector<size_t>(dim_, 0ul);
+  auto winding = std::vector<int>(dim_, 0ul);
 
   for (auto i = 0ul; i < dim_; i++) {
-    winding[i] = GetDistance(a, b, i);
+    winding[i] = static_cast<int>(GetDistance(a, b, i));
   }
 
   return std::move(winding);

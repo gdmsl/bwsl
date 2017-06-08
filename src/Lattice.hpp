@@ -121,7 +121,7 @@ public:
 
   /// Get a vector of winding numbers, one for each direction, for
   /// a couple of sites
-  virtual std::vector<size_t> const& GetWinding(size_t a, size_t b) const = 0;
+  virtual std::vector<int> const& GetWinding(size_t a, size_t b) const = 0;
 
 protected:
   /// Create the vector of neighbors
