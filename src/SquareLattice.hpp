@@ -18,8 +18,8 @@
 #define BWSL_SQUARELATTICE_HPP
 
 // bwsl
-#include <MathUtils.hpp>
 #include <Lattice.hpp>
+#include <MathUtils.hpp>
 
 // std
 #include <cmath>
@@ -40,40 +40,44 @@ public:
   SquareLattice() = delete;
 
   /// Construct a square lattice with given sizes
-  SquareLattice(const offsets_t& size);
+  SquareLattice(offsets_t const& size);
 
   /// Copy constructor
-  SquareLattice(const SquareLattice& that) = default;
+  SquareLattice(SquareLattice const& that) = default;
 
   /// Default destructor
   virtual ~SquareLattice() = default;
 
   /// Copy assignment operator
-  SquareLattice& operator=(const SquareLattice& that) = default;
+  SquareLattice& operator=(SquareLattice const& that) = default;
 
   /// Get the coordination number
   virtual size_t GetCoordination() const override;
 
+  /// Get a vector of winding numbers, one for each direction, for
+  /// a couple of sites
+  virtual const std::vector<size_t>& GetWinding(size_t a,
+                                                size_t b) const override;
+
 protected:
   /// Create the vector of neighbors
-  neighbors_t CreateNeighbors(const offsets_t& size) const override;
+  neighbors_t CreateNeighbors(offsets_t const& size) const override;
 
   /// Create the vector of distances
-  distances_t GenerateDistances(const offsets_t& size) const override;
+  distances_t GenerateDistances(offsets_t const& size) const override;
 
 private:
 }; // class SquareLattice
 
-SquareLattice::SquareLattice(const offsets_t& size)
+SquareLattice::SquareLattice(offsets_t const& size)
   : Lattice(size, CreateNeighbors(size), GenerateDistances(size))
 {
 }
 
 Lattice::neighbors_t
-SquareLattice::CreateNeighbors(const offsets_t& size) const
+SquareLattice::CreateNeighbors(offsets_t const& size) const
 {
-  auto nsites =
-    bwsl::accumulate_product(size);
+  auto nsites = bwsl::accumulate_product(size);
   auto dim = size.size();
 
   auto neighbors = neighbors_t(nsites, offsets_t(2ul * dim, 0ul));
@@ -91,30 +95,51 @@ SquareLattice::CreateNeighbors(const offsets_t& size) const
   return neighbors;
 }
 
-/// Create the vector of distances
-Lattice::distances_t SquareLattice::GenerateDistances(const offsets_t& size) const
+Lattice::distances_t
+SquareLattice::GenerateDistances(offsets_t const& size) const
 {
   auto numsites = bwsl::accumulate_product(size);
   auto dim = size.size();
-  auto distances = distances_t(numsites * (numsites+1) / 2, distance_t(dim, 0.0));
+  auto distances =
+    distances_t(numsites * (numsites + 1) / 2, distance_t(dim, 0.0));
   for (auto i = 0ul; i < numsites; i++) {
     for (auto j = i; j < numsites; j++) {
       auto coordi = GetCoordinates(i, size);
       auto coordj = GetCoordinates(j, size);
       for (auto k = 0ul; k < dim; k++) {
         auto dist = coordi[k] - coordj[k];
-        auto l2 = static_cast<long>(size[k]/2);
-        if (dist > l2) dist -= l2;
-        distances[PairIndex(i,j,numsites)][k] = static_cast<double>(dist);
+        auto l2 = static_cast<long>(size[k] / 2);
+        if (dist > l2) {
+          dist -= l2;
+        }
+        if (dist < -l2) {
+          dist += l2;
+        }
+        distances[PairIndex(i, j, numsites)][k] = static_cast<double>(dist);
       }
     }
   }
   return distances;
 }
 
-size_t SquareLattice::GetCoordination() const
+size_t
+SquareLattice::GetCoordination() const
 {
-  return dim_*2;
+  return dim_ * 2;
+}
+
+std::vector<size_t> const&
+SquareLattice::GetWinding(size_t a, size_t b) const
+{
+  assert(AreNeighbors(a,b));
+
+  auto winding = std::vector<size_t>(dim_, 0ul);
+
+  for (auto i = 0ul; i < dim_; i++) {
+    winding[i] = GetDistance(a, b, i);
+  }
+
+  return std::move(winding);
 }
 
 } // namespace bwsl

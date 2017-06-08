@@ -59,16 +59,16 @@ public:
   Lattice() = delete;
 
   /// Construct a lattice with given size
-  Lattice(const offsets_t& size, const neighbors_t& neighbors, const distances_t& distances);
+  Lattice(offsets_t const& size, neighbors_t const& neighbors, distances_t const& distances);
 
   /// Copy constructor
-  Lattice(const Lattice& that) = default;
+  Lattice(Lattice const& that) = default;
 
   /// Default destructor
   virtual ~Lattice() = default;
 
   /// Copy assignment operator
-  Lattice& operator=(const Lattice& that) = default;
+  Lattice& operator=(Lattice const& that) = default;
 
   /// Get the dimensionality of the lattice
   size_t GetDim() const { return dim_; };
@@ -80,11 +80,11 @@ public:
   size_t GetNumSites() const { return numsites_; };
 
   /// Get nearest neighbors of site i
-  const offsets_t& GetNeighbors(size_t i) const { return neighbors_[i]; }
+  offsets_t const& GetNeighbors(size_t i) const { return neighbors_[i]; }
 
   /// Convert coordinates to an offset
-  size_t GetOffset(const coords_t& coords) const;
-  size_t GetOffset(const coords_t& coords, const offsets_t& size) const;
+  size_t GetOffset(coords_t const& coords) const;
+  size_t GetOffset(coords_t const& coords, offsets_t const& size) const;
 
   /// Convert an offset to coordinates
   coords_t GetCoordinates(size_t offset) const;
@@ -99,10 +99,10 @@ public:
   double GetDistanceSquared(size_t a, size_t b, size_t dir) const;
 
   /// Factory function
-  static Lattice* CreateLattice(const std::string& name, const offsets_t& size);
+  static Lattice* CreateLattice(std::string const& name, const offsets_t& size);
 
   /// Change a vector so that he will match the boundary conditions
-  void EnforceBoundaries(coords_t& coords, const offsets_t& size) const;
+  void EnforceBoundaries(coords_t& coords, offsets_t const& size) const;
 
   /// Change a vector so that he will match the boundary conditions
   void EnforceBoundaries(coords_t& coords) const;
@@ -119,12 +119,16 @@ public:
   /// Get the coordination number
   virtual size_t GetCoordination() const = 0;
 
+  /// Get a vector of winding numbers, one for each direction, for
+  /// a couple of sites
+  virtual std::vector<size_t> const& GetWinding(size_t a, size_t b) const = 0;
+
 protected:
   /// Create the vector of neighbors
-  virtual neighbors_t CreateNeighbors(const offsets_t& size) const = 0;
+  virtual neighbors_t CreateNeighbors(offsets_t const& size) const = 0;
 
   /// Create the vector of distances
-  virtual distances_t GenerateDistances(const offsets_t& size) const = 0;
+  virtual distances_t GenerateDistances(offsets_t const& size) const = 0;
 
   /// Dimensionality of the lattice
   size_t dim_{0};
@@ -143,7 +147,7 @@ private:
   const std::vector<std::vector<double>> distances_;
 }; // class Lattice
 
-Lattice::Lattice(const offsets_t& size, const neighbors_t& neighbors, const distances_t& distances)
+Lattice::Lattice(offsets_t const& size, neighbors_t const& neighbors, distances_t const& distances)
   : dim_(size.size())
   , size_(size)
   , numsites_(std::accumulate(size.begin(), size.end(), 1ul, std::multiplies<size_t>()))
@@ -193,7 +197,7 @@ double Lattice::GetDistanceSquared(size_t a, size_t b) const
   return sum;
 }
 
-size_t Lattice::GetOffset(const coords_t& coords) const
+size_t Lattice::GetOffset(coords_t const& coords) const
 {
   assert(coords.size() == dim_ && "Dimensions not matching");
 
@@ -221,7 +225,7 @@ size_t Lattice::GetOffset(const coords_t& coords) const
   return offset;
 }
 
-size_t Lattice::GetOffset(const coords_t& coords, const offsets_t& size) const
+size_t Lattice::GetOffset(coords_t const& coords, offsets_t const& size) const
 {
   auto dim = size.size();
   assert(coords.size() == dim && "Dimensions not matching");
@@ -268,7 +272,7 @@ Lattice::coords_t Lattice::GetCoordinates(size_t offset) const
   return d;
 }
 
-Lattice::coords_t Lattice::GetCoordinates(size_t offset, const offsets_t& size) const
+Lattice::coords_t Lattice::GetCoordinates(size_t offset, offsets_t const& size) const
 {
   auto dim = size.size();
   auto prod = 1ul;
@@ -287,7 +291,7 @@ Lattice::coords_t Lattice::GetCoordinates(size_t offset, const offsets_t& size) 
   return d;
 }
 
-void Lattice::EnforceBoundaries(coords_t& coords, const offsets_t& size) const
+void Lattice::EnforceBoundaries(coords_t& coords, offsets_t const& size) const
 {
   auto d = size.size();
   for (auto i = 0ul; i < d; i++) {
