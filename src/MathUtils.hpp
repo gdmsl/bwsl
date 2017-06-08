@@ -273,6 +273,22 @@ subtract_into(Container& left, const Container& right)
   return left;
 }
 
+///
+/// \brief    Given two indices, and the number of all possible values.
+///           return an index for the unordered pair (i,j), same as (j,i)
+/// \author   Guido Masella (guido.masella@gmail.com)
+/// \date     June, 2017
+///
+inline size_t
+PairIndex(size_t a, size_t b, size_t numsites)
+{
+  auto an = std::min(a,b);
+  auto bn = std::max(a,b);
+
+  return an * numsites + bn -  (an * (an + 1)) / 2;
+}
+
+
 } // namespace bwsl
 
 #endif // MATHUTILS_HPP

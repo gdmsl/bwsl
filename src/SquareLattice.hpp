@@ -115,7 +115,7 @@ SquareLattice::GenerateDistances(offsets_t const& size) const
         if (dist < -l2) {
           dist += l2;
         }
-        distances[PairIndex(i, j, numsites)][k] = static_cast<double>(dist);
+        distances[bwsl::PairIndex(i, j, numsites)][k] = static_cast<double>(dist);
       }
     }
   }

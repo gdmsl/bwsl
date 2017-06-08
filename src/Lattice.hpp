@@ -113,9 +113,6 @@ public:
   /// Unique index for pairs of sites
   size_t PairIndex(size_t a, size_t b) const;
 
-  /// Unique index for pairs of sites
-  static size_t PairIndex(size_t a, size_t b, size_t numsites);
-
   /// Get the coordination number
   virtual size_t GetCoordination() const = 0;
 
@@ -162,14 +159,6 @@ size_t Lattice::PairIndex(size_t a, size_t b) const
   auto bn = std::max(a,b);
 
   return an * numsites_ + bn -  (an * (an + 1)) / 2;
-}
-
-size_t Lattice::PairIndex(size_t a, size_t b, size_t numsites)
-{
-  auto an = std::min(a,b);
-  auto bn = std::max(a,b);
-
-  return an * numsites + bn -  (an * (an + 1)) / 2;
 }
 
 double Lattice::GetDistance(size_t a, size_t b) const
