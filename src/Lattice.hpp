@@ -111,7 +111,7 @@ public:
   bool AreNeighbors(size_t a, size_t b) const;
 
   /// Unique index for pairs of sites
-  size_t PairIndex(size_t a, size_t b) const;
+  size_t GetPairIndex(size_t a, size_t b) const;
 
   /// Get the coordination number
   virtual size_t GetCoordination() const = 0;
@@ -153,7 +153,7 @@ Lattice::Lattice(offsets_t const& size, neighbors_t const& neighbors, distances_
 {
 }
 
-size_t Lattice::PairIndex(size_t a, size_t b) const
+size_t Lattice::GetPairIndex(size_t a, size_t b) const
 {
   auto an = std::min(a,b);
   auto bn = std::max(a,b);
@@ -169,7 +169,7 @@ double Lattice::GetDistance(size_t a, size_t b) const
 double Lattice::GetDistance(size_t a, size_t b, size_t dir) const
 {
   auto sign = (b > a) ? 1.0 : -1.0;
-  return sign * distances_[PairIndex(a,b)][dir];
+  return sign * distances_[GetPairIndex(a,b)][dir];
 }
 
 double Lattice::GetDistanceSquared(size_t a, size_t b, size_t dir) const

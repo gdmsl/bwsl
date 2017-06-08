@@ -280,12 +280,17 @@ subtract_into(Container& left, const Container& right)
 /// \date     June, 2017
 ///
 inline size_t
-PairIndex(size_t a, size_t b, size_t numsites)
+GetPairIndex(size_t a, size_t b, size_t numsites)
 {
   auto an = std::min(a,b);
   auto bn = std::max(a,b);
 
   return an * numsites + bn -  (an * (an + 1)) / 2;
+}
+
+inline size_t
+GetNumPairs(size_t numvals) {
+  return numvals * (numvals+1ul) / 2ul;
 }
 
 
