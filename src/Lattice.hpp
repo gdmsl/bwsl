@@ -120,6 +120,13 @@ public:
   /// a couple of sites
   virtual std::vector<int> const& GetWinding(size_t a, size_t b) const = 0;
 
+  /// Get a site mapped by a distance on the lattice
+  size_t GetMappedSite(size_t a, coords_t const& map) const;
+
+  /// Get a random distance on the lattice
+  template<class G>
+  coords_t const& GetRandomDistance(G& rng) const;
+
 protected:
   /// Create the vector of neighbors
   virtual neighbors_t CreateNeighbors(offsets_t const& size) const = 0;
@@ -304,6 +311,30 @@ bool Lattice::AreNeighbors(size_t a, size_t b) const
   auto result = std::find(neighbors_[a].begin(), neighbors_[a].end(), b);
 
   return result != neighbors_[a].end();
+}
+
+size_t Lattice::GetMappedSite(size_t a, coords_t const& map) const
+{
+  auto ac = GetCoordinates(a);
+
+  sum_into(ac, map);
+
+  EnforceBoundaries(ac);
+
+  return GetOffset(ac);
+}
+
+template <class G>
+Lattice::coords_t const& Lattice::GetRandomDistance(G& rng) const
+{
+  auto distance = coords_t(dim_, 0ul);
+
+  for (auto i = 0ul; i < dim_; i++) {
+    auto distribution = std::uniform_int_distribution<long>(-size_[i]/2ul, size_[i]/2ul);
+    distance[i] = distribution(rng);
+  }
+
+  return std::move(distance);
 }
 
 } // namespace bwsl
