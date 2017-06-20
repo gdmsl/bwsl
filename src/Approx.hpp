@@ -29,12 +29,9 @@ namespace bwsl {
 /// \brief      Smart type for comparison of floating point numbers
 /// \author     Guido Masella (guido.masella@gmail.com)
 ///
-template<typename T = double>
 class Approx
 {
 public:
-  /// Value Type
-  using value_type = T;
 
   /// Default constructor
   Approx() = delete;
@@ -43,7 +40,7 @@ public:
   Approx& operator=(const Approx& that) = delete;
 
   /// Constructor
-  Approx(const value_type val);
+  Approx(const double val);
 
   /// Copy constructor
   Approx(const Approx& that) = default;
@@ -53,74 +50,66 @@ public:
 
 protected:
 private:
-  const value_type value_{};
-  const value_type epsilon_{ std::numeric_limits<T>::epsilon() * 100 };
+  const double value_{};
+  const double epsilon_{ std::numeric_limits<double>::epsilon() * 100.0 };
 
-  friend bool operator==(Approx const& lhs, T rhs);
-  friend bool operator!=(T lhs, Approx const& rhs);
-  friend bool operator!=(Approx const& lhs, T rhs);
-  friend bool operator<=(T lhs, Approx const& rhs);
-  friend bool operator<=(Approx const& lhs, T rhs);
-  friend bool operator>=(T lhs, Approx const& rhs);
-  friend bool operator>=(Approx const& lhs, T rhs);
-  friend bool operator==(T lhs, Approx const& rhs);
-  friend bool operator<(T lhs, Approx const& rhs);
-  friend bool operator>(T lhs, Approx const& rhs);
+  friend bool operator==(Approx const& lhs, double rhs);
+  friend bool operator!=(double lhs, Approx const& rhs);
+  friend bool operator!=(Approx const& lhs, double rhs);
+  friend bool operator<=(double lhs, Approx const& rhs);
+  friend bool operator<=(Approx const& lhs, double rhs);
+  friend bool operator>=(double lhs, Approx const& rhs);
+  friend bool operator>=(Approx const& lhs, double rhs);
+  friend bool operator==(double lhs, Approx const& rhs);
+  friend bool operator<(double lhs, Approx const& rhs);
+  friend bool operator>(double lhs, Approx const& rhs);
 }; // class Approx
 
-template<typename T>
 bool
-operator==(T lhs, Approx<T> const& rhs)
+operator==(double lhs, Approx const& rhs)
 {
   return std::abs(lhs - rhs.value_) <=
          rhs.epsilon_ * std::max(std::abs(lhs), std::abs(rhs.value_));
 }
 
-template<typename T>
 bool
-operator==(Approx<T> const& lhs, T rhs)
+operator==(Approx const& lhs, double rhs)
 {
   return operator==(rhs, lhs);
 }
 
-template<typename T>
 bool
-operator!=(T lhs, Approx<T> const& rhs)
+operator!=(double lhs, Approx const& rhs)
 {
   return !operator==(lhs, rhs);
 }
 
-template<typename T>
 bool
-operator!=(Approx<T> const& lhs, T rhs)
+operator!=(Approx const& lhs, double rhs)
 {
   return !operator==(rhs, lhs);
 }
 
-template<typename T>
 bool
-operator<=(T lhs, Approx<T> const& rhs)
+operator<=(double lhs, Approx const& rhs)
 {
   return lhs < rhs.value_ || lhs == rhs;
 }
 
-template<typename T>
 bool
-operator<=(Approx<T> const& lhs, T rhs)
+operator<=(Approx const& lhs, double rhs)
 {
   return lhs.value_ < rhs || lhs == rhs;
 }
 
-template<typename T>
 bool
-operator>=(T lhs, Approx<T> const& rhs)
+operator>=(double lhs, Approx const& rhs)
 {
   return lhs > rhs.value_ || lhs == rhs;
 }
 
-template<typename T>
 bool
-operator>=(Approx<T> const& lhs, T rhs)
+operator>=(Approx const& lhs, double rhs)
 {
   return lhs.value_ > rhs || lhs == rhs;
 }
