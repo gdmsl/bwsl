@@ -114,6 +114,11 @@ operator>=(Approx const& lhs, double rhs)
   return lhs.value_ > rhs || lhs == rhs;
 }
 
+Approx::Approx(double val)
+  : value_(val)
+{
+}
+
 } // namespace bwsl
 
 #endif // BWSL_APPROX_HPP
