@@ -56,8 +56,7 @@ public:
 
   /// Get a vector of winding numbers, one for each direction, for
   /// a couple of sites
-  virtual const std::vector<int>& GetWinding(size_t a,
-                                                size_t b) const override;
+  virtual std::vector<int> GetWinding(size_t a, size_t b) const override;
 
 protected:
   /// Create the vector of neighbors
@@ -115,7 +114,8 @@ SquareLattice::GenerateDistances(offsets_t const& size) const
         if (dist < -l2) {
           dist += l2;
         }
-        distances[bwsl::GetPairIndex(i, j, numsites)][k] = static_cast<double>(dist);
+        distances[bwsl::GetPairIndex(i, j, numsites)][k] =
+          static_cast<double>(dist);
       }
     }
   }
@@ -128,10 +128,10 @@ SquareLattice::GetCoordination() const
   return dim_ * 2;
 }
 
-std::vector<int> const&
+std::vector<int>
 SquareLattice::GetWinding(size_t a, size_t b) const
 {
-  assert(AreNeighbors(a,b));
+  assert(AreNeighbors(a, b));
 
   auto winding = std::vector<int>(dim_, 0ul);
 
@@ -139,7 +139,7 @@ SquareLattice::GetWinding(size_t a, size_t b) const
     winding[i] = static_cast<int>(GetDistance(a, b, i));
   }
 
-  return std::move(winding);
+  return winding;
 }
 
 } // namespace bwsl

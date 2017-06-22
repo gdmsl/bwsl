@@ -55,6 +55,19 @@ TEST_CASE("Square Lattice", "[lattice]")
     REQUIRE(structure->GetDistance(0,8) == Approx(sqrt(2)));
     REQUIRE(structure->GetDistance(4,7) == Approx(1.0));
   }
+  SECTION("windings are correct")
+  {
+    auto w = structure->GetWinding(0,1);
+    auto w1 = structure->GetWinding(0,2);
+    auto w3 = structure->GetWinding(2,8);
+    REQUIRE(w.size() == 2);
+    REQUIRE(w[0] == 0);
+    REQUIRE(w[1] == 1);
+    REQUIRE(w1[0] == -1);
+    REQUIRE(w1[1] == 0);
+    REQUIRE(w3[0] == 0);
+    REQUIRE(w3[1] == 1);
+  }
 }
 
 // vim: set ft=cpp ts=2 sts=2 et sw=2 tw=80: //
