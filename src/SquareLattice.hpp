@@ -23,6 +23,7 @@
 
 // std
 #include <cmath>
+#include <iostream>
 #include <vector>
 
 namespace bwsl {
@@ -109,13 +110,11 @@ SquareLattice::GenerateDistances(offsets_t const& size) const
         auto dist = coordi[k] - coordj[k];
         auto l2 = static_cast<long>(size[k] / 2);
         if (dist > l2) {
-          dist -= l2;
+          dist = l2 - dist;
+        } else if (dist < -l2) {
+          dist = -l2 - dist;
         }
-        if (dist < -l2) {
-          dist += l2;
-        }
-        distances[bwsl::GetPairIndex(i, j, numsites)][k] =
-          static_cast<double>(dist);
+        distances[bwsl::GetPairIndex(i, j, numsites)][k] = static_cast<double>(dist);
       }
     }
   }
@@ -136,7 +135,7 @@ SquareLattice::GetWinding(size_t a, size_t b) const
   auto winding = std::vector<int>(dim_, 0ul);
 
   for (auto i = 0ul; i < dim_; i++) {
-    winding[i] = static_cast<int>(GetDistance(a, b, i));
+    winding[i] = static_cast<int>(GetDistance(b, a, i));
   }
 
   return winding;

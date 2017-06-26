@@ -51,6 +51,7 @@ TEST_CASE("Square Lattice", "[lattice]")
   SECTION("distances are correct")
   {
     REQUIRE(structure->GetDistance(0,1) == Approx(1.0));
+    REQUIRE(structure->GetDistance(0,2) == Approx(1.0));
     REQUIRE(structure->GetDistance(0,4) == Approx(sqrt(2)));
     REQUIRE(structure->GetDistance(0,8) == Approx(sqrt(2)));
     REQUIRE(structure->GetDistance(4,7) == Approx(1.0));
@@ -63,10 +64,17 @@ TEST_CASE("Square Lattice", "[lattice]")
     REQUIRE(w.size() == 2);
     REQUIRE(w[0] == 0);
     REQUIRE(w[1] == 1);
-    REQUIRE(w1[0] == -1);
-    REQUIRE(w1[1] == 0);
-    REQUIRE(w3[0] == 0);
-    REQUIRE(w3[1] == 1);
+    REQUIRE(w1[0] == 0);
+    REQUIRE(w1[1] == -1);
+    REQUIRE(w3[0] == -1);
+    REQUIRE(w3[1] == 0);
+  }
+  SECTION("GetCoordinates and GetOffset invert each other")
+  {
+    for (auto i = 0ul; i < structure->GetNumSites(); i++) {
+      auto offs = structure->GetOffset(structure->GetCoordinates(i));
+      REQUIRE(offs == i);
+    }
   }
 }
 
