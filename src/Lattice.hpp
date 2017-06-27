@@ -80,6 +80,9 @@ public:
   size_t GetNumSites() const { return numsites_; };
 
   /// Get nearest neighbors of site i
+  /// Neighbors should have same positions for the same direction.
+  /// For example moving from i to j=GetNeighbors(i)[2] and
+  /// k = GetNeighbors(i)[2] is the same as moving in one direction
   offsets_t const& GetNeighbors(size_t i) const { return neighbors_[i]; }
 
   /// Convert coordinates to an offset
@@ -126,6 +129,10 @@ public:
   /// Get a random distance on the lattice
   template<class G>
   const coords_t GetRandomDistance(G& rng) const;
+
+  /// Get a random direction on the lattice
+  template<class G>
+  const size_t GetRandomDirection(G& rng) const;
 
 protected:
   /// Create the vector of neighbors
@@ -335,6 +342,13 @@ const Lattice::coords_t Lattice::GetRandomDistance(G& rng) const
   }
 
   return distance;
+}
+
+template<class G>
+const size_t Lattice::GetRandomDirection(G& rng) const
+{
+  static auto dist = std::uniform_int_distribution<size_t>(0,dim_*2ul-1);
+  return dist(rng);
 }
 
 } // namespace bwsl
