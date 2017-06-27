@@ -125,7 +125,7 @@ public:
 
   /// Get a random distance on the lattice
   template<class G>
-  coords_t const& GetRandomDistance(G& rng) const;
+  const coords_t GetRandomDistance(G& rng) const;
 
 protected:
   /// Create the vector of neighbors
@@ -325,16 +325,16 @@ size_t Lattice::GetMappedSite(size_t a, coords_t const& map) const
 }
 
 template <class G>
-Lattice::coords_t const& Lattice::GetRandomDistance(G& rng) const
+const Lattice::coords_t Lattice::GetRandomDistance(G& rng) const
 {
   auto distance = coords_t(dim_, 0ul);
 
   for (auto i = 0ul; i < dim_; i++) {
-    auto distribution = std::uniform_int_distribution<long>(-size_[i]/2ul, size_[i]/2ul);
+    auto distribution = std::uniform_int_distribution<long>(-size_[i]/2ul+1, size_[i]/2ul);
     distance[i] = distribution(rng);
   }
 
-  return std::move(distance);
+  return distance;
 }
 
 } // namespace bwsl
