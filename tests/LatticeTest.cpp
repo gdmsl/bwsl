@@ -22,6 +22,7 @@
 // std
 #include <vector>
 #include <cmath>
+#include <random>
 
 // catch
 #define CATCH_CONFIG_MAIN
@@ -75,6 +76,14 @@ TEST_CASE("Square Lattice", "[lattice]")
       auto offs = structure->GetOffset(structure->GetCoordinates(i));
       REQUIRE(offs == i);
     }
+  }
+  SECTION("GetRandomdistance is ok")
+  {
+    auto rng = std::mt19937_64{};
+    auto dist = structure->GetRandomDistance(rng);
+    REQUIRE(dist.size() == 2);
+    REQUIRE(dist[0] >= -3);
+    REQUIRE(dist[0] <= 3);
   }
 }
 
