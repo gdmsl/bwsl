@@ -87,4 +87,39 @@ TEST_CASE("Square Lattice", "[lattice]")
   }
 }
 
+TEST_CASE("Big Square Lattice")
+{
+  Lattice* structure = Lattice::CreateLattice("square", {36,36});
+  auto nsites = structure->GetNumSites();
+  auto size = structure->GetSize();
+
+  SECTION("distances are correct")
+  {
+    for (auto i = 0; i < nsites; i++) {
+      auto coordi = structure->GetCoordinates(i);
+      for (auto j = 0; j< nsites; j++) {
+        if (i == j) continue;
+        auto coordj = structure->GetCoordinates(j);
+        auto distx = coordi[0] - coordj[0];
+        auto disty = coordi[1] - coordj[1];
+        if (distx > static_cast<long>(size[0]/2))
+          distx -= static_cast<long>(size[0]);
+        else if (distx < -static_cast<long>(size[0]/2))
+          distx += static_cast<long>(size[0]);
+        if (disty > static_cast<long>(size[1]/2))
+          disty -= static_cast<long>(size[1]);
+        else if (disty < -static_cast<long>(size[1]/2))
+          disty += static_cast<long>(size[1]);
+        auto dist = sqrt(static_cast<double>(bwsl::square(distx) + bwsl::square(disty)));
+
+        REQUIRE(structure->GetDistance(i,j,0) == Approx(distx));
+        REQUIRE(structure->GetDistance(i,j,1) == Approx(disty));
+        REQUIRE(structure->GetDistance(i,j) == Approx(dist));
+      }
+    }
+  }
+
+
+}
+
 // vim: set ft=cpp ts=2 sts=2 et sw=2 tw=80: //

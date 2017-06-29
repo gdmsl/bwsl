@@ -108,11 +108,11 @@ SquareLattice::GenerateDistances(offsets_t const& size) const
       auto coordj = GetCoordinates(j, size);
       for (auto k = 0ul; k < dim; k++) {
         auto dist = coordi[k] - coordj[k];
-        auto l2 = static_cast<long>(size[k] / 2);
-        if (dist > l2) {
-          dist = l2 - dist;
-        } else if (dist < -l2) {
-          dist = -l2 - dist;
+        auto l = static_cast<long>(size[k]);
+        if (dist > l/2) {
+          dist -= l;
+        } else if (dist < -l/2) {
+          dist += l;
         }
         distances[bwsl::GetPairIndex(i, j, numsites)][k] = static_cast<double>(dist);
       }
