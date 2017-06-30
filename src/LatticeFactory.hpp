@@ -21,15 +21,18 @@
 #include <Lattice.hpp>
 #include <SquareLattice.hpp>
 
+// std
+#include <memory>
+
 namespace bwsl {
 
-Lattice *
+std::shared_ptr<Lattice>
 Lattice::CreateLattice(const std::string& name, const std::vector<size_t>& size)
 {
   if (name == "square") {
-    return new SquareLattice(size);
+    return std::make_shared<SquareLattice>(size);
   }
-  return new SquareLattice(size);
+  return std::make_shared<SquareLattice>(size);
 }
 
 } // namespace bwsl

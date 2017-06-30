@@ -18,6 +18,7 @@
 #define BWSL_LATTICE_HPP
 
 // std
+#include <memory>
 #include <algorithm>
 #include <cassert>
 #include <cmath>
@@ -102,7 +103,7 @@ public:
   double GetDistanceSquared(size_t a, size_t b, size_t dir) const;
 
   /// Factory function
-  static Lattice* CreateLattice(std::string const& name, const offsets_t& size);
+  static std::shared_ptr<Lattice> CreateLattice(std::string const& name, const offsets_t& size);
 
   /// Change a vector so that he will match the boundary conditions
   void EnforceBoundaries(coords_t& coords, offsets_t const& size) const;

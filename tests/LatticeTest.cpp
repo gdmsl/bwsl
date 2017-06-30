@@ -34,7 +34,7 @@ using namespace bwsl;
 TEST_CASE("Square Lattice", "[lattice]")
 {
 
-  Lattice* structure = Lattice::CreateLattice("square", {3,3});
+  auto structure = Lattice::CreateLattice("square", {3,3});
 
   SECTION("neighbors are correct")
   {
@@ -89,7 +89,7 @@ TEST_CASE("Square Lattice", "[lattice]")
 
 TEST_CASE("Big Square Lattice")
 {
-  Lattice* structure = Lattice::CreateLattice("square", {36,36});
+  auto structure = Lattice::CreateLattice("square", {36,36});
   auto nsites = structure->GetNumSites();
   auto size = structure->GetSize();
 
