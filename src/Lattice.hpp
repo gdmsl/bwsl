@@ -56,11 +56,17 @@ public:
   /// Type for distance vector
   using distances_t = std::vector<distance_t>;
 
+  /// Type for a single allowed k
+  using kappa_t = std::vector<double>;
+
+  /// Type for the value of alloed k
+  using kappas_t = std::vector<kappa_t>;
+
   /// Default constructor
   Lattice() = delete;
 
   /// Construct a lattice with given size
-  Lattice(offsets_t const& size, neighbors_t const& neighbors, distances_t const& distances);
+  Lattice(offsets_t const& size, neighbors_t const& neighbors, distances_t const& distances, kappas_t const& kappas);
 
   /// Copy constructor
   Lattice(Lattice const& that) = default;
@@ -135,12 +141,18 @@ public:
   template<class G>
   size_t GetRandomDirection(G& rng) const;
 
+  /// Get a kappa
+  kappa_t const& GetK(size_t a) const { return kappas_[a]; }
+
 protected:
   /// Create the vector of neighbors
   virtual neighbors_t CreateNeighbors(offsets_t const& size) const = 0;
 
   /// Create the vector of distances
   virtual distances_t GenerateDistances(offsets_t const& size) const = 0;
+
+  /// Generate the vector of allowed k
+  virtual kappas_t GenerateKappas(offsets_t const& size) const = 0;
 
   /// Dimensionality of the lattice
   size_t dim_{0};
@@ -156,15 +168,19 @@ private:
   const neighbors_t neighbors_{};
 
   /// Vector of distances
-  const std::vector<std::vector<double>> distances_;
+  const distances_t distances_{};
+
+  /// Vector of all the kappa
+  const kappas_t kappas_{};
 }; // class Lattice
 
-Lattice::Lattice(offsets_t const& size, neighbors_t const& neighbors, distances_t const& distances)
+Lattice::Lattice(offsets_t const& size, neighbors_t const& neighbors, distances_t const& distances, kappas_t const& kappas)
   : dim_(size.size())
   , size_(size)
   , numsites_(std::accumulate(size.begin(), size.end(), 1ul, std::multiplies<size_t>()))
   , neighbors_(neighbors)
   , distances_(distances)
+  , kappas_(kappas)
 {
 }
 

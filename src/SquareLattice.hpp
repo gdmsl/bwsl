@@ -66,11 +66,14 @@ protected:
   /// Create the vector of distances
   distances_t GenerateDistances(offsets_t const& size) const override;
 
+  /// Generate the vector of allowed k
+  std::vector<std::vector<double>> GenerateKappas(offsets_t const& size) const override;
+
 private:
 }; // class SquareLattice
 
 SquareLattice::SquareLattice(offsets_t const& size)
-  : Lattice(size, CreateNeighbors(size), GenerateDistances(size))
+  : Lattice(size, CreateNeighbors(size), GenerateDistances(size), GenerateKappas(size))
 {
 }
 
@@ -139,6 +142,21 @@ SquareLattice::GetWinding(size_t a, size_t b) const
   }
 
   return winding;
+}
+
+std::vector<std::vector<double>>
+SquareLattice::GenerateKappas(offsets_t const& size) const
+{
+  auto kappas = kappas_t{};
+  for (auto j = 0ul; j < numsites_; j++)
+  {
+    auto k = kappa_t(dim_, 0.0);
+    for (auto i = 0ul; i < dim_; i ++) {
+      k[i] = 2.0 * M_PI * GetDistance(0,j, i) / size[i];
+    }
+    kappas.push_back(k);
+  }
+  return kappas;
 }
 
 } // namespace bwsl
