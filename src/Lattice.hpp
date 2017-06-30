@@ -108,6 +108,9 @@ public:
   double GetDistanceSquared(size_t a, size_t b) const;
   double GetDistanceSquared(size_t a, size_t b, size_t dir) const;
 
+  /// Get the distance vector between two sites
+  distance_t const& GetDistanceVector(size_t a, size_t b) const;
+
   /// Factory function
   static std::shared_ptr<Lattice> CreateLattice(std::string const& name, const offsets_t& size);
 
@@ -369,6 +372,10 @@ size_t Lattice::GetRandomDirection(G& rng) const
   return dist(rng);
 }
 
+Lattice::distance_t const& Lattice::GetDistanceVector(size_t a, size_t b) const
+{
+  return distances_[GetPairIndex(a,b)];
+}
 } // namespace bwsl
 
 #endif // BWSL_LATTICE_HPP
