@@ -372,6 +372,7 @@ size_t Lattice::GetRandomDirection(G& rng) const
   return dist(rng);
 }
 
+// FIXME sign problem.
 Lattice::distance_t const& Lattice::GetDistanceVector(size_t a, size_t b) const
 {
   return distances_[GetPairIndex(a,b)];
