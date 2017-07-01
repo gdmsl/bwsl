@@ -153,7 +153,7 @@ SquareLattice::GenerateKappas(offsets_t const& size) const
   for (auto j = 0ul; j < numsites; j++)
   {
     auto k = kappa_t(dim, 0.0);
-    auto r = GetCoordinates(j);
+    auto r = GetCoordinates(j, size);
     for (auto i = 0ul; i < dim; i ++) {
       auto l = static_cast<double>(size[i]);
       auto l2 = static_cast<double>(size[i]/2);
