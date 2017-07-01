@@ -147,11 +147,13 @@ SquareLattice::GetWinding(size_t a, size_t b) const
 std::vector<std::vector<double>>
 SquareLattice::GenerateKappas(offsets_t const& size) const
 {
+  auto numsites = bwsl::accumulate_product(size);
+  auto dim = size.size();
   auto kappas = kappas_t{};
-  for (auto j = 0ul; j < numsites_; j++)
+  for (auto j = 0ul; j < numsites; j++)
   {
-    auto k = kappa_t(dim_, 0.0);
-    for (auto i = 0ul; i < dim_; i ++) {
+    auto k = kappa_t(dim, 0.0);
+    for (auto i = 0ul; i < dim; i ++) {
       k[i] = 2.0 * M_PI * GetDistance(0,j, i) / size[i];
     }
     kappas.push_back(k);
