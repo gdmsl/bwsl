@@ -18,10 +18,10 @@
 #define BWSL_LATTICE_HPP
 
 // std
-#include <memory>
 #include <algorithm>
 #include <cassert>
 #include <cmath>
+#include <memory>
 #include <vector>
 
 // bwsl
@@ -59,14 +59,11 @@ public:
   /// Type for a single allowed k
   using kappa_t = std::vector<double>;
 
-  /// Type for the value of alloed k
-  using kappas_t = std::vector<kappa_t>;
-
   /// Default constructor
   Lattice() = delete;
 
   /// Construct a lattice with given size
-  Lattice(offsets_t const& size, neighbors_t const& neighbors, distances_t const& distances, kappas_t const& kappas);
+  Lattice(offsets_t const& size, neighbors_t const& neighbors);
 
   /// Copy constructor
   Lattice(Lattice const& that) = default;
@@ -98,11 +95,11 @@ public:
 
   /// Convert an offset to coordinates
   coords_t GetCoordinates(size_t offset) const;
-  coords_t GetCoordinates(size_t offset, const offsets_t& size) const;
+  coords_t GetCoordinates(size_t offset, offsets_t const& size) const;
 
   /// Distance betweeen two sites of the lattice
   double GetDistance(size_t a, size_t b) const;
-  double GetDistance(size_t a, size_t b, size_t dir) const;
+  virtual double GetDistance(size_t a, size_t b, size_t dir) const = 0;
 
   /// Distance betweeen two sites of the lattice
   double GetDistanceSquared(size_t a, size_t b) const;
@@ -112,13 +109,12 @@ public:
   distance_t const& GetDistanceVector(size_t a, size_t b) const;
 
   /// Factory function
-  static std::shared_ptr<Lattice> CreateLattice(std::string const& name, const offsets_t& size);
-
-  /// Change a vector so that he will match the boundary conditions
-  void EnforceBoundaries(coords_t& coords, offsets_t const& size) const;
+  static std::shared_ptr<Lattice> CreateLattice(std::string const& name,
+                                                const offsets_t& size);
 
   /// Change a vector so that he will match the boundary conditions
   void EnforceBoundaries(coords_t& coords) const;
+  void EnforceBoundaries(coords_t& coords, offsets_t const& size) const;
 
   /// Check if two sites are neighbors
   bool AreNeighbors(size_t a, size_t b) const;
@@ -145,26 +141,20 @@ public:
   size_t GetRandomDirection(G& rng) const;
 
   /// Get a kappa
-  kappa_t const& GetK(size_t a) const { return kappas_[a]; }
+  virtual kappa_t GetK(size_t a) const = 0;
 
 protected:
   /// Create the vector of neighbors
   virtual neighbors_t CreateNeighbors(offsets_t const& size) const = 0;
 
-  /// Create the vector of distances
-  virtual distances_t GenerateDistances(offsets_t const& size) const = 0;
-
-  /// Generate the vector of allowed k
-  virtual kappas_t GenerateKappas(offsets_t const& size) const = 0;
-
   /// Dimensionality of the lattice
-  size_t dim_{0};
+  size_t dim_{ 0 };
 
   /// Size of the lattice
   const offsets_t size_{};
 
   /// Number of sites in the lattice
-  const size_t numsites_{0};
+  const size_t numsites_{ 0 };
 
 private:
   /// vector of nearest neighbors
@@ -173,54 +163,50 @@ private:
   /// Vector of distances
   const distances_t distances_{};
 
-  /// Vector of all the kappa
-  const kappas_t kappas_{};
 }; // class Lattice
 
-Lattice::Lattice(offsets_t const& size, neighbors_t const& neighbors, distances_t const& distances, kappas_t const& kappas)
+Lattice::Lattice(offsets_t const& size, neighbors_t const& neighbors)
   : dim_(size.size())
   , size_(size)
-  , numsites_(std::accumulate(size.begin(), size.end(), 1ul, std::multiplies<size_t>()))
+  , numsites_(
+      std::accumulate(size.begin(), size.end(), 1ul, std::multiplies<size_t>()))
   , neighbors_(neighbors)
-  , distances_(distances)
-  , kappas_(kappas)
 {
 }
 
-size_t Lattice::GetPairIndex(size_t a, size_t b) const
+size_t
+Lattice::GetPairIndex(size_t a, size_t b) const
 {
-  auto an = std::min(a,b);
-  auto bn = std::max(a,b);
+  auto an = std::min(a, b);
+  auto bn = std::max(a, b);
 
-  return an * numsites_ + bn -  (an * (an + 1)) / 2;
+  return an * numsites_ + bn - (an * (an + 1)) / 2;
 }
 
-double Lattice::GetDistance(size_t a, size_t b) const
+double
+Lattice::GetDistance(size_t a, size_t b) const
 {
-  return std::sqrt(GetDistanceSquared(a,b));
+  return std::sqrt(GetDistanceSquared(a, b));
 }
 
-double Lattice::GetDistance(size_t a, size_t b, size_t dir) const
+double
+Lattice::GetDistanceSquared(size_t a, size_t b, size_t dir) const
 {
-  auto sign = (b > a) ? 1.0 : -1.0;
-  return sign * distances_[GetPairIndex(a,b)][dir];
+  return bwsl::square(GetDistance(a, b, dir));
 }
 
-double Lattice::GetDistanceSquared(size_t a, size_t b, size_t dir) const
-{
-  return bwsl::square(GetDistance(a,b,dir));
-}
-
-double Lattice::GetDistanceSquared(size_t a, size_t b) const
+double
+Lattice::GetDistanceSquared(size_t a, size_t b) const
 {
   auto sum = 0.0;
-  for (auto i=0ul; i < dim_; i++) {
-    sum += GetDistanceSquared(a,b,i);
+  for (auto i = 0ul; i < dim_; i++) {
+    sum += GetDistanceSquared(a, b, i);
   }
   return sum;
 }
 
-size_t Lattice::GetOffset(coords_t const& coords) const
+size_t
+Lattice::GetOffset(coords_t const& coords) const
 {
   assert(coords.size() == dim_ && "Dimensions not matching");
 
@@ -248,7 +234,8 @@ size_t Lattice::GetOffset(coords_t const& coords) const
   return offset;
 }
 
-size_t Lattice::GetOffset(coords_t const& coords, offsets_t const& size) const
+size_t
+Lattice::GetOffset(coords_t const& coords, offsets_t const& size) const
 {
   auto dim = size.size();
   assert(coords.size() == dim && "Dimensions not matching");
@@ -277,7 +264,8 @@ size_t Lattice::GetOffset(coords_t const& coords, offsets_t const& size) const
   return offset;
 }
 
-Lattice::coords_t Lattice::GetCoordinates(size_t offset) const
+Lattice::coords_t
+Lattice::GetCoordinates(size_t offset) const
 {
   auto prod = 1ul;
 
@@ -295,7 +283,8 @@ Lattice::coords_t Lattice::GetCoordinates(size_t offset) const
   return d;
 }
 
-Lattice::coords_t Lattice::GetCoordinates(size_t offset, offsets_t const& size) const
+Lattice::coords_t
+Lattice::GetCoordinates(size_t offset, offsets_t const& size) const
 {
   auto dim = size.size();
   auto prod = 1ul;
@@ -314,7 +303,8 @@ Lattice::coords_t Lattice::GetCoordinates(size_t offset, offsets_t const& size) 
   return d;
 }
 
-void Lattice::EnforceBoundaries(coords_t& coords, offsets_t const& size) const
+void
+Lattice::EnforceBoundaries(coords_t& coords, offsets_t const& size) const
 {
   auto d = size.size();
   for (auto i = 0ul; i < d; i++) {
@@ -326,12 +316,14 @@ void Lattice::EnforceBoundaries(coords_t& coords, offsets_t const& size) const
   }
 }
 
-void Lattice::EnforceBoundaries(coords_t& coords) const
+void
+Lattice::EnforceBoundaries(coords_t& coords) const
 {
   EnforceBoundaries(coords, size_);
 }
 
-bool Lattice::AreNeighbors(size_t a, size_t b) const
+bool
+Lattice::AreNeighbors(size_t a, size_t b) const
 {
   assert(a < neighbors_.size());
 
@@ -340,7 +332,8 @@ bool Lattice::AreNeighbors(size_t a, size_t b) const
   return result != neighbors_[a].end();
 }
 
-size_t Lattice::GetMappedSite(size_t a, coords_t const& map) const
+size_t
+Lattice::GetMappedSite(size_t a, coords_t const& map) const
 {
   auto ac = GetCoordinates(a);
 
@@ -351,14 +344,15 @@ size_t Lattice::GetMappedSite(size_t a, coords_t const& map) const
   return GetOffset(ac);
 }
 
-template <class G>
-Lattice::coords_t Lattice::GetRandomDistance(G& rng) const
+template<class G>
+Lattice::coords_t
+Lattice::GetRandomDistance(G& rng) const
 {
   auto distance = coords_t(dim_, 0l);
 
   for (auto i = 0ul; i < dim_; i++) {
-    auto s = static_cast<long>(size_[i])/2;
-    auto distribution = std::uniform_int_distribution<long>(-s+1, s);
+    auto s = static_cast<long>(size_[i]) / 2;
+    auto distribution = std::uniform_int_distribution<long>(-s + 1, s);
     distance[i] = distribution(rng);
   }
 
@@ -366,16 +360,18 @@ Lattice::coords_t Lattice::GetRandomDistance(G& rng) const
 }
 
 template<class G>
-size_t Lattice::GetRandomDirection(G& rng) const
+size_t
+Lattice::GetRandomDirection(G& rng) const
 {
-  static auto dist = std::uniform_int_distribution<size_t>(0,dim_*2ul-1);
+  static auto dist = std::uniform_int_distribution<size_t>(0, dim_ * 2ul - 1);
   return dist(rng);
 }
 
 // FIXME sign problem.
-Lattice::distance_t const& Lattice::GetDistanceVector(size_t a, size_t b) const
+Lattice::distance_t const&
+Lattice::GetDistanceVector(size_t a, size_t b) const
 {
-  return distances_[GetPairIndex(a,b)];
+  return distances_[GetPairIndex(a, b)];
 }
 } // namespace bwsl
 

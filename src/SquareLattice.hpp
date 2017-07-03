@@ -52,6 +52,9 @@ public:
   /// Copy assignment operator
   SquareLattice& operator=(SquareLattice const& that) = default;
 
+  /// Get the projection of the distance between two sites
+  virtual double GetDistance(size_t a, size_t b, size_t dir) const override;
+
   /// Get the coordination number
   virtual size_t GetCoordination() const override;
 
@@ -59,21 +62,18 @@ public:
   /// a couple of sites
   virtual std::vector<int> GetWinding(size_t a, size_t b) const override;
 
+  /// Get a kappa
+  virtual kappa_t GetK(size_t j) const override;
+
 protected:
   /// Create the vector of neighbors
   neighbors_t CreateNeighbors(offsets_t const& size) const override;
-
-  /// Create the vector of distances
-  distances_t GenerateDistances(offsets_t const& size) const override;
-
-  /// Generate the vector of allowed k
-  std::vector<std::vector<double>> GenerateKappas(offsets_t const& size) const override;
 
 private:
 }; // class SquareLattice
 
 SquareLattice::SquareLattice(offsets_t const& size)
-  : Lattice(size, CreateNeighbors(size), GenerateDistances(size), GenerateKappas(size))
+  : Lattice(size, CreateNeighbors(size))
 {
 }
 
@@ -98,32 +98,6 @@ SquareLattice::CreateNeighbors(offsets_t const& size) const
   return neighbors;
 }
 
-Lattice::distances_t
-SquareLattice::GenerateDistances(offsets_t const& size) const
-{
-  auto numsites = bwsl::accumulate_product(size);
-  auto dim = size.size();
-  auto distances =
-    distances_t(numsites * (numsites + 1) / 2, distance_t(dim, 0.0));
-  for (auto i = 0ul; i < numsites; i++) {
-    for (auto j = i; j < numsites; j++) {
-      auto coordi = GetCoordinates(i, size);
-      auto coordj = GetCoordinates(j, size);
-      for (auto k = 0ul; k < dim; k++) {
-        auto dist = coordi[k] - coordj[k];
-        auto l = static_cast<long>(size[k]);
-        if (dist > l/2) {
-          dist -= l;
-        } else if (dist < -l/2) {
-          dist += l;
-        }
-        distances[bwsl::GetPairIndex(i, j, numsites)][k] = static_cast<double>(dist);
-      }
-    }
-  }
-  return distances;
-}
-
 size_t
 SquareLattice::GetCoordination() const
 {
@@ -144,29 +118,38 @@ SquareLattice::GetWinding(size_t a, size_t b) const
   return winding;
 }
 
-std::vector<std::vector<double>>
-SquareLattice::GenerateKappas(offsets_t const& size) const
+SquareLattice::kappa_t
+SquareLattice::GetK(size_t j) const
 {
-  auto numsites = bwsl::accumulate_product(size);
-  auto dim = size.size();
-  auto kappas = kappas_t{};
-  for (auto j = 0ul; j < numsites; j++)
-  {
-    auto k = kappa_t(dim, 0.0);
-    auto r = GetCoordinates(j, size);
-    for (auto i = 0ul; i < dim; i ++) {
-      auto l = static_cast<double>(size[i]);
-      auto l2 = static_cast<double>(size[i]/2);
-      auto dist = static_cast<double>(r[i]);
-      if (dist > l2)
-        dist -= l;
-      if (dist < -l2)
-        dist += l;
-      k[i] = 2.0 * M_PI * dist / l;
-    }
-    kappas.push_back(k);
+  auto k = kappa_t(dim_, 0.0);
+  auto r = GetCoordinates(j, size_);
+  for (auto i = 0ul; i < dim_; i++) {
+    auto l = static_cast<double>(size_[i]);
+    auto l2 = static_cast<double>(size_[i] / 2);
+    auto dist = static_cast<double>(r[i]);
+    if (dist > l2)
+      dist -= l;
+    if (dist < -l2)
+      dist += l;
+    k[i] = 2.0 * M_PI * dist / l;
   }
-  return kappas;
+  return k;
+}
+
+double
+SquareLattice::GetDistance(size_t a, size_t b, size_t dir) const
+{
+  auto ca = GetCoordinates(a);
+  auto cb = GetCoordinates(b);
+  auto dist = ca[dir] - cb[dir];
+  auto l = static_cast<long>(size_[dir]);
+  if (dist > l/2) {
+    dist -= l;
+  }
+  if (dist < -l/2) {
+    dist += l;
+  }
+  return static_cast<double>(dist);
 }
 
 } // namespace bwsl
