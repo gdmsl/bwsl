@@ -50,12 +50,6 @@ public:
   /// Vector of neighbors
   using neighbors_t = std::vector<offsets_t>;
 
-  /// Type for distacne between a pair
-  using distance_t = std::vector<double>;
-
-  /// Type for distance vector
-  using distances_t = std::vector<distance_t>;
-
   /// Type for a single allowed k
   using kappa_t = std::vector<double>;
 
@@ -105,9 +99,6 @@ public:
   double GetDistanceSquared(size_t a, size_t b) const;
   double GetDistanceSquared(size_t a, size_t b, size_t dir) const;
 
-  /// Get the distance vector between two sites
-  distance_t const& GetDistanceVector(size_t a, size_t b) const;
-
   /// Factory function
   static std::shared_ptr<Lattice> CreateLattice(std::string const& name,
                                                 const offsets_t& size);
@@ -141,7 +132,7 @@ public:
   size_t GetRandomDirection(G& rng) const;
 
   /// Get a kappa
-  virtual kappa_t GetK(size_t a) const = 0;
+  virtual double GetK(size_t a, size_t dir) const = 0;
 
 protected:
   /// Create the vector of neighbors
@@ -159,9 +150,6 @@ protected:
 private:
   /// vector of nearest neighbors
   const neighbors_t neighbors_{};
-
-  /// Vector of distances
-  const distances_t distances_{};
 
 }; // class Lattice
 
@@ -367,12 +355,6 @@ Lattice::GetRandomDirection(G& rng) const
   return dist(rng);
 }
 
-// FIXME sign problem.
-Lattice::distance_t const&
-Lattice::GetDistanceVector(size_t a, size_t b) const
-{
-  return distances_[GetPairIndex(a, b)];
-}
 } // namespace bwsl
 
 #endif // BWSL_LATTICE_HPP

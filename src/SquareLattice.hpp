@@ -63,7 +63,7 @@ public:
   virtual std::vector<int> GetWinding(size_t a, size_t b) const override;
 
   /// Get a kappa
-  virtual kappa_t GetK(size_t j) const override;
+  virtual double GetK(size_t j, size_t dir) const override;
 
 protected:
   /// Create the vector of neighbors
@@ -118,22 +118,10 @@ SquareLattice::GetWinding(size_t a, size_t b) const
   return winding;
 }
 
-SquareLattice::kappa_t
-SquareLattice::GetK(size_t j) const
+double
+SquareLattice::GetK(size_t j, size_t dir) const
 {
-  auto k = kappa_t(dim_, 0.0);
-  auto r = GetCoordinates(j, size_);
-  for (auto i = 0ul; i < dim_; i++) {
-    auto l = static_cast<double>(size_[i]);
-    auto l2 = static_cast<double>(size_[i] / 2);
-    auto dist = static_cast<double>(r[i]);
-    if (dist > l2)
-      dist -= l;
-    if (dist < -l2)
-      dist += l;
-    k[i] = 2.0 * M_PI * dist / l;
-  }
-  return k;
+  return 2.0 * M_PI * static_cast<double>(GetDistance(0,j,dir))/ size_[dir];
 }
 
 double
