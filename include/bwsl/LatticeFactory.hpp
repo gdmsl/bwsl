@@ -1,8 +1,8 @@
-//===-- LatticeFactory.hpp ------------------------------------------------*- C++ -*-===//
+//===-- LatticeFactory.hpp -------------------------------------*- C++ -*-===//
 //
 //                       BeagleWarlord's Support Library
 //
-// Copyright 2017 Guido Masella. All Rights Reserved.
+// Copyright 2016-2018 Guido Masella. All Rights Reserved.
 // See LICENSE file for details
 //
 //===---------------------------------------------------------------------===//
@@ -18,8 +18,8 @@
 #define BWSL_LATTICEFACTORY_HPP
 
 // bwsl
-#include <Lattice.hpp>
-#include <SquareLattice.hpp>
+#include <bwsl/Lattice.hpp>
+#include <bwsl/SquareLattice.hpp>
 
 // std
 #include <memory>

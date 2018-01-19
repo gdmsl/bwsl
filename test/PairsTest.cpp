@@ -15,7 +15,9 @@
 ///
 //===---------------------------------------------------------------------===//
 // bwsl
-#include <MathUtils.hpp>
+#include <bwsl/MathUtils.hpp>
+
+// std
 #include <iostream>
 
 // catch
@@ -27,7 +29,6 @@ using namespace bwsl;
 // TDD example
 TEST_CASE("Pairs", "[math]")
 {
-
   SECTION("GetPairIndex is inverted with GetIndividualIndices")
   {
     const auto n = 3489;

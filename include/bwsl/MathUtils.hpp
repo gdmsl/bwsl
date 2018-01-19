@@ -2,7 +2,7 @@
 //
 //                       BeagleWarlord's Support Library
 //
-// Copyright 2016 Guido Masella. All Rights Reserved.
+// Copyright 2016-2018 Guido Masella. All Rights Reserved.
 // See LICENSE file for details
 //
 //===---------------------------------------------------------------------===//
@@ -316,7 +316,8 @@ GetIndividualIndices(size_t pair, size_t numelems)
 /// \date     June, 2017
 ///
 inline size_t
-GetNumPairs(size_t numvals) {
+GetNumPairs(size_t numvals)
+{
   return numvals * (numvals+1ul) / 2ul;
 }
 

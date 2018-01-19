@@ -15,9 +15,9 @@
 ///
 //===---------------------------------------------------------------------===//
 // bwsl
-#include <LatticeFactory.hpp>
-#include <Lattice.hpp>
-#include <SquareLattice.hpp>
+#include <bwsl/LatticeFactory.hpp>
+#include <bwsl/Lattice.hpp>
+#include <bwsl/SquareLattice.hpp>
 
 // std
 #include <vector>

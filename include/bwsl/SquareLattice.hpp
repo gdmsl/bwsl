@@ -2,7 +2,7 @@
 //
 //                       BeagleWarlord's Support Library
 //
-// Copyright 2017 Guido Masella. All Rights Reserved.
+// Copyright 2016-2018 Guido Masella. All Rights Reserved.
 // See LICENSE file for details
 //
 //===---------------------------------------------------------------------===//
@@ -18,8 +18,8 @@
 #define BWSL_SQUARELATTICE_HPP
 
 // bwsl
-#include <Lattice.hpp>
-#include <MathUtils.hpp>
+#include <bwsl/Lattice.hpp>
+#include <bwsl/MathUtils.hpp>
 
 // std
 #include <cmath>

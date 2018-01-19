@@ -18,7 +18,7 @@
 #define BWSL_LOGSPACE_HPP
 
 //bwsl
-#include <MathUtils.hpp>
+#include <bwsl/MathUtils.hpp>
 
 // std
 #include <vector>
