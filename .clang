@@ -1,4 +1,4 @@
--Isrc
+-Iinclude
 -I./
 -Ilibs/pcg-cpp/include
 -Ilibs/spdlog/include
