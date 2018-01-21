@@ -25,25 +25,10 @@ include(BuildCatch)
 list(APPEND libs_INCLUDE_DIRS ${CATCH_INCLUDE_DIRS})
 
 # We use FMT for fast output formatting and pretty printing
-include(BuildFMT)
-list(APPEND libs_INCLUDE_DIRS ${FMT_INCLUDE_DIRS})
-list(APPEND libs_LIBRARIES ${FMT_LIBRARY})
+add_subdirectory(fmt)
+target_link_libraries(bwsl
+  INTERFACE
+    fmt::fmt-header-only
+  )
 
-# Include the directory where the headers of the third party dirs
-# are
-include_directories(SYSTEM ${DEPS_INSTALL_DIR}/include)
-
-# Boost
-# TODO: download and install boost if required to
-set(Boost_USE_STATIC_LIBS     ON)
-set(Boost_USE_MULTITHREADED   ON)
-set(Boost_USE_STATIC_RUNTIME  ON)
-find_package(Boost REQUIRED COMPONENTS system filesystem)
-include_directories(${Boost_INCLUDE_DIRS})
-message(STATUS "Boost_INCLUDE_DIRS: ${Boost_INCLUDE_DIRS}")
-message(STATUS "Boost_LIBRARIES: ${Boost_LIBRARIES}")
-message(STATUS "Boost_LIBRARY_DIRS: ${Boost_LIBRARY_DIRS}")
-list(APPEND libs_INCLUDE_DIRS ${Boost_INCLUDE_DIRS})
-list(APPEND libs_LIBRARIES ${Boost_LIBRARIES})
-
-# vim: set ft=cmake ts=4 sts=4 et sw=4 tw=80 foldmarker={{{,}}} fdm=marker: #
+# vim: set ft=cmake ts=2 sts=2 et sw=2 tw=80 foldmarker={{{,}}} fdm=marker: #

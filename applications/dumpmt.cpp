@@ -33,6 +33,10 @@ main (int ac, char **av)
 
   std::cout << rng << std::endl;
 
+  int i = 0;
+  unsigned int j = 0;
+  if (i < j) return EXIT_FAILURE;
+
   return EXIT_SUCCESS;
 }
 
