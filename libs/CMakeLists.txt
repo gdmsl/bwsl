@@ -2,33 +2,43 @@
 #                                   BWSL
 #
 # libs/CMAkeLists.txt
-# Third party libraries required by BWSL
+# Third party libraries required by SWMC
 #
 # Guido Masella (guido.masella@gmail.com)
 #
 
-# External Projects
-include(ExternalProject)
+# Find Dependency Catch {{{
+find_package(Catch)
+if (NOT Catch_FOUND)
+  message(STATUS "Compiling CATCH")
+  add_subdirectory(catch2)
+endif()
+# }}}
 
-# Point CMake at any custom modules we may ship
-list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/libs/cmake")
+# Find Dependency pcg-cpp {{{
+#add_subdirectory(pcg-cpp)
+# }}}
 
-# Useful directories for management of third party libraries
-set(DEPS_INSTALL_DIR "${CMAKE_BINARY_DIR}/usr" CACHE PATH "Dependencies install directory.")
-set(DEPS_BIN_DIR "${DEPS_INSTALL_DIR}/bin" CACHE PATH "Dependencies binary install directory.")
-set(DEPS_LIB_DIR "${DEPS_INSTALL_DIR}/lib" CACHE PATH "Dependencies library install directory.")
-set(DEPS_BUILD_DIR "${CMAKE_BINARY_DIR}/build" CACHE PATH "Dependencies build directory.")
-set(DEPS_DOWNLOAD_DIR "${DEPS_BUILD_DIR}/downloads" CACHE PATH "Dependencies download directory.")
+# Find Dependency yaml-cpp {{{
+#find_package(yaml-cpp)
+#if (NOT yaml-cpp_FOUND)
+  #message(STATUS "Compiling YAML-CPP")
+  #add_subdirectory(yaml-cpp)
+#endif()
+# }}}
 
-# Catch 2 is our choice for the testing framework
-include(BuildCatch)
-list(APPEND libs_INCLUDE_DIRS ${CATCH_INCLUDE_DIRS})
+# Find Dependency fmt {{{
+#find_package(fmt)
+#if (NOT FMT_FOUND)
+  #message(STATUS "Using bundled fmt lib")
+  #add_subdirectory(fmt)
+#endif()
+#}}}
 
-# We use FMT for fast output formatting and pretty printing
-add_subdirectory(fmt)
-target_link_libraries(bwsl
-  INTERFACE
-    fmt::fmt-header-only
-  )
+# Boost {{{
+#find_package(Boost REQUIRED COMPONENTS program_options filesystem)
+#set_target_properties(Boost::program_options PROPERTIES IMPORTED_GLOBAL TRUE)
+#set_target_properties(Boost::filesystem PROPERTIES IMPORTED_GLOBAL TRUE)
+# }}}
 
 # vim: set ft=cmake ts=2 sts=2 et sw=2 tw=80 foldmarker={{{,}}} fdm=marker: #
