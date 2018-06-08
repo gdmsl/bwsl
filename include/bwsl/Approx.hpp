@@ -10,7 +10,6 @@
 /// \file
 /// \version    0.1
 /// \author     Guido Masella (guido.masella@gmail.com)
-/// \date       June, 2017
 /// \brief      Definitions for the Approx Class
 ///
 //===---------------------------------------------------------------------===//

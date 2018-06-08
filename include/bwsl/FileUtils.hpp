@@ -10,7 +10,6 @@
 /// \file
 /// \version    1.0
 /// \author     Guido Masella (guido.masella@gmail.com)
-/// \date       June, 2016
 /// \brief      Definitions for the class Foo
 ///
 //===---------------------------------------------------------------------===//

@@ -10,7 +10,6 @@
 /// \file
 /// \version    0.1
 /// \author     Guido Masella (guido.masella@gmail.com)
-/// \date       May, 2017
 /// \brief      Common math functions
 ///
 //===---------------------------------------------------------------------===//
@@ -64,8 +63,6 @@ square(T x)
 
 ///
 /// \brief      Cube functions
-/// \author     Guido Masella (guido.masella@gmail.com)
-/// \date       June, 2016
 ///
 template<typename T>
 inline T
@@ -77,8 +74,6 @@ cube(T x)
 
 ///
 /// \brief      Product of all the elements of a container
-/// \author     Guido Masella (guido.masella@gmail.com)
-/// \date       April, 2016
 ///
 template<class Container, class T = typename Container::value_type>
 inline T
@@ -89,8 +84,6 @@ accumulate_product(const Container& v)
 
 ///
 /// \brief      Sum of all the elements of a container
-/// \author     Guido Masella (guido.masella@gmail.com)
-/// \date       May, 2017
 ///
 template<class Container, class T = typename Container::value_type>
 inline T
@@ -101,8 +94,6 @@ accumulate_sum(const Container& v)
 
 ///
 /// \brief      Return the maximum value in a container
-/// \author     Guido Masella (guido.masella@gmail.com)
-/// \date       May, 2017
 ///
 template<class Container>
 inline typename Container::value_type
@@ -113,8 +104,6 @@ max(const Container& v)
 
 ///
 /// \brief      Square sum of the elements of a container
-/// \author     Guido Masella (guido.masella@gmail.com)
-/// \date       April, 2016
 ///
 template<class Container, class T>
 inline T
@@ -129,8 +118,6 @@ sum_squared(const Container& v)
 
 ///
 /// \brief      Do the difference between unsigned types or return abs(a-b)
-/// \author     Guido Masella (guido.masella@gmail.com)
-/// \date       June, 2016
 ///
 template<typename T>
 inline T
@@ -141,8 +128,6 @@ absdiff(T a, T b)
 
 ///
 /// \brief      Do the difference between unsigned types giving signed result
-/// \author     Guido Masella (guido.masella@gmail.com)
-/// \date       June, 2016
 ///
 template<typename T, typename R>
 inline R
@@ -158,8 +143,6 @@ signeddiff(T a, T b)
 ///
 /// \brief      Compute the binomial coefficient (n choose k).
 /// \details    Uses a multiplicative formula
-/// \author     Guido Masella (guido.masella@gmail.com)
-/// \date       October, 2016
 ///
 template<typename T = long>
 inline double
@@ -186,8 +169,6 @@ cbinomial(T n, T k)
 
 ///
 /// \brief    Choose between the probabilities given
-/// \author   Guido Masella (guido.masella@gmail.com)
-/// \date     March, 2017
 ///
 template<class T = std::vector<double>, typename G>
 inline SizeType
@@ -208,9 +189,7 @@ choose_between(const T& probs, G& rng)
 }
 
 ///
-/// \brief    Choose between the probabilities given
-/// \author   Guido Masella (guido.masella@gmail.com)
-/// \date     March, 2017
+/// \brief    Choose between the comulative probabilities given
 ///
 template<class T = std::vector<double>, typename G>
 inline SizeType
@@ -228,8 +207,6 @@ choose_between_psums(const T& comul, G& rng)
 
 ///
 /// \brief    Choose with given probability
-/// \author   Guido Masella (guido.masella@gmail.com)
-/// \date     March, 2017
 ///
 template<typename T = double, typename G>
 inline bool
@@ -241,8 +218,6 @@ choose_with_probability(T prob, G& rng)
 
 ///
 /// \brief    Add the second array to the first one
-/// \author   Guido Masella (guido.masella@gmail.com)
-/// \date     May, 2017
 ///
 template<class Container>
 inline Container&
@@ -276,8 +251,6 @@ subtract_into(Container& left, const Container& right)
 ///
 /// \brief    Given two indices, and the number of all possible values.
 ///           return an index for the unordered pair (i,j), same as (j,i)
-/// \author   Guido Masella (guido.masella@gmail.com)
-/// \date     June, 2017
 ///
 inline size_t
 GetPairIndex(size_t a, size_t b, size_t numelems)
@@ -291,8 +264,6 @@ GetPairIndex(size_t a, size_t b, size_t numelems)
 ///
 /// \brief    Given an unique index to a pair return the pair of corresponding
 ///           indices.
-/// \author   Guido Masella (guido.masella@gmail.com)
-/// \date     June, 2017
 ///
 inline std::pair<size_t, size_t>
 GetIndividualIndices(size_t pair, size_t numelems)
@@ -312,8 +283,6 @@ GetIndividualIndices(size_t pair, size_t numelems)
 
 ///
 /// \brief    Return the number of unordered pairs (i,j).
-/// \author   Guido Masella (guido.masella@gmail.com)
-/// \date     June, 2017
 ///
 inline size_t
 GetNumPairs(size_t numvals)

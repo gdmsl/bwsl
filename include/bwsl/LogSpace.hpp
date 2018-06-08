@@ -2,7 +2,7 @@
 //
 //                       BeagleWarlord's Support Library
 //
-// Copyright 2017 Guido Masella. All Rights Reserved.
+// Copyright 2016-2018 Guido Masella. All Rights Reserved.
 // See LICENSE file for details
 //
 //===---------------------------------------------------------------------===//
@@ -10,7 +10,6 @@
 /// \file
 /// \version    2.0
 /// \author     Guido Masella (guido.masella@gmail.com)
-/// \date       March, 2016
 /// \brief      Definitions of the LogSpace class
 ///
 //===---------------------------------------------------------------------===//
@@ -30,9 +29,6 @@ namespace bwsl {
 
 ///
 /// \brief      Generate logarithmically spaced numbers
-/// \version    2.0
-/// \author     Guido Masella (guido.masella@gmail.com)
-/// \date       June, 2016
 ///
 template <typename T>
 class LogSpace
@@ -177,7 +173,7 @@ LogSpace<T>::Collect(unsigned long n)
   return retval;
 }
 
-} // namespace beagletools
+} // namespace bwsl
 
 #endif // BWSL_LOGSPACE_HPP
 

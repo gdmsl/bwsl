@@ -10,7 +10,6 @@
 /// \file
 /// \version    2.0
 /// \author     Guido Masella (guido.masella@gmail.com)
-/// \date       March, 2016
 /// \brief      Definitions of the LinSpace class
 ///
 //===---------------------------------------------------------------------===//
@@ -23,12 +22,10 @@
 #include <cmath>
 #include <vector>
 
-namespace beagletools {
+namespace bwsl {
 
 ///
 /// \brief      Generate sequence of equally spaced numbers
-/// \author     Guido Masella (guido.masella@gmail.com)
-/// \date       June, 2016
 ///
 template<typename T>
 class LinSpace
@@ -166,7 +163,7 @@ operator!=(const LinSpace<T>& a, const LinSpace<T>& b)
   return !(a == b);
 }
 
-} // namespace BWSL
+} // namespace bwsl
 
 #endif // BWSL_LINSPACE_HPP
 

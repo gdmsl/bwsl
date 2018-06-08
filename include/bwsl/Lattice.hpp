@@ -10,7 +10,6 @@
 /// \file
 /// \version    0.3
 /// \author     Guido Masella (guido.masella@gmail.com)
-/// \date       May, 2017
 /// \brief      Definitions for the Lattice Class
 ///
 //===---------------------------------------------------------------------===//
