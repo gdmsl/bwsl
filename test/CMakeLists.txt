@@ -6,7 +6,7 @@ add_executable(LatticeTest LatticeTest.cpp)
 target_link_libraries(LatticeTest
   PRIVATE
     bwsl
-    Catch::Catch
+    Catch2::Catch
   )
 add_test(NAME bwsl.Lattice COMMAND $<TARGET_FILE:LatticeTest>)
 # }}}
@@ -16,7 +16,7 @@ add_executable(PairsTest PairsTest.cpp)
 target_link_libraries(PairsTest
   PRIVATE
     bwsl
-    Catch::Catch
+    Catch2::Catch
   )
 add_test(NAME bwsl.Pairs COMMAND $<TARGET_FILE:PairsTest>)
 # }}}

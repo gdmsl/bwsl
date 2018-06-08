@@ -15,30 +15,19 @@ if (NOT Catch_FOUND)
 endif()
 # }}}
 
-# Find Dependency pcg-cpp {{{
-#add_subdirectory(pcg-cpp)
-# }}}
-
-# Find Dependency yaml-cpp {{{
-#find_package(yaml-cpp)
-#if (NOT yaml-cpp_FOUND)
-  #message(STATUS "Compiling YAML-CPP")
-  #add_subdirectory(yaml-cpp)
-#endif()
-# }}}
-
 # Find Dependency fmt {{{
 #find_package(fmt)
 #if (NOT FMT_FOUND)
-  #message(STATUS "Using bundled fmt lib")
-  #add_subdirectory(fmt)
+  message(STATUS "Using bundled fmt")
+  add_subdirectory(fmt EXCLUDE_FROM_ALL)
 #endif()
 #}}}
 
 # Boost {{{
-#find_package(Boost REQUIRED COMPONENTS program_options filesystem)
-#set_target_properties(Boost::program_options PROPERTIES IMPORTED_GLOBAL TRUE)
-#set_target_properties(Boost::filesystem PROPERTIES IMPORTED_GLOBAL TRUE)
+if(NOT ${CMAKE_VERSION} VERSION_LESS "3.11.0")
+  find_package(Boost REQUIRED COMPONENTS filesystem)
+  set_target_properties(Boost::filesystem PROPERTIES IMPORTED_GLOBAL TRUE)
+endif()
 # }}}
 
 # vim: set ft=cmake ts=2 sts=2 et sw=2 tw=80 foldmarker={{{,}}} fdm=marker: #

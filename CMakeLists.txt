@@ -6,7 +6,7 @@
 # Guido Masella (guido.masella@gmail.com)
 #
 
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.8)
 
 project(bwl VERSION 1 LANGUAGES CXX)
 
@@ -36,7 +36,6 @@ target_include_directories(bwsl
     $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>
   )
-
 
 # Applications
 add_subdirectory(applications)

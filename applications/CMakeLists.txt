@@ -2,7 +2,7 @@
 add_executable(dumpmt dumpmt.cpp)
 target_link_libraries(
     dumpmt
-    bwsl
+    bwsl::bwsl
     )
 # }}}
 
