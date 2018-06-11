@@ -103,6 +103,16 @@ max(const Container& v)
 }
 
 ///
+/// \brief      Return the minimum value in a container
+///
+template<class Container>
+inline typename Container::value_type
+min(const Container& v)
+{
+  return *std::min_element(v.begin(), v.end());
+}
+
+///
 /// \brief      Square sum of the elements of a container
 ///
 template<class Container, class T>

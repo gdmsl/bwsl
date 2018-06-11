@@ -32,7 +32,10 @@ namespace bwsl {
 class Bravais
 {
 public:
-  using coordinates_t = std::vector<int>;
+  /// Coordinates of a point in the lattice
+  using coords_t = std::vector<int>;
+
+  /// Shorthand for real valued vectors
   using realvec_t = std::vector<double>;
 
   /// Construct an abstract lattice
@@ -54,15 +57,17 @@ public:
   Bravais& operator=(Bravais&& that) = default;
 
   /// Get the real space position of a point
-  realvec_t GetRealspace(coordinates_t const& coords) const;
+  realvec_t GetRealSpace(coords_t const& coords) const;
+
+  realvec_t GetReciprocalSpace(coords_t const& coords) const;
 
   /// Get the real space vector connecting two points on the lattice
-  realvec_t GetVector(coordinates_t const& first,
-                      coordinates_t const& second) const;
+  realvec_t GetVector(coords_t const& first,
+                      coords_t const& second) const;
 
   /// Get the distance vector in real space between two points
-  double GetDistance(coordinates_t const& first,
-                     coordinates_t const& second) const;
+  double GetDistance(coords_t const& first,
+                     coords_t const& second) const;
 
   /// Generate the allowed momenta for a lattice of given size
   std::vector<realvec_t> GenMomenta(std::vector<size_t> const& sizes);
@@ -84,13 +89,14 @@ private:
   realvec_t mvectors_{};
 }; // class Bravais
 
-Bravais::Bravais(size_t dim_, realvec_t pvectors, realvec_t mvectors)
-  : pvectors_(std::move(mvectors))
+Bravais::Bravais(size_t dim, realvec_t pvectors, realvec_t mvectors)
+  : dim_(dim)
+  , pvectors_(std::move(pvectors))
   , mvectors_(std::move(mvectors))
 {}
 
 Bravais::realvec_t
-Bravais::GetRealspace(coordinates_t const& coords) const
+Bravais::GetRealSpace(coords_t const& coords) const
 {
   assert(coords.size() == dim_ && "Dimensions mismatch");
   auto p = Bravais::realvec_t(dim_, 0.0);
@@ -103,20 +109,33 @@ Bravais::GetRealspace(coordinates_t const& coords) const
 }
 
 Bravais::realvec_t
-Bravais::GetVector(coordinates_t const& first,
-                   coordinates_t const& second) const
+Bravais::GetReciprocalSpace(coords_t const& coords) const
 {
-  auto p = coordinates_t(dim_, 0.0);
+  assert(coords.size() == dim_ && "Dimensions mismatch");
+  auto p = Bravais::realvec_t(dim_, 0.0);
+  for (auto i = 0ul; i < dim_; i++) {
+    for (auto j = 0ul; j < dim_; j++) {
+      p[i] += coords[i] * mvectors_[i * dim_ + j];
+    }
+  }
+  return std::move(p);
+}
+
+Bravais::realvec_t
+Bravais::GetVector(coords_t const& first,
+                   coords_t const& second) const
+{
+  auto p = coords_t(dim_, 0.0);
   for (auto i = 0ul; i < dim_; i++) {
     p[i] = first[i] - second[i];
   }
 
-  return GetRealspace(p);
+  return GetRealSpace(p);
 }
 
 double
-Bravais::GetDistance(coordinates_t const& first,
-                     coordinates_t const& second) const
+Bravais::GetDistance(coords_t const& first,
+                     coords_t const& second) const
 {
   auto p = GetVector(first, second);
   auto d = 0.0;
