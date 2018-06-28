@@ -8,9 +8,8 @@
 #
 
 # Find Dependency Catch {{{
-find_package(Catch)
-if (NOT Catch_FOUND)
-  message(STATUS "Compiling CATCH")
+if (BWSL_TEST)
+  message(STATUS "Compiling bundled CATCH")
   add_subdirectory(catch2)
 endif()
 # }}}
