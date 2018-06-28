@@ -15,14 +15,6 @@ if (NOT Catch_FOUND)
 endif()
 # }}}
 
-# Find Dependency fmt {{{
-#find_package(fmt)
-#if (NOT FMT_FOUND)
-  message(STATUS "Using bundled fmt")
-  add_subdirectory(fmt EXCLUDE_FROM_ALL)
-#endif()
-#}}}
-
 # Boost {{{
 if(NOT ${CMAKE_VERSION} VERSION_LESS "3.11.0")
   find_package(Boost REQUIRED COMPONENTS filesystem)
