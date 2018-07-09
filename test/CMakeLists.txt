@@ -21,4 +21,14 @@ target_link_libraries(PairsTest
 add_test(NAME bwsl.Pairs COMMAND $<TARGET_FILE:PairsTest>)
 # }}}
 
+# AccumulatorTest {{{
+add_executable(AccumulatorTest AccumulatorTest.cpp)
+target_link_libraries(AccumulatorTest
+  PRIVATE
+    bwsl
+    Catch2::Catch
+  )
+add_test(NAME bwsl.Accumulator COMMAND $<TARGET_FILE:PairsTest>)
+# }}}
+
 # vim: set ft=cmake ts=2 sts=2 et sw=2 tw=80 foldmarker={{{,}}} fdm=marker: #
