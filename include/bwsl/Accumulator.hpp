@@ -82,7 +82,7 @@ private:
 }; // class Accumulator
 
 template<class T, class G>
-void
+inline void
 Accumulator::add(T measure, G weight)
 {
   double m = static_cast<double>(measure);
@@ -103,25 +103,25 @@ Accumulator::add(T measure, G weight)
 }
 
 template<class T>
-void
+inline void
 Accumulator::add(T measure)
 {
   add(measure, 1.0);
 }
 
-double
+inline double
 Accumulator::GetResult() const
 {
   return measure_ / weight_;
 }
 
-unsigned long
+inline unsigned long
 Accumulator::GetCount() const
 {
   return count_;
 }
 
-void
+inline void
 Accumulator::Reset()
 {
   measure_ = 0.0;
