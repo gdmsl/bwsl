@@ -65,6 +65,9 @@ public:
   /// Get the number of measurements
   unsigned long GetCount() const;
 
+  /// Reset the accumulator to the initial state
+  void Reset();
+
 protected:
 private:
   /// Mean of the measurements
@@ -116,6 +119,14 @@ unsigned long
 Accumulator::GetCount() const
 {
   return count_;
+}
+
+void
+Accumulator::Reset()
+{
+  measure_ = 0.0;
+  weight_ = 0.0;
+  count_ = 0ul;
 }
 
 } // namespace bwsl
