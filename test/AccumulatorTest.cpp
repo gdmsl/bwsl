@@ -54,22 +54,22 @@ TEST_CASE("unweighted averages", "")
 
 TEST_CASE("distributions")
 {
-  auto count = 100000ul;
+  auto count = 10000000ul;
   auto prova = Accumulator();
   auto mean = 5.0;
   auto var = 2.0;
   std::random_device rd{};
   std::mt19937 gen{rd()};
+  std::normal_distribution<> d{mean,var};
 
   SECTION("reproducing mean of a gaussian distribution")
   {
-    std::normal_distribution<> d{mean,var};
 
     for (auto i = 0ul; i < count; i++) {
       prova.add(d(gen));
     }
 
-    REQUIRE(prova.GetResult() == mean);
+    REQUIRE(prova.GetResult() == Approx(mean).epsilon(1e-3));
   }
 }
 
@@ -79,15 +79,21 @@ TEST_CASE("weighted averages", "")
   auto provaunw = Accumulator();
   auto count = 2398ul;
   auto testval = 9.89;
+  auto mean = 5.0;
+  auto var = 2.0;
+  std::random_device rd{};
+  std::mt19937 gen{rd()};
+  std::normal_distribution<> d{mean,var};
 
   SECTION("adding equal-weight measurements")
   {
     for (auto i = 0ul; i < count; i++) {
-      prova.add(rand(), testval);
-      provaunw.add(rand());
+      auto val = d(gen);
+      prova.add(val, testval);
+      provaunw.add(val);
     }
-    REQUIRE(prova.GetCount() == provaunw.GetCount());
-    REQUIRE(prova.GetResult() == provaunw.GetResult());
+    REQUIRE(prova.GetCount() == Approx(provaunw.GetCount()).epsilon(1e-3));
+    REQUIRE(prova.GetResult() == Approx(provaunw.GetResult()).epsilon(1e-3));
   }
 }
 

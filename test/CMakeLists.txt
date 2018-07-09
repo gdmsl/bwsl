@@ -28,7 +28,17 @@ target_link_libraries(AccumulatorTest
     bwsl
     Catch2::Catch
   )
-add_test(NAME bwsl.Accumulator COMMAND $<TARGET_FILE:PairsTest>)
+add_test(NAME bwsl.Accumulator COMMAND $<TARGET_FILE:AccumulatorTest>)
+# }}}
+
+# HistAccumulatorTest {{{
+add_executable(HistAccumulatorTest HistAccumulatorTest.cpp)
+target_link_libraries(HistAccumulatorTest
+  PRIVATE
+    bwsl
+    Catch2::Catch
+  )
+add_test(NAME bwsl.HistAccumulator COMMAND $<TARGET_FILE:HistAccumulatorTest>)
 # }}}
 
 # vim: set ft=cmake ts=2 sts=2 et sw=2 tw=80 foldmarker={{{,}}} fdm=marker: #
