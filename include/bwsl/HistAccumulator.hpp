@@ -61,6 +61,12 @@ public:
   /// Get the result of all the components
   std::vector<double> GetResult() const;
 
+  /// Get the number of measurements in total
+  size_t GetCount() const { return count_; };
+
+  /// Get the count of a single observable
+  size_t GetCount(size_t idx) const { return  acc_[idx].GetCount(); }
+
   /// Get the number of bins
   size_t GetNbins() const { return nbins_; };
 
