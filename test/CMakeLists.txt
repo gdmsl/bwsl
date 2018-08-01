@@ -11,6 +11,16 @@ target_link_libraries(LatticeTest
 add_test(NAME bwsl.Lattice COMMAND $<TARGET_FILE:LatticeTest>)
 # }}}
 
+# EnumString {{{
+add_executable(EnumString EnumString.cpp)
+target_link_libraries(EnumString
+  PRIVATE
+    bwsl
+    Catch2::Catch
+  )
+add_test(NAME bwsl.EnumString COMMAND $<TARGET_FILE:EnumString>)
+# }}}
+
 # PairsTest {{{
 add_executable(PairsTest PairsTest.cpp)
 target_link_libraries(PairsTest

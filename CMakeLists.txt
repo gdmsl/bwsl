@@ -36,6 +36,10 @@ list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 
 # Third-Party libraries
 add_subdirectory(libs)
+if(${CMAKE_VERSION} VERSION_LESS "3.11.0")
+  message("Please consider to switch to CMake 3.11.0")
+  find_package(Boost REQUIRED)
+endif()
 
 add_library(bwsl INTERFACE)
 add_library(bwsl::bwsl ALIAS bwsl)
@@ -57,6 +61,11 @@ target_include_directories(bwsl
   INTERFACE
     $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>
+  )
+
+target_link_libraries(bwsl
+  INTERFACE
+    Boost::boost
   )
 
 # Applications

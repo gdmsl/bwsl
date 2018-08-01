@@ -8,10 +8,10 @@
 #
 
 # Boost {{{
-#if(NOT ${CMAKE_VERSION} VERSION_LESS "3.11.0")
-  #find_package(Boost REQUIRED COMPONENTS filesystem)
-  #set_target_properties(Boost::filesystem PROPERTIES IMPORTED_GLOBAL TRUE)
-#endif()
+if(NOT ${CMAKE_VERSION} VERSION_LESS "3.11.0")
+  find_package(Boost REQUIRED)
+  set_target_properties(Boost::boost PROPERTIES IMPORTED_GLOBAL TRUE)
+endif()
 # }}}
 
 # Find Dependency Catch {{{
