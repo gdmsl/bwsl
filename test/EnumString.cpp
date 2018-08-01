@@ -27,13 +27,19 @@ BWSL_DEFINE_ENUM_WITH_STRING_CONVERSIONS(OS_type, (Linux)(Apple)(Windows))
 #include <catch.hpp>
 
 // TDD example
-TEST_CASE("vectors can be sized and resized", "[vector]")
+TEST_CASE("conversion works", "[vector]")
 {
   OS_type t = Windows;
 
-  SECTION("resizing bigger changes size and capacity")
+  SECTION("converting to a string")
   {
     REQUIRE(ToString(t) == "Windows");
+  }
+  SECTION("converting from a string")
+  {
+    OS_type t2{};
+    FromString(t2, "Windows");
+    REQUIRE(t2 == t);
   }
 }
 

@@ -21,6 +21,7 @@
 #include <boost/preprocessor.hpp>
 
 // std
+#include <exception>
 #include <string>
 
 ///
@@ -29,6 +30,15 @@
 #define BWSL_DEFINE_ENUM_WITH_STRING_CONVERSIONS_TOSTRING_CASE(r, data, elem)  \
   case elem:                                                                   \
     return BOOST_PP_STRINGIZE(elem);
+
+///
+/// Helper macro used in BWSL_DEFINE_ENUM_WITH_STRING_CONVERSIONS
+///
+#define BWSL_DEFINE_ENUM_WITH_STRING_CONVERSIONS_FROMSTRING_IF(r, data, elem)  \
+  if (v == BOOST_PP_STRINGIZE(elem)) {                                         \
+    n = elem;                                                                  \
+    return;                                                                    \
+  }
 
 ///
 /// Macro for generating enum with string conversion.
@@ -55,6 +65,24 @@
     BOOST_PP_SEQ_ENUM(enumerators)                                             \
   };                                                                           \
                                                                                \
+  class EnumStringConversionFailed_##name : public std::exception              \
+  {                                                                            \
+  public:                                                                      \
+    EnumStringConversionFailed_##name(std::string const& value)                \
+      : value_(value)                                                          \
+    {}                                                                         \
+                                                                               \
+    std::string what() throw()                                                 \
+    {                                                                          \
+      return std::string("Unknown correspondance of ") + value_ +              \
+             std::string(" for enum ") + name_;                                \
+    }                                                                          \
+                                                                               \
+  private:                                                                     \
+    const std::string name_{ BOOST_PP_STRINGIZE(name) };                       \
+    std::string value_{ "" };                                                  \
+  };                                                                           \
+                                                                               \
   inline std::string ToString(name v)                                          \
   {                                                                            \
     switch (v) {                                                               \
@@ -63,8 +91,17 @@
         name,                                                                  \
         enumerators)                                                           \
       default:                                                                 \
-        return "[Unknown " BOOST_PP_STRINGIZE(name) "]";                       \
+        return "[ Unknown " BOOST_PP_STRINGIZE(name) " ]";                     \
     }                                                                          \
+  }                                                                            \
+                                                                               \
+  inline void FromString(name& n, std::string const& v)                        \
+  {                                                                            \
+    BOOST_PP_SEQ_FOR_EACH(                                                     \
+      BWSL_DEFINE_ENUM_WITH_STRING_CONVERSIONS_FROMSTRING_IF,                  \
+      name,                                                                    \
+      enumerators)                                                             \
+    throw EnumStringConversionFailed_##name(v);                                \
   }
 
 #endif // BWSL_ENUMSTRING_HPP
