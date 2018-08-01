@@ -38,8 +38,15 @@ public:
   /// Shorthand for real valued vectors
   using realvec_t = std::vector<double>;
 
+  /// Vector of coordinates
+  using neighbors_t = std::vector<int>;
+
   /// Construct an abstract lattice
-  Bravais(size_t dim_, realvec_t pvectors, realvec_t mvectors);
+  Bravais(size_t dim_,
+          size_t gamma,
+          realvec_t pvectors,
+          realvec_t mvectors,
+          neighbors_t neighbors);
 
   /// Copy constructor
   Bravais(Bravais const& that) = default;
@@ -56,29 +63,33 @@ public:
   /// Copy assignment operator
   Bravais& operator=(Bravais&& that) = default;
 
+  /// Get the dimensionality
+  size_t GetDim() const { return dim_; };
+
+  /// Get the coordination number
+  size_t GetGamma() const { return gamma_; };
+
   /// Get the real space position of a point
   realvec_t GetRealSpace(coords_t const& coords) const;
 
   realvec_t GetReciprocalSpace(coords_t const& coords) const;
 
   /// Get the real space vector connecting two points on the lattice
-  realvec_t GetVector(coords_t const& first,
-                      coords_t const& second) const;
+  realvec_t GetVector(coords_t const& first, coords_t const& second) const;
 
   /// Get the distance vector in real space between two points
-  double GetDistance(coords_t const& first,
-                     coords_t const& second) const;
+  double GetDistance(coords_t const& first, coords_t const& second) const;
 
-  /// Generate the allowed momenta for a lattice of given size
-  std::vector<realvec_t> GenMomenta(std::vector<size_t> const& sizes);
-
-  /// Generate the coordinates on a lattice of given size
-  std::vector<realvec_t> GenMinimumVectors(std::vector<size_t> const&);
+  /// Get one of the neighbors of a lattice point
+  Bravais::coords_t GetNeighbor(coords_t const& point, size_t idx) const;
 
 protected:
 private:
   /// Dimensionality
   size_t dim_{};
+
+  /// Coordination number
+  size_t gamma_{};
 
   /// Direct lattice vectors
   /// it is a dxd matrix
@@ -87,13 +98,26 @@ private:
   /// Reciprocal lattice vectors
   /// it is a dxd matrix
   realvec_t mvectors_{};
+
+  /// Neighbors directions
+  neighbors_t neighbors_{};
 }; // class Bravais
 
-Bravais::Bravais(size_t dim, realvec_t pvectors, realvec_t mvectors)
+Bravais::Bravais(size_t dim,
+                 size_t gamma,
+                 realvec_t pvectors,
+                 realvec_t mvectors,
+                 neighbors_t neighbors)
   : dim_(dim)
+  , gamma_(gamma)
   , pvectors_(std::move(pvectors))
   , mvectors_(std::move(mvectors))
-{}
+  , neighbors_(std::move(neighbors))
+{
+  assert(pvectors_.size() == square(dim));
+  assert(mvectors_.size() == square(dim));
+  assert(neighbors_.size() == gamma / 2ul * dim);
+}
 
 Bravais::realvec_t
 Bravais::GetRealSpace(coords_t const& coords) const
@@ -122,8 +146,7 @@ Bravais::GetReciprocalSpace(coords_t const& coords) const
 }
 
 Bravais::realvec_t
-Bravais::GetVector(coords_t const& first,
-                   coords_t const& second) const
+Bravais::GetVector(coords_t const& first, coords_t const& second) const
 {
   auto p = coords_t(dim_, 0.0);
   for (auto i = 0ul; i < dim_; i++) {
@@ -134,8 +157,7 @@ Bravais::GetVector(coords_t const& first,
 }
 
 double
-Bravais::GetDistance(coords_t const& first,
-                     coords_t const& second) const
+Bravais::GetDistance(coords_t const& first, coords_t const& second) const
 {
   auto p = GetVector(first, second);
   auto d = 0.0;
@@ -146,17 +168,48 @@ Bravais::GetDistance(coords_t const& first,
   return std::sqrt(d);
 }
 
-const auto ChainLattice = Bravais(1ul, { 1.0 }, { 2 * M_PI });
-const auto SquareLattice =
-  Bravais(2ul, { 1.0, 0.0, 0.0, 1.0 }, { 2 * M_PI, 0.0, 0.0, 2 * M_PI });
-const auto CubicLattice =
-  Bravais(2ul,
-          { 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0 },
-          { 2 * M_PI, 0.0, 0.0, 0.0, 2 * M_PI, 0.0, 0.0, 0.0, 2 * M_PI });
-const auto TriangularLattice = Bravais(
+Bravais::coords_t
+Bravais::GetNeighbor(coords_t const& point, size_t idx) const
+{
+  auto aidx = idx / 2ul;
+  auto sidx = idx % 2ul == 0ul ? 1 : -1;
+  auto n = point;
+
+  for (auto i = 0ul; i < dim_; i++) {
+    n[i] += sidx * neighbors_[aidx * dim_ + i];
+  }
+  return n;
+}
+
+// clang-format off
+const auto ChainLattice = Bravais(
+  1ul,
+  2ul,
+  { 1.0 },
+  { 2 * M_PI },
+  { 1 }
+);
+const auto SquareLattice = Bravais(
+  2ul,
+  4ul,
+  { 1.0, 0.0, 0.0, 1.0 },
+  { 2 * M_PI, 0.0, 0.0, 2 * M_PI },
+  { 1, 0, 0, 1 }
+);
+const auto CubicLattice = Bravais(
   3ul,
+  6ul,
+  { 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0 },
+  { 2 * M_PI, 0.0, 0.0, 0.0, 2 * M_PI, 0.0, 0.0, 0.0, 2 * M_PI },
+  { 1, 0, 0, 0, 1, 0, 0, 0, 1 }
+);
+const auto TriangularLattice = Bravais(
+  2ul,
+  6ul,
   { 1.0, 0.5, 0.0, std::sqrt(3.0) / 2.0 },
-  { 2 * M_PI, 0.0, -2 * M_PI / std::sqrt(3.0), 4 * M_PI / std::sqrt(3.0) });
+  { 2 * M_PI, 0.0, -2 * M_PI / std::sqrt(3.0), 4 * M_PI / std::sqrt(3.0) },
+  { 1, 0, 0, 1, 1, -1 }
+);
 
 } // namespace bwsl
 

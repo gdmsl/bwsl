@@ -16,17 +16,17 @@
 #ifndef BWSL_LATTICE_HPP
 #define BWSL_LATTICE_HPP
 
+// bwsl
+#include <bwsl/Approx.hpp>
+#include <bwsl/Bravais.hpp>
+#include <bwsl/MathUtils.hpp>
+
 // std
 #include <algorithm>
 #include <cassert>
 #include <cmath>
 #include <memory>
 #include <vector>
-
-// bwsl
-#include <bwsl/Approx.hpp>
-#include <bwsl/Bravais.hpp>
-#include <bwsl/MathUtils.hpp>
 
 namespace bwsl {
 
@@ -125,7 +125,7 @@ protected:
     offsets_t const& size) const;
 
   /// Create the vector of neighbors
-  neighbors_t ComputeNeighbors(std::vector<realvec_t> const& distances) const;
+  neighbors_t ComputeNeighbors(Bravais const& bravais, offsets_t const& size) const;
 
   /// Compute the allowed momenta
   std::vector<realvec_t> ComputeMomenta(Bravais const& bravais,
@@ -158,11 +158,10 @@ private:
 Lattice::Lattice(Bravais const& bravais, offsets_t const& size)
   : dim_(size.size())
   , size_(size)
-  , numsites_(
-      std::accumulate(size.begin(), size.end(), 1ul, std::multiplies<size_t>()))
+  , numsites_(accumulate_product(size))
   , distvector_(ComputeVectors(bravais, size))
   , distances_(ComputeDistances(distvector_, size))
-  , neighbors_(ComputeNeighbors(distances_))
+  , neighbors_(ComputeNeighbors(bravais, size))
   , momenta_(ComputeMomenta(bravais, size))
 {}
 
@@ -383,28 +382,19 @@ Lattice::ComputeDistances(std::vector<realvec_t> const& distvector,
 }
 
 Lattice::neighbors_t
-Lattice::ComputeNeighbors(std::vector<realvec_t> const& distances) const
+Lattice::ComputeNeighbors(Bravais const& bravais, offsets_t const& size) const
 {
   auto p = neighbors_t{};
+  auto n = accumulate_product(size);
+  auto gamma = bravais.GetGamma();
 
-  // nearest neighbors of one sites are defined to be all the sites to have
-  // the minimum distance to that site
-  for (auto i = 0ul; i < distances.size(); i++) {
+  for (auto i = 0ul; i < n; i++) {
     auto nn = offsets_t{};
-    auto mindist = std::numeric_limits<double>::infinity();
-    for (auto j = 0ul; j < distances[i].size(); j++) {
-      if (i == j) {
-        continue;
-      }
-      auto const& dist = distances[i][j];
-      // we use approx to avoid damage dealth by roundoff errors while
-      // computing the distances
-      if (Approx(dist) == mindist) {
-        nn.push_back(j);
-      } else if (dist < mindist) {
-        mindist = dist;
-        nn.clear();
-      }
+    auto ci = GetCoordinates(i, size);
+    for (auto j = 0ul; j < gamma; j++) {
+      auto cj = bravais.GetNeighbor(ci, j);
+      EnforceBoundaries(cj, size);
+      nn.push_back(GetOffset(cj, size));
     }
     p.push_back(std::move(nn));
   }

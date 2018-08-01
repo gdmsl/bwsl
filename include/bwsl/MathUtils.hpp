@@ -79,7 +79,8 @@ template<class Container, class T = typename Container::value_type>
 inline T
 accumulate_product(const Container& v)
 {
-  return static_cast<T>(std::accumulate(v.begin(), v.end(), 1, std::multiplies<T>()));
+  return static_cast<T>(
+    std::accumulate(v.begin(), v.end(), 1, std::multiplies<T>()));
 }
 
 ///
@@ -124,6 +125,16 @@ sum_squared(const Container& v)
     d += square<T>(x);
   }
   return d;
+}
+
+///
+/// \brief      Sign function
+///
+template<typename T>
+inline int
+sgn(T val)
+{
+  return (T(0) < val) - (val < T(0));
 }
 
 ///
@@ -265,10 +276,10 @@ subtract_into(Container& left, const Container& right)
 inline size_t
 GetPairIndex(size_t a, size_t b, size_t numelems)
 {
-  auto an = std::min(a,b);
-  auto bn = std::max(a,b);
+  auto an = std::min(a, b);
+  auto bn = std::max(a, b);
 
-  return an * numelems + bn -  (an * (an + 1)) / 2;
+  return an * numelems + bn - (an * (an + 1)) / 2;
 }
 
 ///
@@ -281,14 +292,14 @@ GetIndividualIndices(size_t pair, size_t numelems)
   auto i = pair / numelems;
   auto j = pair % numelems;
 
-  j += (i * (i+1))/2;
+  j += (i * (i + 1)) / 2;
 
   while (j >= numelems) {
-    i +=1;
+    i += 1;
     j = j - numelems + i;
   }
 
-  return std::make_pair(i,j);
+  return std::make_pair(i, j);
 }
 
 ///
@@ -297,9 +308,8 @@ GetIndividualIndices(size_t pair, size_t numelems)
 inline size_t
 GetNumPairs(size_t numvals)
 {
-  return numvals * (numvals+1ul) / 2ul;
+  return numvals * (numvals + 1ul) / 2ul;
 }
-
 
 } // namespace bwsl
 
