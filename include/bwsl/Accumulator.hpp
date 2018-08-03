@@ -16,6 +16,11 @@
 #ifndef BWSL_ACCUMULATOR_HPP
 #define BWSL_ACCUMULATOR_HPP
 
+// boost
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/serialization/version.hpp>
+
 // std
 #include <exception>
 #include <limits>
@@ -79,6 +84,17 @@ private:
   /// Number of measurements
   unsigned long count_{ 0 };
 
+  // serializaton
+  friend class boost::serialization::access;
+
+  /// Serialization method for the class
+  template<class Archive>
+  void serialize(Archive & ar, const unsigned int version)
+  {
+    ar & measure_;
+    ar & weight_;
+    ar & count_;
+  }
 }; // class Accumulator
 
 template<class T, class G>

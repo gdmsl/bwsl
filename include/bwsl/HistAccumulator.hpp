@@ -19,6 +19,12 @@
 // bwsl
 #include <bwsl/Accumulator.hpp>
 
+// boost
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/serialization/vector.hpp>
+#include <boost/serialization/version.hpp>
+
 // std
 #include <vector>
 
@@ -80,6 +86,18 @@ private:
 
   /// Number of measurements
   unsigned long count_{ 0ul };
+
+  // serializaton
+  friend class boost::serialization::access;
+
+  /// Serialization method for the class
+  template<class Archive>
+  void serialize(Archive & ar, const unsigned int version)
+  {
+    ar & nbins_;
+    ar & acc_;
+    ar & count_;
+  }
 }; // class HistAccumulator
 
 HistAccumulator::HistAccumulator(size_t nbins)
