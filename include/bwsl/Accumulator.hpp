@@ -17,8 +17,8 @@
 #define BWSL_ACCUMULATOR_HPP
 
 // boost
-#include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
+#include <boost/archive/text_oarchive.hpp>
 #include <boost/serialization/version.hpp>
 
 // std
@@ -89,12 +89,7 @@ private:
 
   /// Serialization method for the class
   template<class Archive>
-  void serialize(Archive & ar, const unsigned int version)
-  {
-    ar & measure_;
-    ar & weight_;
-    ar & count_;
-  }
+  void serialize(Archive& ar, const unsigned int version);
 }; // class Accumulator
 
 template<class T, class G>
@@ -145,6 +140,14 @@ Accumulator::Reset()
   count_ = 0ul;
 }
 
+template<class Archive>
+inline void
+Accumulator::serialize(Archive& ar, const unsigned int version)
+{
+  ar& measure_;
+  ar& weight_;
+  ar& count_;
+}
 } // namespace bwsl
 
 #endif // BWSL_ACCUMULATOR_HPP

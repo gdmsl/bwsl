@@ -20,8 +20,8 @@
 #include <bwsl/Accumulator.hpp>
 
 // boost
-#include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
+#include <boost/archive/text_oarchive.hpp>
 #include <boost/serialization/vector.hpp>
 #include <boost/serialization/version.hpp>
 
@@ -71,7 +71,7 @@ public:
   size_t GetCount() const { return count_; };
 
   /// Get the count of a single observable
-  size_t GetCount(size_t idx) const { return  acc_[idx].GetCount(); }
+  size_t GetCount(size_t idx) const { return acc_[idx].GetCount(); }
 
   /// Get the number of bins
   size_t GetNbins() const { return nbins_; };
@@ -92,12 +92,7 @@ private:
 
   /// Serialization method for the class
   template<class Archive>
-  void serialize(Archive & ar, const unsigned int version)
-  {
-    ar & nbins_;
-    ar & acc_;
-    ar & count_;
-  }
+  void serialize(Archive& ar, const unsigned int version);
 }; // class HistAccumulator
 
 HistAccumulator::HistAccumulator(size_t nbins)
@@ -145,6 +140,15 @@ HistAccumulator::GetResult() const
   }
 
   return std::move(r);
+}
+
+template<class Archive>
+inline void
+HistAccumulator::serialize(Archive& ar, const unsigned int version)
+{
+  ar& nbins_;
+  ar& acc_;
+  ar& count_;
 }
 
 } // namespace bwsl
