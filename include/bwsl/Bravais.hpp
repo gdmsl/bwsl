@@ -45,7 +45,7 @@ public:
   Bravais(size_t dim_,
           size_t gamma,
           realvec_t pvectors,
-          realvec_t mvectors,
+          realvec_t pivectors,
           neighbors_t neighbors);
 
   /// Copy constructor
@@ -72,6 +72,10 @@ public:
   /// Get the real space position of a point
   realvec_t GetRealSpace(coords_t const& coords) const;
 
+  /// Get the coordinates of a realspace vector on the lattice basis
+  realvec_t GetInverseVector(realvec_t const& realspace) const;
+
+  /// Reciprocal space vector
   realvec_t GetReciprocalSpace(coords_t const& coords) const;
 
   /// Get the real space vector connecting two points on the lattice
@@ -95,9 +99,8 @@ private:
   /// it is a dxd matrix
   realvec_t pvectors_{};
 
-  /// Reciprocal lattice vectors
-  /// it is a dxd matrix
-  realvec_t mvectors_{};
+  /// Inverse of the pvectors_ matrix
+  realvec_t pivectors_{};
 
   /// Neighbors directions
   neighbors_t neighbors_{};
@@ -106,16 +109,16 @@ private:
 Bravais::Bravais(size_t dim,
                  size_t gamma,
                  realvec_t pvectors,
-                 realvec_t mvectors,
+                 realvec_t pivectors,
                  neighbors_t neighbors)
   : dim_(dim)
   , gamma_(gamma)
   , pvectors_(std::move(pvectors))
-  , mvectors_(std::move(mvectors))
+  , pivectors_(std::move(pivectors))
   , neighbors_(std::move(neighbors))
 {
   assert(pvectors_.size() == square(dim));
-  assert(mvectors_.size() == square(dim));
+  assert(pivectors_.size() == square(dim));
   assert(neighbors_.size() == gamma / 2ul * dim);
 }
 
@@ -132,6 +135,19 @@ Bravais::GetRealSpace(coords_t const& coords) const
   return std::move(p);
 }
 
+inline Bravais::realvec_t
+Bravais::GetInverseVector(realvec_t const& realspace) const
+{
+  assert(realspace.size() == dim_ && "Dimensions mismatch");
+  auto p = Bravais::realvec_t(dim_, 0.0);
+  for (auto i = 0ul; i < dim_; i++) {
+    for (auto j = 0ul; j < dim_; j++) {
+      p[i] += realspace[i] * pivectors_[i * dim_ + j];
+    }
+  }
+  return std::move(p);
+}
+
 Bravais::realvec_t
 Bravais::GetReciprocalSpace(coords_t const& coords) const
 {
@@ -139,7 +155,7 @@ Bravais::GetReciprocalSpace(coords_t const& coords) const
   auto p = Bravais::realvec_t(dim_, 0.0);
   for (auto i = 0ul; i < dim_; i++) {
     for (auto j = 0ul; j < dim_; j++) {
-      p[i] += coords[i] * mvectors_[i * dim_ + j];
+      p[i] += coords[i] * 2 * M_PI * pivectors_[i * dim_ + j];
     }
   }
   return std::move(p);
@@ -156,7 +172,7 @@ Bravais::GetVector(coords_t const& first, coords_t const& second) const
   return GetRealSpace(p);
 }
 
-double
+inline double
 Bravais::GetDistance(coords_t const& first, coords_t const& second) const
 {
   auto p = GetVector(first, second);
@@ -168,7 +184,7 @@ Bravais::GetDistance(coords_t const& first, coords_t const& second) const
   return std::sqrt(d);
 }
 
-Bravais::coords_t
+inline Bravais::coords_t
 Bravais::GetNeighbor(coords_t const& point, size_t idx) const
 {
   auto aidx = idx / 2ul;
@@ -186,28 +202,28 @@ const auto ChainLattice = Bravais(
   1ul,
   2ul,
   { 1.0 },
-  { 2 * M_PI },
+  { 1.0 },
   { 1 }
 );
 const auto SquareLattice = Bravais(
   2ul,
   4ul,
   { 1.0, 0.0, 0.0, 1.0 },
-  { 2 * M_PI, 0.0, 0.0, 2 * M_PI },
+  { 1.0, 0.0, 0.0, 1.0 },
   { 1, 0, 0, 1 }
 );
 const auto CubicLattice = Bravais(
   3ul,
   6ul,
   { 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0 },
-  { 2 * M_PI, 0.0, 0.0, 0.0, 2 * M_PI, 0.0, 0.0, 0.0, 2 * M_PI },
+  { 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0 },
   { 1, 0, 0, 0, 1, 0, 0, 0, 1 }
 );
 const auto TriangularLattice = Bravais(
   2ul,
   6ul,
   { 1.0, 0.5, 0.0, std::sqrt(3.0) / 2.0 },
-  { 2 * M_PI, 0.0, -2 * M_PI / std::sqrt(3.0), 4 * M_PI / std::sqrt(3.0) },
+  { 1.0, -1.0 / std::sqrt(3), 0, 2.0 / std::sqrt(3) },
   { 1, 0, 0, 1, 1, -1 }
 );
 

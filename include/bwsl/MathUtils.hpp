@@ -270,8 +270,8 @@ subtract_into(Container& left, const Container& right)
 }
 
 ///
-/// \brief    Given two indices, and the number of all possible values.
-///           return an index for the unordered pair (i,j), same as (j,i)
+/// Given two indices, and the number of all possible values.
+/// return an index for the unordered pair (i,j), same as (j,i)
 ///
 inline size_t
 GetPairIndex(size_t a, size_t b, size_t numelems)
@@ -283,8 +283,8 @@ GetPairIndex(size_t a, size_t b, size_t numelems)
 }
 
 ///
-/// \brief    Given an unique index to a pair return the pair of corresponding
-///           indices.
+/// Given an unique index to a pair return the pair of corresponding
+/// indices.
 ///
 inline std::pair<size_t, size_t>
 GetIndividualIndices(size_t pair, size_t numelems)
@@ -303,13 +303,76 @@ GetIndividualIndices(size_t pair, size_t numelems)
 }
 
 ///
-/// \brief    Return the number of unordered pairs (i,j).
+/// Return the number of unordered pairs (i,j).
 ///
 inline size_t
 GetNumPairs(size_t numvals)
 {
   return numvals * (numvals + 1ul) / 2ul;
 }
+
+///
+/// Transform coordinates to index
+///
+template <class C, class D>
+inline size_t
+ArrayToIndex(C const& a, D const& size)
+{
+  static_assert(std::is_same<typename D::value_type, size_t>::value, "type must contain size_t values");
+  static_assert(std::is_integral<typename C::value_type>::value, "Integral required.");
+  auto dim = size.size();
+  assert(a.size() == dim && "Dimensions not matching");
+
+  auto index = 0ul;
+  auto prod = 1ul;
+
+  for (auto i = 0ul; i < dim - 1; i++) {
+    prod *= size[i];
+  }
+  for (auto i = 0ul; i < dim; i++) {
+    auto x = a[i];
+    auto s = size[i];
+    while (x < 0) {
+      x += s;
+    }
+
+    auto xul = static_cast<size_t>(x);
+    while (xul >= s) {
+      xul -= s;
+    }
+    index += prod * xul;
+    prod /= s;
+  }
+
+  return index;
+}
+
+///
+/// Transform an index to coordinates
+///
+template<class C, class D>
+inline C
+IndexToArray(size_t index, D const& size)
+{
+  static_assert(std::is_same<typename D::value_type, size_t>::value, "type must contain size_t values");
+  static_assert(std::is_integral<typename C::value_type>::value, "Integral required.");
+  auto dim = size.size();
+  auto prod = 1ul;
+
+  auto d = C(dim, 0);
+
+  for (auto i = 0ul; i < dim - 1; i++) {
+    prod *= size[i];
+  }
+  for (auto i = 0ul; i < dim; i++) {
+    d[i] = static_cast<typename C::value_type>(index / prod);
+    index = index % prod;
+    prod /= size[i];
+  }
+
+  return d;
+}
+
 
 } // namespace bwsl
 
