@@ -102,6 +102,7 @@ TEST_CASE("Big Square Lattice")
           disty += static_cast<long>(size[1]);
         auto dist = sqrt(static_cast<double>(bwsl::square(distx) + bwsl::square(disty)));
 
+        std::cout << i << " " << j << " " << (structure.GetVector(i,j)[1] == disty) << std::endl;
         REQUIRE(structure.GetVector(i,j)[0] == distx);
         REQUIRE(structure.GetVector(i,j)[1] == disty);
         REQUIRE(structure.GetDistance(i,j) == dist);

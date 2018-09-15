@@ -218,7 +218,13 @@ inline Lattice::realvec_t
 Lattice::GetVector(size_t a, size_t b) const
 {
   auto index = GetPairIndex(a, b);
-  return distvector_[index];
+  auto dv = distvector_[index];
+  if (a > b) {
+    for (auto& x : dv) {
+      x = -x;
+    }
+  }
+  return dv;
 }
 
 inline bool
