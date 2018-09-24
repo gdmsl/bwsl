@@ -77,7 +77,6 @@ public:
   size_t GetNbins() const { return nbins_; };
 
 protected:
-private:
   /// Number of bins
   size_t nbins_{ 0ul };
 
@@ -93,6 +92,8 @@ private:
   /// Serialization method for the class
   template<class Archive>
   void serialize(Archive& ar, const unsigned int version);
+
+private:
 }; // class HistAccumulator
 
 HistAccumulator::HistAccumulator(size_t nbins)
