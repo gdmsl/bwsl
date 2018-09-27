@@ -6,7 +6,7 @@ add_executable(LatticeTest LatticeTest.cpp)
 target_link_libraries(LatticeTest
   PRIVATE
     bwsl
-    Catch2::Catch
+    Catch2::Catch2
   )
 add_test(NAME bwsl.Lattice COMMAND $<TARGET_FILE:LatticeTest>)
 # }}}
@@ -16,7 +16,7 @@ add_executable(EnumString EnumString.cpp)
 target_link_libraries(EnumString
   PRIVATE
     bwsl
-    Catch2::Catch
+    Catch2::Catch2
   )
 add_test(NAME bwsl.EnumString COMMAND $<TARGET_FILE:EnumString>)
 # }}}
@@ -26,7 +26,7 @@ add_executable(PairsTest PairsTest.cpp)
 target_link_libraries(PairsTest
   PRIVATE
     bwsl
-    Catch2::Catch
+    Catch2::Catch2
   )
 add_test(NAME bwsl.Pairs COMMAND $<TARGET_FILE:PairsTest>)
 # }}}
@@ -36,7 +36,7 @@ add_executable(AccumulatorTest AccumulatorTest.cpp)
 target_link_libraries(AccumulatorTest
   PRIVATE
     bwsl
-    Catch2::Catch
+    Catch2::Catch2
   )
 add_test(NAME bwsl.Accumulator COMMAND $<TARGET_FILE:AccumulatorTest>)
 # }}}
@@ -46,7 +46,7 @@ add_executable(HistAccumulatorTest HistAccumulatorTest.cpp)
 target_link_libraries(HistAccumulatorTest
   PRIVATE
     bwsl
-    Catch2::Catch
+    Catch2::Catch2
   )
 add_test(NAME bwsl.HistAccumulator COMMAND $<TARGET_FILE:HistAccumulatorTest>)
 # }}}

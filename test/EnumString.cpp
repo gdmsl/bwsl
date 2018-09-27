@@ -24,7 +24,7 @@ BWSL_DEFINE_ENUM_WITH_STRING_CONVERSIONS(OS_type, (Linux)(Apple)(Windows))
 
 // catch
 #define CATCH_CONFIG_MAIN
-#include <catch.hpp>
+#include <catch2/catch.hpp>
 
 // TDD example
 TEST_CASE("conversion works", "[vector]")

@@ -15,27 +15,43 @@
 ///
 //===---------------------------------------------------------------------===//
 // bwsl
-#include <bwsl/MathUtils.hpp>
+#include <bwsl/Pairs.hpp>
 
 // std
 #include <iostream>
 
 // catch
 #define CATCH_CONFIG_MAIN
-#include <catch.hpp>
+#include <catch2/catch.hpp>
 
-using namespace bwsl;
+using namespace bwsl::pairs;
 
 // TDD example
-TEST_CASE("Pairs", "[math]")
+TEST_CASE("Pairs with self pair", "[math]")
 {
-  SECTION("GetPairIndex is inverted with GetIndividualIndices")
+  SECTION("GetPairIndex is inverted with GetPair")
   {
     const auto n = 3489;
     for (auto s1 = 0ul; s1 < n; s1++) {
       for (auto s2 = s1; s2 < n; s2++) {
-        auto k = GetPairIndex(s1,s2,n);
-        auto indices = GetIndividualIndices(k, n);
+        auto k = GetPairIndex(s1,s2,n, false);
+        auto indices = GetPair(k, n, false);
+        REQUIRE(s1 == indices.first);
+        REQUIRE(s2 == indices.second);
+      }
+    }
+  }
+}
+
+TEST_CASE("Pairs withoud self pair", "[math]")
+{
+  SECTION("GetPairIndex is inverted with GetPair")
+  {
+    const auto n = 3489;
+    for (auto s1 = 0ul; s1 < n; s1++) {
+      for (auto s2 = s1+1ul; s2 < n; s2++) {
+        auto k = GetPairIndex(s1,s2,n, true);
+        auto indices = GetPair(k, n, true);
         REQUIRE(s1 == indices.first);
         REQUIRE(s2 == indices.second);
       }
