@@ -270,48 +270,6 @@ subtract_into(Container& left, const Container& right)
 }
 
 ///
-/// Given two indices, and the number of all possible values.
-/// return an index for the unordered pair (i,j), same as (j,i)
-///
-inline size_t
-GetPairIndex(size_t a, size_t b, size_t numelems)
-{
-  auto an = std::min(a, b);
-  auto bn = std::max(a, b);
-
-  return an * numelems + bn - (an * (an + 1)) / 2;
-}
-
-///
-/// Given an unique index to a pair return the pair of corresponding
-/// indices.
-///
-inline std::pair<size_t, size_t>
-GetIndividualIndices(size_t pair, size_t numelems)
-{
-  auto i = pair / numelems;
-  auto j = pair % numelems;
-
-  j += (i * (i + 1)) / 2;
-
-  while (j >= numelems) {
-    i += 1;
-    j = j - numelems + i;
-  }
-
-  return std::make_pair(i, j);
-}
-
-///
-/// Return the number of unordered pairs (i,j).
-///
-inline size_t
-GetNumPairs(size_t numvals)
-{
-  return numvals * (numvals + 1ul) / 2ul;
-}
-
-///
 /// Transform coordinates to index
 ///
 template <class C, class D>
