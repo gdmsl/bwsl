@@ -20,6 +20,7 @@
 #include <bwsl/Approx.hpp>
 #include <bwsl/Bravais.hpp>
 #include <bwsl/MathUtils.hpp>
+#include <bwsl/Pairs.hpp>
 
 // std
 #include <algorithm>
@@ -174,7 +175,7 @@ inline Lattice::Lattice(Bravais const& bravais,
   : dim_(size.size())
   , size_(size)
   , numsites_(accumulate_product(size))
-  , numpairs_(GetNumPairs(numsites_))
+  , numpairs_(pairs::GetNumPairs(numsites_))
   , openboundaries_(openboundaries)
   , distvector_(ComputeVectors(bravais))
   , distances_(ComputeDistances())
@@ -272,7 +273,7 @@ Lattice::ComputeVectors(Bravais const& bravais) const
     /// just add the minimum image to the vector of distances
     p.push_back(minvec);
   }
-  return std::move(p);
+  return p;
 }
 
 inline Lattice::realvec_t
@@ -286,7 +287,7 @@ Lattice::ComputeDistances() const
     }
     p.push_back(std::sqrt(d));
   }
-  return std::move(p);
+  return p;
 }
 
 inline Lattice::neighbors_t
@@ -311,7 +312,7 @@ Lattice::ComputeNeighbors(Bravais const& bravais) const
     p.push_back(std::move(nn));
   }
 
-  return std::move(p);
+  return p;
 }
 
 inline std::vector<Lattice::realvec_t>
@@ -339,19 +340,19 @@ Lattice::ComputeMomenta(Bravais const& bravais) const
     p.push_back(kappa);
   }
 
-  return std::move(p);
+  return p;
 }
 
 inline size_t
 Lattice::GetPairIndex(size_t a, size_t b) const
 {
-  return bwsl::GetPairIndex(a, b, numsites_);
+  return bwsl::pairs::GetPairIndex(a, b, numsites_);
 }
 
 inline std::pair<size_t, size_t>
 Lattice::GetIndividualIndices(size_t pair) const
 {
-  return bwsl::GetIndividualIndices(pair, numsites_);
+  return bwsl::pairs::GetPair(pair, numsites_);
 }
 
 inline double

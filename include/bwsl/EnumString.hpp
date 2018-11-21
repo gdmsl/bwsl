@@ -72,10 +72,11 @@
       : value_(value)                                                          \
     {}                                                                         \
                                                                                \
-    std::string what() throw()                                                 \
+    const char* what() const throw()                                           \
     {                                                                          \
-      return std::string("Unknown correspondance of ") + value_ +              \
-             std::string(" for enum ") + name_;                                \
+      auto s = std::string("Unknown correspondance of ") + value_ +            \
+               std::string(" for enum ") + name_;                              \
+      return s.c_str();                                                        \
     }                                                                          \
                                                                                \
   private:                                                                     \

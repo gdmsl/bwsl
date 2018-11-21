@@ -132,7 +132,7 @@ Bravais::GetRealSpace(coords_t const& coords) const
       p[i] += coords[i] * pvectors_[i * dim_ + j];
     }
   }
-  return std::move(p);
+  return p;
 }
 
 inline Bravais::realvec_t
@@ -145,7 +145,7 @@ Bravais::GetInverseVector(realvec_t const& realspace) const
       p[i] += realspace[i] * pivectors_[i * dim_ + j];
     }
   }
-  return std::move(p);
+  return p;
 }
 
 Bravais::realvec_t
@@ -158,7 +158,7 @@ Bravais::GetReciprocalSpace(coords_t const& coords) const
       p[i] += coords[i] * 2 * M_PI * pivectors_[i * dim_ + j];
     }
   }
-  return std::move(p);
+  return p;
 }
 
 Bravais::realvec_t

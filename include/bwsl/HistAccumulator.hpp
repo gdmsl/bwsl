@@ -140,7 +140,7 @@ HistAccumulator::GetResult() const
     r[i] = GetResult(i);
   }
 
-  return std::move(r);
+  return r;
 }
 
 template<class Archive>
