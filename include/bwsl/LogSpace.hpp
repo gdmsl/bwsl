@@ -7,10 +7,9 @@
 //
 //===---------------------------------------------------------------------===//
 ///
-/// \file
-/// \version    2.0
-/// \author     Guido Masella (guido.masella@gmail.com)
-/// \brief      Definitions of the LogSpace class
+/// @file
+/// @author     Guido Masella (guido.masella@gmail.com)
+/// @brief      Definitions of the LogSpace class
 ///
 //===---------------------------------------------------------------------===//
 #ifndef BWSL_LOGSPACE_HPP

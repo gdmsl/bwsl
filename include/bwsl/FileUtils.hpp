@@ -7,10 +7,9 @@
 //
 //===---------------------------------------------------------------------===//
 ///
-/// \file
-/// \version    1.0
-/// \author     Guido Masella (guido.masella@gmail.com)
-/// \brief      Definitions for the class Foo
+/// @file
+/// @author     Guido Masella (guido.masella@gmail.com)
+/// @brief      Definitions for the class Foo
 ///
 //===---------------------------------------------------------------------===//
 #ifndef BWSL_FILEUTILS_HPP

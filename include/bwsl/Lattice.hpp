@@ -26,6 +26,7 @@
 #include <algorithm>
 #include <cassert>
 #include <cmath>
+#include <iostream>
 #include <memory>
 #include <vector>
 
@@ -218,14 +219,7 @@ Lattice::GetDistance(size_t a, size_t b) const
 inline Lattice::realvec_t
 Lattice::GetVector(size_t a, size_t b) const
 {
-  auto index = GetPairIndex(a, b);
-  auto dv = distvector_[index];
-  if (a > b) {
-    for (auto& x : dv) {
-      x = -x;
-    }
-  }
-  return dv;
+  return distvector_[GetPairIndex(a, b)];
 }
 
 inline bool

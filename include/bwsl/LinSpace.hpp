@@ -2,15 +2,14 @@
 //
 //                       BeagleWarlord's Support Library
 //
-// Copyright 2016-2018 Guido Masella. All Rights Reserved.
+// Copyright 2016-2019 Guido Masella. All Rights Reserved.
 // See LICENSE file for details
 //
 //===---------------------------------------------------------------------===//
 ///
-/// \file
-/// \version    2.0
-/// \author     Guido Masella (guido.masella@gmail.com)
-/// \brief      Definitions of the LinSpace class
+/// @file
+/// @author     Guido Masella (guido.masella@gmail.com)
+/// @brief      Definitions of the LinSpace class
 ///
 //===---------------------------------------------------------------------===//
 #ifndef BWSL_LINSPACE_HPP
@@ -25,7 +24,7 @@
 namespace bwsl {
 
 ///
-/// \brief      Generate sequence of equally spaced numbers
+/// Generate sequence of equally spaced numbers
 ///
 template<typename T>
 class LinSpace
@@ -153,7 +152,7 @@ template<typename T>
 bool
 operator==(const LinSpace<T>& a, const LinSpace<T>& b)
 {
-  return static_cast<bool>(a.step_ == b.step_);
+  return a.step_ == b.step_;
 };
 
 template<typename T>

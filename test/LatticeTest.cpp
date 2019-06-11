@@ -2,16 +2,14 @@
 //
 //                       BeagleWarlord's Support Library
 //
-// Copyright 2017 Guido Masella. All Rights Reserved.
+// Copyright 2017-2019 Guido Masella. All Rights Reserved.
 // See LICENSE file for details
 //
 //===---------------------------------------------------------------------===//
 ///
-/// \file
-/// \version    0.1
-/// \author     Guido Masella (guido.masella@gmail.com)
-/// \date       May, 2017
-/// \brief      Tests for the Lattice Class
+/// @file
+/// @author     Guido Masella (guido.masella@gmail.com)
+/// @brief      Tests for the Lattice Class
 ///
 //===---------------------------------------------------------------------===//
 // bwsl
@@ -55,19 +53,7 @@ TEST_CASE("Square Lattice", "[lattice]")
     REQUIRE(structure.GetDistance(0,8) == bwsl::Approx(sqrt(2)));
     REQUIRE(structure.GetDistance(4,7) == bwsl::Approx(1.0));
   }
-  //SECTION("windings are correct")
-  //{
-    //auto w = structure->GetWinding(0,1);
-    //auto w1 = structure->GetWinding(0,2);
-    //auto w3 = structure->GetWinding(2,8);
-    //REQUIRE(w.size() == 2);
-    //REQUIRE(w[0] == 0);
-    //REQUIRE(w[1] == 1);
-    //REQUIRE(w1[0] == 0);
-    //REQUIRE(w1[1] == -1);
-    //REQUIRE(w3[0] == -1);
-    //REQUIRE(w3[1] == 0);
-  //}
+
   SECTION("GetCoordinates and GetOffset invert each other")
   {
     for (auto i = 0ul; i < structure.GetNumSites(); i++) {
@@ -92,25 +78,30 @@ TEST_CASE("Big Square Lattice")
         auto coordj = structure.GetCoordinates(j);
         auto distx = coordi[0] - coordj[0];
         auto disty = coordi[1] - coordj[1];
-        if (distx > static_cast<long>(size[0]/2))
+        if (distx > static_cast<long>(size[0]/2)) {
           distx -= static_cast<long>(size[0]);
-        else if (distx <= -static_cast<long>(size[0]/2))
+        } else if (distx <= -static_cast<long>(size[0]/2)) {
           distx += static_cast<long>(size[0]);
-        if (disty > static_cast<long>(size[1]/2))
+        } if (disty >= static_cast<long>(size[1]/2)) {
           disty -= static_cast<long>(size[1]);
-        else if (disty <= -static_cast<long>(size[1]/2))
+        } else if (disty <= -static_cast<long>(size[1]/2)) {
           disty += static_cast<long>(size[1]);
+        }
         auto dist = sqrt(static_cast<double>(bwsl::square(distx) + bwsl::square(disty)));
 
         std::cout << i << " " << j << " " << (structure.GetVector(i,j)[1] == disty) << std::endl;
-        REQUIRE(structure.GetVector(i,j)[0] == distx);
-        REQUIRE(structure.GetVector(i,j)[1] == disty);
+        if (abs(distx) != size[0]/2) {
+          REQUIRE(structure.GetVector(i,j)[0] == distx);
+        }
+
+        if (abs(disty) != size[0]/2) {
+          REQUIRE(structure.GetVector(i,j)[1] == disty);
+        }
+
         REQUIRE(structure.GetDistance(i,j) == dist);
       }
     }
   }
-
-
 }
 
 // vim: set ft=cpp ts=2 sts=2 et sw=2 tw=80: //
