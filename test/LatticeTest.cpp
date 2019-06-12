@@ -65,7 +65,7 @@ TEST_CASE("Square Lattice", "[lattice]")
 
 TEST_CASE("Big Square Lattice")
 {
-  auto structure = Lattice(SquareLattice, std::vector<size_t>{36ul,36ul});
+  auto structure = Lattice(SquareLattice, std::vector<size_t>{16ul,16ul});
   auto nsites = structure.GetNumSites();
   auto size = structure.GetSize();
 
@@ -73,32 +73,23 @@ TEST_CASE("Big Square Lattice")
   {
     for (auto i = 0ul; i < nsites; i++) {
       auto coordi = structure.GetCoordinates(i);
-      for (auto j = 0ul; j< nsites; j++) {
+      for (auto j = i; j < nsites; j++) {
         if (i == j) continue;
         auto coordj = structure.GetCoordinates(j);
-        auto distx = coordi[0] - coordj[0];
-        auto disty = coordi[1] - coordj[1];
+        auto distx = coordj[0] - coordi[0];
+        auto disty = coordj[1] - coordi[1];
         if (distx > static_cast<long>(size[0]/2)) {
           distx -= static_cast<long>(size[0]);
-        } else if (distx <= -static_cast<long>(size[0]/2)) {
+        } else if (distx < -static_cast<long>(size[0]/2)) {
           distx += static_cast<long>(size[0]);
-        } if (disty >= static_cast<long>(size[1]/2)) {
+        } if (disty > static_cast<long>(size[1]/2)) {
           disty -= static_cast<long>(size[1]);
-        } else if (disty <= -static_cast<long>(size[1]/2)) {
+        } else if (disty < -static_cast<long>(size[1]/2)) {
           disty += static_cast<long>(size[1]);
         }
         auto dist = sqrt(static_cast<double>(bwsl::square(distx) + bwsl::square(disty)));
-
-        std::cout << i << " " << j << " " << (structure.GetVector(i,j)[1] == disty) << std::endl;
-        if (abs(distx) != size[0]/2) {
-          REQUIRE(structure.GetVector(i,j)[0] == distx);
-        }
-
-        if (abs(disty) != size[0]/2) {
-          REQUIRE(structure.GetVector(i,j)[1] == disty);
-        }
-
-        REQUIRE(structure.GetDistance(i,j) == dist);
+        REQUIRE(structure.GetDistance(i,j) == bwsl::Approx(dist));
+        REQUIRE(structure.GetDistance(j,i) == bwsl::Approx(dist));
       }
     }
   }

@@ -55,23 +55,22 @@ TEST_CASE("histograms can be constructed", "")
 
 TEST_CASE("sampling discrete distribution")
 {
-  std::random_device rd;
-  std::mt19937 gen(rd());
+  std::mt19937 gen(19890501UL);
   auto weights = std::vector<double>{{40, 10, 10, 40}};
   auto s = std::accumulate(weights.begin(), weights.end(), 0.0);
   std::discrete_distribution<> d(weights.begin(), weights.end());
-  auto count = 10000000ul;
+  auto count = 10000000UL;
 
   auto h = HistAccumulator(weights.size());
 
-  for (auto i = 0ul; i < count; i++) {
+  for (auto i = 0UL; i < count; i++) {
     auto val = d(gen);
     h.add(val);
   }
 
-  for (auto i = 0ul; i < weights.size(); i++) {
+  for (auto i = 0UL; i < weights.size(); i++) {
     auto p = weights[i] / s;
-    REQUIRE(h.GetResult(i) == Approx(p).epsilon(0.001));
+    REQUIRE(h.GetResult(i) == Approx(p).epsilon(0.01));
   }
 }
 

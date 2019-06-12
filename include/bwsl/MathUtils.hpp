@@ -7,10 +7,9 @@
 //
 //===---------------------------------------------------------------------===//
 ///
-/// \file
-/// \version    0.1
-/// \author     Guido Masella (guido.masella@gmail.com)
-/// \brief      Common math functions
+/// @file
+/// @author     Guido Masella (guido.masella@gmail.com)
+/// @brief      Common math functions
 ///
 //===---------------------------------------------------------------------===//
 #ifndef BWSL_MATHUTILS_HPP
@@ -29,29 +28,19 @@
 namespace bwsl {
 
 ///
-/// \brief      Type for indices of containers
-/// \version    2.0
-/// \author     Guido Masella (guido.masella@gmail.com)
-/// \date       June, 2016
-///
+/// Type for indices of containers.
 /// It is only an alias for std::size_t
 ///
 using SizeType = std::size_t;
 
 ///
-/// \brief      Type for distances between indices
-/// \version    2.0
-/// \author     Guido Masella (guido.masella@gmail.com)
-/// \date       March, 2017
-///
+/// Type for distances between indices
 /// It is only an alias for long
 ///
 using DiffType = long;
 
 ///
-/// \brief      Square functions
-/// \author     Guido Masella (guido.masella@gmail.com)
-/// \date       June, 2016
+/// Square functions
 ///
 template<typename T>
 inline T
@@ -62,7 +51,7 @@ square(T x)
 }
 
 ///
-/// \brief      Cube functions
+/// Cube functions
 ///
 template<typename T>
 inline T
@@ -73,7 +62,7 @@ cube(T x)
 }
 
 ///
-/// \brief      Product of all the elements of a container
+/// Product of all the elements of a container
 ///
 template<class Container, class T = typename Container::value_type>
 inline T
@@ -84,7 +73,7 @@ accumulate_product(const Container& v)
 }
 
 ///
-/// \brief      Sum of all the elements of a container
+/// Sum of all the elements of a container
 ///
 template<class Container, class T = typename Container::value_type>
 inline T
@@ -94,7 +83,7 @@ accumulate_sum(const Container& v)
 }
 
 ///
-/// \brief      Return the maximum value in a container
+/// Return the maximum value in a container
 ///
 template<class Container>
 inline typename Container::value_type
@@ -104,7 +93,7 @@ max(const Container& v)
 }
 
 ///
-/// \brief      Return the minimum value in a container
+/// Return the minimum value in a container
 ///
 template<class Container>
 inline typename Container::value_type
@@ -114,7 +103,7 @@ min(const Container& v)
 }
 
 ///
-/// \brief      Square sum of the elements of a container
+/// Square sum of the elements of a container
 ///
 template<class Container, class T>
 inline T
@@ -128,7 +117,7 @@ sum_squared(const Container& v)
 }
 
 ///
-/// \brief      Sign function
+/// Sign function
 ///
 template<typename T>
 inline int
@@ -138,7 +127,7 @@ sgn(T val)
 }
 
 ///
-/// \brief      Do the difference between unsigned types or return abs(a-b)
+/// Do the difference between unsigned types or return `abs(a-b)`
 ///
 template<typename T>
 inline T
@@ -148,7 +137,7 @@ absdiff(T a, T b)
 }
 
 ///
-/// \brief      Do the difference between unsigned types giving signed result
+/// Do the difference between unsigned types giving signed result
 ///
 template<typename T, typename R>
 inline R
@@ -162,8 +151,8 @@ signeddiff(T a, T b)
 }
 
 ///
-/// \brief      Compute the binomial coefficient (n choose k).
-/// \details    Uses a multiplicative formula
+/// Compute the binomial coefficient `(n choose k)`.
+/// Uses a multiplicative formula
 ///
 template<typename T = long>
 inline double
@@ -189,7 +178,7 @@ cbinomial(T n, T k)
 }
 
 ///
-/// \brief    Choose between the probabilities given
+/// Choose between the probabilities given
 ///
 template<class T = std::vector<double>, typename G>
 inline SizeType
@@ -210,7 +199,7 @@ choose_between(const T& probs, G& rng)
 }
 
 ///
-/// \brief    Choose between the comulative probabilities given
+/// Choose between the comulative probabilities given
 ///
 template<class T = std::vector<double>, typename G>
 inline SizeType
@@ -227,7 +216,7 @@ choose_between_psums(const T& comul, G& rng)
 }
 
 ///
-/// \brief    Choose with given probability
+/// Choose with given probability
 ///
 template<typename T = double, typename G>
 inline bool
@@ -238,7 +227,7 @@ choose_with_probability(T prob, G& rng)
 }
 
 ///
-/// \brief    Add the second array to the first one
+/// Add the second array to the first one
 ///
 template<class Container>
 inline Container&
@@ -253,9 +242,7 @@ sum_into(Container& left, const Container& right)
 }
 
 ///
-/// \brief    Subtract the second array to the first one
-/// \author   Guido Masella (guido.masella@gmail.com)
-/// \date     May, 2017
+/// Subtract the second array to the first one
 ///
 template<class Container>
 inline Container&
@@ -267,6 +254,19 @@ subtract_into(Container& left, const Container& right)
                  left.begin(),
                  std::minus<typename Container::value_type>());
   return left;
+}
+
+///
+/// Invert each component of a vector
+///
+template <class Container>
+inline Container&
+invert(Container& c)
+{
+  for (auto& x : c) {
+    x = -x;
+  }
+  return c;
 }
 
 ///
@@ -330,7 +330,6 @@ IndexToArray(size_t index, D const& size)
 
   return d;
 }
-
 
 } // namespace bwsl
 

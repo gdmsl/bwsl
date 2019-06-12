@@ -166,7 +166,7 @@ Bravais::GetVector(coords_t const& first, coords_t const& second) const
 {
   auto p = coords_t(dim_, 0.0);
   for (auto i = 0ul; i < dim_; i++) {
-    p[i] = first[i] - second[i];
+    p[i] = second[i] - first[i];
   }
 
   return GetRealSpace(p);
