@@ -27,7 +27,7 @@
 namespace bwsl {
 
 ///
-/// \brief      Generate logarithmically spaced numbers
+/// Generate logarithmically spaced numbers.
 ///
 template <typename T>
 class LogSpace

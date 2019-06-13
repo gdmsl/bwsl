@@ -7,10 +7,9 @@
 //
 //===---------------------------------------------------------------------===//
 ///
-/// \file
-/// \author     Guido Masella (guido.masella@gmail.com)
-/// \date       July, 2018
-/// \brief      Definitions for the HistAccumulator Class
+/// @file
+/// @author     Guido Masella (guido.masella@gmail.com)
+/// @brief      Definitions for the HistAccumulator Class
 ///
 //===---------------------------------------------------------------------===//
 #ifndef BWSL_HISTACCUMULATOR_HPP

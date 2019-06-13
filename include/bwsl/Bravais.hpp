@@ -7,10 +7,9 @@
 //
 //===---------------------------------------------------------------------===//
 ///
-/// \file
-/// \version    0.1
-/// \author     Guido Masella (guido.masella@gmail.com)
-/// \brief      Definitions for the Bravais Class
+/// @file
+/// @author     Guido Masella (guido.masella@gmail.com)
+/// @brief      Definitions for the Bravais Class
 ///
 //===---------------------------------------------------------------------===//
 #ifndef BWSL_BRAVAIS_HPP
@@ -27,7 +26,7 @@
 namespace bwsl {
 
 ///
-/// \brief Representation of an infinite bravais lattice
+/// Representation of an infinite bravais lattice.
 ///
 class Bravais
 {

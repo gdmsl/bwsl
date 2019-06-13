@@ -7,10 +7,9 @@
 //
 //===---------------------------------------------------------------------===//
 ///
-/// \file
-/// \version    0.1
-/// \author     Guido Masella (guido.masella@gmail.com)
-/// \brief      Definitions for the Approx Class
+/// @file
+/// @author     Guido Masella (guido.masella@gmail.com)
+/// @brief      Definitions for the Approx Class
 ///
 //===---------------------------------------------------------------------===//
 #ifndef BWSL_APPROX_HPP
@@ -24,8 +23,7 @@
 namespace bwsl {
 
 ///
-/// \brief      Smart type for comparison of floating point numbers
-/// \author     Guido Masella (guido.masella@gmail.com)
+/// Smart type for comparison of floating point numbers
 ///
 class Approx
 {

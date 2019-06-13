@@ -7,10 +7,9 @@
 //
 //===---------------------------------------------------------------------===//
 ///
-/// \file
-/// \version    0.3
-/// \author     Guido Masella (guido.masella@gmail.com)
-/// \brief      Definitions for the Lattice Class
+/// @file
+/// @author     Guido Masella (guido.masella@gmail.com)
+/// @brief      Definitions for the Lattice Class
 ///
 //===---------------------------------------------------------------------===//
 #ifndef BWSL_LATTICE_HPP
@@ -33,7 +32,7 @@
 namespace bwsl {
 
 ///
-/// \brief      Representation of a Lattice
+/// Representation of a Lattice.
 ///
 class Lattice
 {
