@@ -2,16 +2,14 @@
 //
 //                       BeagleWarlord's Support Library
 //
-// Copyright 2016-2018 Guido Masella. All Rights Reserved.
+// Copyright 2016-2019 Guido Masella. All Rights Reserved.
 // See LICENSE file for details
 //
 //===---------------------------------------------------------------------===//
 ///
-/// \file
-/// \version    0.1
-/// \author     Guido Masella (guido.masella@gmail.com)
-/// \date       May, 2017
-/// \brief      Implementation of the Foo Class
+/// @file
+/// @author     Guido Masella (guido.masella@gmail.com)
+/// @brief      Implementation of the Foo Class
 ///
 //===---------------------------------------------------------------------===//
 #include <Foo.hpp>

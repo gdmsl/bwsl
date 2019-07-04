@@ -1,10 +1,11 @@
-#
+# =========================================================================== #
 #                                   BWSL
+# =========================================================================== #
 #
-# CMAkeLists.txt
+# CMakeLists.txt
 #
-# Guido Masella (guido.masella@gmail.com)
-#
+# AUTHOR: Guido Masella (guido.masella@gmail.com)
+# =========================================================================== #
 
 cmake_minimum_required(VERSION 3.8)
 
@@ -36,8 +37,10 @@ list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 
 # Third-Party libraries
 add_subdirectory(libs)
-if(${CMAKE_VERSION} VERSION_LESS "3.11.0" OR NOT MASTER_PROJECT)
-  message("Please consider to switch to CMake 3.11.0")
+if(${CMAKE_VERSION} VERSION_LESS 3.11 OR NOT MASTER_PROJECT)
+  if (MASTER_PROJECT)
+    message("Please consider to switch to CMake 3.11")
+  endif()
   find_package(Boost REQUIRED)
 endif()
 

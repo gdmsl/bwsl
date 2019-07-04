@@ -2,15 +2,14 @@
 //
 //                       BeagleWarlord's Support Library
 //
-// Copyright 2016-2018 Guido Masella. All Rights Reserved.
+// Copyright 2016-2019 Guido Masella. All Rights Reserved.
 // See LICENSE file for details
 //
 //===---------------------------------------------------------------------===//
 ///
-/// \file
-/// \author     Guido Masella (guido.masella@gmail.com)
-/// \date       July, 2018
-/// \brief      Definitions for the Accumulator Class
+/// @file
+/// @author     Guido Masella (guido.masella@gmail.com)
+/// @brief      Definitions for the Accumulator Class
 ///
 //===---------------------------------------------------------------------===//
 #ifndef BWSL_ACCUMULATOR_HPP

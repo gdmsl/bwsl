@@ -1,3 +1,13 @@
+# =========================================================================== #
+#                                   BWSL
+# =========================================================================== #
+#
+# applications/CMAkeLists.txt
+# Applications and examples included in the BWSL
+#
+# AUTHOR: Guido Masella (guido.masella@gmail.com)
+# =========================================================================== #
+
 # dumpmt {{{
 add_executable(dumpmt dumpmt.cpp)
 target_link_libraries(

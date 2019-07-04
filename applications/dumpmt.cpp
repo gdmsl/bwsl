@@ -2,7 +2,7 @@
 //
 //                       BeagleWarlord's Support Library
 //
-// Copyright 2016-2018 Guido Masella. All Rights Reserved.
+// Copyright 2016-2010 Guido Masella. All Rights Reserved.
 // See LICENSE file for details
 //
 //===---------------------------------------------------------------------===//
@@ -32,10 +32,6 @@ main (int ac, char **av)
   auto rng = std::mt19937_64{seed};
 
   std::cout << rng << std::endl;
-
-  int i = 0;
-  unsigned int j = 0;
-  if (i < j) return EXIT_FAILURE;
 
   return EXIT_SUCCESS;
 }
