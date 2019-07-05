@@ -83,6 +83,8 @@ public:
   /// Get the distance vector in real space between two points
   double GetDistance(coords_t const& first, coords_t const& second) const;
 
+  std::pair<double, realvec_t> GetDistanceVector(coords_t const& first, coords_t const& second) const;
+
   /// Get one of the neighbors of a lattice point
   Bravais::coords_t GetNeighbor(coords_t const& point, size_t idx) const;
 
@@ -171,6 +173,8 @@ Bravais::GetVector(coords_t const& first, coords_t const& second) const
   return GetRealSpace(p);
 }
 
+
+
 inline double
 Bravais::GetDistance(coords_t const& first, coords_t const& second) const
 {
@@ -181,6 +185,18 @@ Bravais::GetDistance(coords_t const& first, coords_t const& second) const
   }
 
   return std::sqrt(d);
+}
+
+inline std::pair<double, Bravais::realvec_t>
+Bravais::GetDistanceVector(coords_t const& first, coords_t const& second) const
+{
+  auto p = GetVector(first, second);
+  auto d = 0.0;
+  for (size_t i = 0; i < dim_; i++) {
+    d += square(p[i]);
+  }
+
+  return std::make_pair(std::sqrt(d), p);
 }
 
 inline Bravais::coords_t

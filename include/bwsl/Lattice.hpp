@@ -53,7 +53,7 @@ public:
   using realvec_t = std::vector<double>;
 
   /// Default constructor
-  Lattice() = delete;
+  Lattice() = default;
 
   /// Construct a lattice with given size from an infinite bravais lattice
   Lattice(Bravais const& bravais,
@@ -127,6 +127,9 @@ protected:
   /// Compute the positions of all the lattice points
   std::vector<realvec_t> ComputePositions(Bravais const& bravais) const;
 
+  /// Compute the distance vectors
+  std::vector<realvec_t> ComputeVectors(Bravais const& bravais) const;
+
   /// Compute the vector of distances
   realvec_t ComputeDistances(Bravais const& bravais) const;
 
@@ -140,27 +143,30 @@ protected:
   size_t dim_{ 0 };
 
   /// Size of the lattice
-  const offsets_t size_{};
+  offsets_t size_{};
 
   /// Number of sites in the lattice
-  const size_t numsites_{ 0 };
+  size_t numsites_{ 0 };
 
   /// Number of pairs of lattice sites
-  const size_t numpairs_{ 0 };
+  size_t numpairs_{ 0 };
 
   /// Flag for closed/open boundary conditions
-  const bool openboundaries_{ false };
+  bool openboundaries_{ false };
 
 private:
   /// Positions of all the sites
   /// Assuming that the first site has position `(0,0)`
-  const std::vector<realvec_t> position_{};
+  std::vector<realvec_t> position_{};
+
+  /// All the distance vectors between pairs of sites
+  std::vector<realvec_t> vectors_{};
 
   /// All the distances on the lattice with minimum image convention
-  const realvec_t distance_{};
+  realvec_t distance_{};
 
   /// vector of nearest neighbors
-  const neighbors_t neighbors_{};
+  neighbors_t neighbors_{};
 
   /// Allowed values momenta
   const std::vector<realvec_t> momenta_{};
@@ -176,6 +182,7 @@ inline Lattice::Lattice(Bravais const& bravais,
   , numpairs_(pairs::GetNumPairs(numsites_))
   , openboundaries_(openboundaries)
   , position_(ComputePositions(bravais))
+  , vectors_(ComputeVectors(bravais))
   , distance_(ComputeDistances(bravais))
   , neighbors_(ComputeNeighbors(bravais))
   , momenta_(ComputeMomenta(bravais))
@@ -236,7 +243,7 @@ Lattice::ComputePositions(Bravais const& bravais) const
   auto p = std::vector<realvec_t>{};
   auto c0 = GetCoordinates(0);
   for (auto i = 0UL; i < numsites_; i++) {
-    auto x = bravais.GetVector(c0,GetCoordinates(i));
+    auto x = bravais.GetVector(c0, GetCoordinates(i));
     p.push_back(x);
   }
 
@@ -246,7 +253,20 @@ Lattice::ComputePositions(Bravais const& bravais) const
 inline Lattice::realvec_t
 Lattice::ComputeDistances(Bravais const& bravais) const
 {
-  auto p = realvec_t(numpairs_, 0.0);
+  auto p = realvec_t{};
+  std::transform(vectors_.begin(),
+                 vectors_.end(),
+                 std::back_inserter(p),
+                 [](realvec_t const& x) -> double {
+                   return sqrt(sum_squared<realvec_t, double>(x));
+                 });
+  return p;
+}
+
+inline std::vector<Lattice::realvec_t>
+Lattice::ComputeVectors(Bravais const& bravais) const
+{
+  auto p = std::vector<realvec_t>(numpairs_, realvec_t(dim_, 0.0));
   const auto imgsize = offsets_t(dim_, 3);
   const auto nimg = accumulate_product(imgsize);
 
@@ -258,13 +278,13 @@ Lattice::ComputeDistances(Bravais const& bravais) const
     }
     auto ci = GetCoordinates(i);
     auto cj = GetCoordinates(j);
-    auto pair2 = GetPairIndex(j,i);
+    auto pair2 = GetPairIndex(j, i);
 
     subtract_into(cj, ci);
     EnforceBoundaries(cj);
 
     // minimum distance found
-    auto mindist = bravais.GetDistance(c0, cj);
+    auto [mindist, minvec] = bravais.GetDistanceVector(c0, cj);
 
     // search for the minimum distance across the first shell of
     // periodic images if we are with closed boundary condition
@@ -275,15 +295,16 @@ Lattice::ComputeDistances(Bravais const& bravais) const
         for (auto m = 0UL; m < dim_; m++) {
           cjm[m] += (img[m] - 1) * size_[m];
         }
-        auto dist = bravais.GetDistance(c0, cjm);
+        auto [dist, vec] = bravais.GetDistanceVector(c0, cjm);
 
         if (dist < mindist) {
           mindist = dist;
+          minvec = vec;
         }
       }
     }
-    p[pair] = mindist;
-    p[pair2] = mindist;
+    p[pair] = minvec;
+    p[pair2] = minvec;
   }
   return p;
 }
