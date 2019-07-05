@@ -67,7 +67,7 @@ public:
   virtual ~Lattice() = default;
 
   /// Copy assignment operator
-  Lattice& operator=(Lattice const& that) = delete;
+  Lattice& operator=(Lattice const& that) = default;
 
   /// Get the dimensionality of the lattice
   size_t GetDim() const { return dim_; };
@@ -169,7 +169,7 @@ private:
   neighbors_t neighbors_{};
 
   /// Allowed values momenta
-  const std::vector<realvec_t> momenta_{};
+  std::vector<realvec_t> momenta_{};
 
 }; // class Lattice
 
