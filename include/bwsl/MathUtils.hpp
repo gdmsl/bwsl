@@ -330,6 +330,48 @@ IndexToArray(size_t index, D const& size)
   return d;
 }
 
+/// Interpolation-Binary search.
+/// Mixed interpolation and binary search to squeeze the best possible
+/// performances. Interpolation search is done until a window of 10000
+/// elements is reached. For smaller windows a binary search is performed.
+template<class ForwardIt, class T>
+ForwardIt
+upper_bound(ForwardIt first, ForwardIt last, const T& value)
+{
+  auto count = std::distance(first, last);
+  auto it = first;
+  auto to = it;
+  std::advance(to, count - 1);
+
+  while (count > 10000) {
+    auto itval = *it;
+    // check if the value is outside the lower bound of the search interval
+    if (value < itval) {
+      return it;
+    } else if (!(itval < value)) { // value <= it (so only if they are equal)
+      return ++it;
+    }
+
+    // check if the value is outside the upper bound of the search interval
+    if (!(value < *to)) { // value >= to
+      return ++to;
+    }
+
+    // compute the new position interpolating the position of the point
+    const auto np = std::round((value - itval) / (*to - itval) * count);
+    auto nt = it;
+    std::advance(nt, np);
+
+    if (!(value < *nt)) { // value >= *nt
+      it = ++nt;
+    } else {
+      to = --nt;
+    }
+    count = std::distance(it, to);
+  }
+  return upper_bound(it, ++to, value);
+}
+
 } // namespace bwsl
 
 // vim: set ts=2 sts=2 et sw=2 tw=80: //
