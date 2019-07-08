@@ -12,8 +12,7 @@
 /// @brief      Definitions of the LinSpace class
 ///
 //===---------------------------------------------------------------------===//
-#ifndef BWSL_LINSPACE_HPP
-#define BWSL_LINSPACE_HPP
+#pragma once
 
 // std
 #include <algorithm>
@@ -163,7 +162,5 @@ operator!=(const LinSpace<T>& a, const LinSpace<T>& b)
 }
 
 } // namespace bwsl
-
-#endif // BWSL_LINSPACE_HPP
 
 // vim: set ts=2 sts=2 et sw=2 tw=80: //

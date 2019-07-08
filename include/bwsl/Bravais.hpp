@@ -12,8 +12,7 @@
 /// @brief      Definitions for the Bravais Class
 ///
 //===---------------------------------------------------------------------===//
-#ifndef BWSL_BRAVAIS_HPP
-#define BWSL_BRAVAIS_HPP
+#pragma once
 
 // bwsl
 #include <bwsl/MathUtils.hpp>
@@ -243,7 +242,5 @@ const auto TriangularLattice = Bravais(
 );
 
 } // namespace bwsl
-
-#endif // BWSL_BRAVAIS_HPP
 
 // vim: set ft=cpp ts=2 sts=2 et sw=2 tw=80: //

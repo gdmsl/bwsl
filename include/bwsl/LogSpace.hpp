@@ -12,8 +12,7 @@
 /// @brief      Definitions of the LogSpace class
 ///
 //===---------------------------------------------------------------------===//
-#ifndef BWSL_LOGSPACE_HPP
-#define BWSL_LOGSPACE_HPP
+#pragma once
 
 //bwsl
 #include <bwsl/MathUtils.hpp>
@@ -173,7 +172,5 @@ LogSpace<T>::Collect(unsigned long n)
 }
 
 } // namespace bwsl
-
-#endif // BWSL_LOGSPACE_HPP
 
 // vim: set ts=2 sts=2 et sw=2 tw=80: //

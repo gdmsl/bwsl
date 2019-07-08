@@ -12,8 +12,7 @@
 /// @brief      Definitions for the Accumulator Class
 ///
 //===---------------------------------------------------------------------===//
-#ifndef BWSL_ACCUMULATOR_HPP
-#define BWSL_ACCUMULATOR_HPP
+#pragma once
 
 // boost
 #include <boost/archive/text_iarchive.hpp>
@@ -148,7 +147,5 @@ Accumulator::serialize(Archive& ar, const unsigned int version)
   ar& count_;
 }
 } // namespace bwsl
-
-#endif // BWSL_ACCUMULATOR_HPP
 
 // vim: set ft=cpp ts=2 sts=2 et sw=2 tw=80: //

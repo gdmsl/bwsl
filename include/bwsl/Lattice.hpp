@@ -12,8 +12,7 @@
 /// @brief      Definitions for the Lattice Class
 ///
 //===---------------------------------------------------------------------===//
-#ifndef BWSL_LATTICE_HPP
-#define BWSL_LATTICE_HPP
+#pragma once
 
 // bwsl
 #include <bwsl/Approx.hpp>
@@ -375,7 +374,5 @@ Lattice::GetIndividualIndices(size_t pair) const
 }
 
 } // namespace bwsl
-
-#endif // BWSL_LATTICE_HPP
 
 // vim: set ft=cpp ts=2 sts=2 et sw=2 tw=80: //

@@ -12,8 +12,7 @@
 /// @brief      Definitions for the HistAccumulator Class
 ///
 //===---------------------------------------------------------------------===//
-#ifndef BWSL_HISTACCUMULATOR_HPP
-#define BWSL_HISTACCUMULATOR_HPP
+#pragma once
 
 // bwsl
 #include <bwsl/Accumulator.hpp>
@@ -152,7 +151,5 @@ HistAccumulator::serialize(Archive& ar, const unsigned int version)
 }
 
 } // namespace bwsl
-
-#endif // BWSL_HISTACCUMULATOR_HPP
 
 // vim: set ft=cpp ts=2 sts=2 et sw=2 tw=80: //

@@ -12,8 +12,7 @@
 /// @brief      Definitions for the EnumString Class
 ///
 //===---------------------------------------------------------------------===//
-#ifndef BWSL_ENUMSTRING_HPP
-#define BWSL_ENUMSTRING_HPP
+#pragma once
 
 // boost
 #include <boost/preprocessor.hpp>
@@ -102,7 +101,5 @@
       enumerators)                                                             \
     throw EnumStringConversionFailed_##name(v);                                \
   }
-
-#endif // BWSL_ENUMSTRING_HPP
 
 // vim: set ft=cpp ts=2 sts=2 et sw=2 tw=80: //

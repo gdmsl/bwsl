@@ -12,8 +12,7 @@
 /// @brief      Definitions for the class Foo
 ///
 //===---------------------------------------------------------------------===//
-#ifndef BWSL_FILEUTILS_HPP
-#define BWSL_FILEUTILS_HPP
+#pragma once
 
 // std
 #include <fstream>
@@ -48,7 +47,5 @@ bool compare_files(const std::string& p1, const std::string& p2)
 }
 
 } // namespace bwsl
-
-#endif // BWSL_FILEUTILS_HPP
 
 // vim: set ft=cpp ts=2 sts=2 et sw=2 tw=80: //

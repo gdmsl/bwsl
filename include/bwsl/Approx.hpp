@@ -12,8 +12,7 @@
 /// @brief      Definitions for the Approx Class
 ///
 //===---------------------------------------------------------------------===//
-#ifndef BWSL_APPROX_HPP
-#define BWSL_APPROX_HPP
+#pragma once
 
 // std
 #include <algorithm>
@@ -116,7 +115,5 @@ Approx::Approx(double val)
 }
 
 } // namespace bwsl
-
-#endif // BWSL_APPROX_HPP
 
 // vim: set ft=cpp ts=2 sts=2 et sw=2 tw=80: //

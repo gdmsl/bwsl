@@ -12,8 +12,7 @@
 /// @brief      Common math functions
 ///
 //===---------------------------------------------------------------------===//
-#ifndef BWSL_MATHUTILS_HPP
-#define BWSL_MATHUTILS_HPP
+#pragma once
 
 // std
 #include <algorithm>
@@ -332,7 +331,5 @@ IndexToArray(size_t index, D const& size)
 }
 
 } // namespace bwsl
-
-#endif // MATHUTILS_HPP
 
 // vim: set ts=2 sts=2 et sw=2 tw=80: //

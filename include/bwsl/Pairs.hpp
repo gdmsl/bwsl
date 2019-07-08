@@ -64,8 +64,6 @@ GetNumPairs(size_t maxval)
   return square(maxval);
 }
 
-
-
 } // namespace pairs
 } // namespace bwsl
 
