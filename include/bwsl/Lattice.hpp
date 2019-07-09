@@ -96,7 +96,7 @@ public:
   double GetDistance(size_t a, size_t b) const;
 
   /// Get the real space coordinates of site `a`.
-  realvec_t Getvector(size_t a, size_t b) const;
+  realvec_t GetVector(size_t a, size_t b) const;
 
   /// Get the real space coordinates of site `a`.
   realvec_t GetPosition(size_t a) const;
@@ -225,7 +225,7 @@ Lattice::GetDistance(size_t a, size_t b) const
 }
 
 inline Lattice::realvec_t
-Lattice::GetDistance(size_t a, size_t b) const
+Lattice::GetVector(size_t a, size_t b) const
 {
   assert(a < numsites_);
   assert(b < numsites_);
