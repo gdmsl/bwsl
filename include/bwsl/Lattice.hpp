@@ -96,6 +96,9 @@ public:
   double GetDistance(size_t a, size_t b) const;
 
   /// Get the real space coordinates of site `a`.
+  realvec_t Getvector(size_t a, size_t b) const;
+
+  /// Get the real space coordinates of site `a`.
   realvec_t GetPosition(size_t a) const;
 
   /// Change a vector so that he will match the boundary conditions
@@ -216,7 +219,17 @@ Lattice::IsInBoundaries(coords_t const& coords) const
 inline double
 Lattice::GetDistance(size_t a, size_t b) const
 {
+  assert(a < numsites_);
+  assert(b < numsites_);
   return distance_[GetPairIndex(a, b)];
+}
+
+inline Lattice::realvec_t
+Lattice::GetDistance(size_t a, size_t b) const
+{
+  assert(a < numsites_);
+  assert(b < numsites_);
+  return vectors_[GetPairIndex(a, b)];
 }
 
 inline Lattice::realvec_t
