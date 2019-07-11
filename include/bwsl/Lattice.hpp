@@ -95,10 +95,19 @@ public:
   /// Distance betweeen two sites of the lattice
   double GetDistance(size_t a, size_t b) const;
 
-  /// Get the real space coordinates of site `a`.
+  /// Get the vector spawning from site @p a to site @p b .
   realvec_t GetVector(size_t a, size_t b) const;
 
-  /// Get the real space coordinates of site `a`.
+  /// Get the winding number times the system size for a hopping between the
+  /// sites @p a and @p b .
+  coords_t GetJump(size_t a, size_t b) const;
+
+  /// Given an accumulator for the winding number return the total winding.
+  /// The total winding is defined as the number of times we jump around the
+  /// boundaries.
+  coords_t GetWinding(coords_t jump) const;
+
+  /// Get the real space coordinates of site @p a . 
   realvec_t GetPosition(size_t a) const;
 
   /// Change a vector so that he will match the boundary conditions
@@ -230,6 +239,30 @@ Lattice::GetVector(size_t a, size_t b) const
   assert(a < numsites_);
   assert(b < numsites_);
   return vectors_[GetPairIndex(a, b)];
+}
+
+inline Lattice::coords_t
+Lattice::GetJump(size_t a, size_t b) const
+{
+  assert(a < numsites_);
+  assert(b < numsites_);
+  auto cb = GetCoordinates(b);
+  subtract_into(cb, GetCoordinates(a));
+  return cb;
+}
+
+inline Lattice::coords_t
+Lattice::GetWinding(Lattice::coords_t jumps) const
+{
+  assert(accumulated_wind.size() == dim_);
+
+  std::transform(jumps.begin(),
+                 jumps.end(),
+                 size_.begin(),
+                 jumps.begin(),
+                 std::divides<typename coords_t::valye_type>());
+
+  return jumps;
 }
 
 inline Lattice::realvec_t
