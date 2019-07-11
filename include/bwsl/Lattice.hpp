@@ -254,13 +254,13 @@ Lattice::GetJump(size_t a, size_t b) const
 inline Lattice::coords_t
 Lattice::GetWinding(Lattice::coords_t jumps) const
 {
-  assert(accumulated_wind.size() == dim_);
+  assert(jumps.size() == dim_);
 
   std::transform(jumps.begin(),
                  jumps.end(),
                  size_.begin(),
                  jumps.begin(),
-                 std::divides<typename coords_t::valye_type>());
+                 std::divides<typename coords_t::value_type>());
 
   return jumps;
 }
