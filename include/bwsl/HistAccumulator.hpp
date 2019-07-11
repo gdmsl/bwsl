@@ -35,7 +35,7 @@ class HistAccumulator
 {
 public:
   /// Default constructor
-  HistAccumulator() = delete;
+  HistAccumulator() = default;
 
   /// Construct an histogram
   HistAccumulator(size_t nbins);
@@ -48,6 +48,9 @@ public:
 
   /// Copy assignment operator
   HistAccumulator& operator=(const HistAccumulator& that) = default;
+
+  /// Resize the histogram
+  void Resize(size_t nbins);
 
   /// Reset the histogram
   void Reset();
@@ -134,11 +137,17 @@ HistAccumulator::force_add(size_t idx, T val)
 {
   if (idx >= nbins_) {
     acc_.resize(idx);
+    nbins_ = idx;
   }
   acc_[idx].add(val);
   count_ += 1ul;
 }
 
+inline void
+HistAccumulator::Resize(size_t nbins) {
+  nbins_ = nbins;
+  acc_.resize(nbins);
+}
 
 double
 HistAccumulator::GetResult(size_t idx) const
