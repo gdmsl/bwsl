@@ -107,7 +107,7 @@ public:
   /// boundaries.
   coords_t GetWinding(coords_t jump) const;
 
-  /// Get the real space coordinates of site @p a . 
+  /// Get the real space coordinates of site @p a .
   realvec_t GetPosition(size_t a) const;
 
   /// Change a vector so that he will match the boundary conditions
@@ -417,6 +417,15 @@ inline std::pair<size_t, size_t>
 Lattice::GetIndividualIndices(size_t pair) const
 {
   return bwsl::pairs::GetPair(pair, numsites_);
+}
+
+inline size_t
+Lattice::GetMappedSite(size_t a, size_t b) const
+{
+  auto cb = GetCoordinates(b);
+  subtract_into(cb, GetCoordinates(a));
+  EnforceBoundaries(cb);
+  return GetOffset(cb);
 }
 
 } // namespace bwsl
