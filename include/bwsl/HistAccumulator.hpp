@@ -59,11 +59,22 @@ public:
   /// Add a unitary measurement
   void add(size_t idx) { add(idx, 1.0); };
 
+  /// Add a measurement and increase the number of bins
+  template<class T>
+  void force_add(size_t idx, T val);
+
+  /// Add an unitary measurement and increase the number of bins
+  void force_add(size_t idx) { add(idx, 1.0); };
+
   /// Get a single component result
   double GetResult(size_t idx) const;
 
   /// Get the result of all the components
-  std::vector<double> GetResult() const;
+  std::vector<double> GetResults() const;
+
+  /// Get the results of all the components but divide by the one
+  /// given.
+  std::vector<double> GetResults(size_t idx) const;
 
   /// Get the number of measurements in total
   size_t GetCount() const { return count_; };
@@ -117,6 +128,18 @@ HistAccumulator::add(size_t idx, T val)
   count_ += 1ul;
 }
 
+template<class T>
+inline void
+HistAccumulator::force_add(size_t idx, T val)
+{
+  if (idx >= nbins_) {
+    acc_.resize(idx);
+  }
+  acc_[idx].add(val);
+  count_ += 1ul;
+}
+
+
 double
 HistAccumulator::GetResult(size_t idx) const
 {
@@ -130,7 +153,7 @@ HistAccumulator::GetResult(size_t idx) const
 }
 
 std::vector<double>
-HistAccumulator::GetResult() const
+HistAccumulator::GetResults() const
 {
   auto r = std::vector<double>(nbins_, 0.0);
 
@@ -138,6 +161,16 @@ HistAccumulator::GetResult() const
     r[i] = GetResult(i);
   }
 
+  return r;
+}
+
+std::vector<double>
+HistAccumulator::GetResults(size_t idx) const
+{
+  auto r = GetResults();
+  for (auto& v : r) {
+    v /= r[idx];
+  }
   return r;
 }
 
