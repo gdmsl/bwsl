@@ -27,7 +27,6 @@ namespace bwsl {
 class Approx
 {
 public:
-
   /// Default constructor
   Approx() = delete;
 
@@ -60,59 +59,58 @@ private:
   friend bool operator>(double lhs, Approx const& rhs);
 }; // class Approx
 
-bool
+inline bool
 operator==(double lhs, Approx const& rhs)
 {
   return std::abs(lhs - rhs.value_) <=
          rhs.epsilon_ * std::max(std::abs(lhs), std::abs(rhs.value_));
 }
 
-bool
+inline bool
 operator==(Approx const& lhs, double rhs)
 {
   return operator==(rhs, lhs);
 }
 
-bool
+inline bool
 operator!=(double lhs, Approx const& rhs)
 {
   return !operator==(lhs, rhs);
 }
 
-bool
+inline bool
 operator!=(Approx const& lhs, double rhs)
 {
   return !operator==(rhs, lhs);
 }
 
-bool
+inline bool
 operator<=(double lhs, Approx const& rhs)
 {
   return lhs < rhs.value_ || lhs == rhs;
 }
 
-bool
+inline bool
 operator<=(Approx const& lhs, double rhs)
 {
   return lhs.value_ < rhs || lhs == rhs;
 }
 
-bool
+inline bool
 operator>=(double lhs, Approx const& rhs)
 {
   return lhs > rhs.value_ || lhs == rhs;
 }
 
-bool
+inline bool
 operator>=(Approx const& lhs, double rhs)
 {
   return lhs.value_ > rhs || lhs == rhs;
 }
 
-Approx::Approx(double val)
+inline Approx::Approx(double val)
   : value_(val)
-{
-}
+{}
 
 } // namespace bwsl
 
