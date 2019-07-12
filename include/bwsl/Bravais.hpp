@@ -106,7 +106,7 @@ private:
   neighbors_t neighbors_{};
 }; // class Bravais
 
-Bravais::Bravais(size_t dim,
+inline Bravais::Bravais(size_t dim,
                  size_t gamma,
                  realvec_t pvectors,
                  realvec_t pivectors,
@@ -122,7 +122,7 @@ Bravais::Bravais(size_t dim,
   assert(neighbors_.size() == gamma / 2ul * dim);
 }
 
-Bravais::realvec_t
+inline Bravais::realvec_t
 Bravais::GetRealSpace(coords_t const& coords) const
 {
   assert(coords.size() == dim_ && "Dimensions mismatch");
@@ -148,7 +148,7 @@ Bravais::GetInverseVector(realvec_t const& realspace) const
   return p;
 }
 
-Bravais::realvec_t
+inline Bravais::realvec_t
 Bravais::GetReciprocalSpace(coords_t const& coords) const
 {
   assert(coords.size() == dim_ && "Dimensions mismatch");
@@ -161,7 +161,7 @@ Bravais::GetReciprocalSpace(coords_t const& coords) const
   return p;
 }
 
-Bravais::realvec_t
+inline Bravais::realvec_t
 Bravais::GetVector(coords_t const& first, coords_t const& second) const
 {
   auto p = coords_t(dim_, 0.0);
@@ -171,8 +171,6 @@ Bravais::GetVector(coords_t const& first, coords_t const& second) const
 
   return GetRealSpace(p);
 }
-
-
 
 inline double
 Bravais::GetDistance(coords_t const& first, coords_t const& second) const
