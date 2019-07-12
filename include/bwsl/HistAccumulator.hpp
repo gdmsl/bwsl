@@ -108,7 +108,7 @@ protected:
 private:
 }; // class HistAccumulator
 
-HistAccumulator::HistAccumulator(size_t nbins)
+inline HistAccumulator::HistAccumulator(size_t nbins)
   : nbins_(nbins)
   , acc_(nbins)
   , count_(0ul)
@@ -144,12 +144,13 @@ HistAccumulator::force_add(size_t idx, T val)
 }
 
 inline void
-HistAccumulator::Resize(size_t nbins) {
+HistAccumulator::Resize(size_t nbins)
+{
   nbins_ = nbins;
   acc_.resize(nbins);
 }
 
-double
+inline double
 HistAccumulator::GetResult(size_t idx) const
 {
   auto& c = acc_[idx];
@@ -161,7 +162,7 @@ HistAccumulator::GetResult(size_t idx) const
   return c.GetResult() * (c.GetCount() / static_cast<double>(count_));
 }
 
-std::vector<double>
+inline std::vector<double>
 HistAccumulator::GetResults() const
 {
   auto r = std::vector<double>(nbins_, 0.0);
@@ -173,7 +174,7 @@ HistAccumulator::GetResults() const
   return r;
 }
 
-std::vector<double>
+inline std::vector<double>
 HistAccumulator::GetResults(size_t idx) const
 {
   auto r = GetResults();

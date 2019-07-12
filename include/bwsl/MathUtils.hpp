@@ -335,7 +335,7 @@ IndexToArray(size_t index, D const& size)
 /// performances. Interpolation search is done until a window of 10000
 /// elements is reached. For smaller windows a binary search is performed.
 template<class ForwardIt, class T>
-ForwardIt
+inline ForwardIt
 upper_bound(ForwardIt first, ForwardIt last, const T& value)
 {
   auto count = std::distance(first, last);
