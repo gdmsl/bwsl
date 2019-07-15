@@ -136,8 +136,8 @@ inline void
 HistAccumulator::force_add(size_t idx, T val)
 {
   if (idx >= nbins_) {
-    acc_.resize(idx);
-    nbins_ = idx;
+    acc_.resize(idx+1UL);
+    nbins_ = idx+1UL;
   }
   acc_[idx].add(val);
   count_ += 1ul;
