@@ -67,7 +67,7 @@ public:
   void force_add(size_t idx, T val);
 
   /// Add an unitary measurement and increase the number of bins
-  void force_add(size_t idx) { add(idx, 1.0); };
+  void force_add(size_t idx) { force_add(idx, 1.0); };
 
   /// Get a single component result
   double GetResult(size_t idx) const;
