@@ -135,9 +135,10 @@ template<class T>
 inline void
 HistAccumulator::force_add(size_t idx, T val)
 {
-  if (idx >= nbins_) {
-    acc_.resize(idx+1UL);
-    nbins_ = idx+1UL;
+  while (idx >= nbins_) {
+    acc_.emplace_back();
+    nbins_++;
+    assert(nbins_ = acc_.size());
   }
   acc_[idx].add(val);
   count_ += 1ul;
