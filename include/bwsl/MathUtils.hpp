@@ -67,8 +67,8 @@ template<class Container, class T = typename Container::value_type>
 inline T
 accumulate_product(const Container& v)
 {
-  return static_cast<T>(
-    std::accumulate(v.begin(), v.end(), 1, std::multiplies<T>()));
+  return std::accumulate(
+    v.begin(), v.end(), static_cast<T>(1), std::multiplies<T>());
 }
 
 ///
@@ -78,7 +78,7 @@ template<class Container, class T = typename Container::value_type>
 inline T
 accumulate_sum(const Container& v)
 {
-  return static_cast<T>(std::accumulate(v.begin(), v.end(), 0));
+  return std::accumulate(v.begin(), v.end(), static_cast<T>(0));
 }
 
 ///
@@ -258,7 +258,7 @@ subtract_into(Container& left, const Container& right)
 ///
 /// Invert each component of a vector
 ///
-template <class Container>
+template<class Container>
 inline Container&
 invert(Container& c)
 {
@@ -271,12 +271,14 @@ invert(Container& c)
 ///
 /// Transform coordinates to index
 ///
-template <class C, class D>
+template<class C, class D>
 inline size_t
 ArrayToIndex(C const& a, D const& size)
 {
-  static_assert(std::is_same<typename D::value_type, size_t>::value, "type must contain size_t values");
-  static_assert(std::is_integral<typename C::value_type>::value, "Integral required.");
+  static_assert(std::is_same<typename D::value_type, size_t>::value,
+                "type must contain size_t values");
+  static_assert(std::is_integral<typename C::value_type>::value,
+                "Integral required.");
   auto dim = size.size();
   assert(a.size() == dim && "Dimensions not matching");
 
@@ -311,8 +313,10 @@ template<class C, class D>
 inline C
 IndexToArray(size_t index, D const& size)
 {
-  static_assert(std::is_same<typename D::value_type, size_t>::value, "type must contain size_t values");
-  static_assert(std::is_integral<typename C::value_type>::value, "Integral required.");
+  static_assert(std::is_same<typename D::value_type, size_t>::value,
+                "type must contain size_t values");
+  static_assert(std::is_integral<typename C::value_type>::value,
+                "Integral required.");
   auto dim = size.size();
   auto prod = 1ul;
 
