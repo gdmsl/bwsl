@@ -139,7 +139,7 @@ operator>=(Approx const& lhs, T rhs)
 }
 
 template <typename T>
-inline Approx::Approx(T val, double epsilon_)
+inline Approx::Approx(T val)
   : value_(static_cast<double>(val))
 {}
 
