@@ -144,10 +144,10 @@ inline Approx::Approx(T val)
 {}
 
 namespace literals {
-    Approx operator "" _a(long double val) {
+    inline Approx operator "" _a(long double val) {
         return Approx(val);
     }
-    Approx operator "" _a(unsigned long long val) {
+    inline Approx operator "" _a(unsigned long long val) {
         return Approx(val);
     }
 } // end namespace literals
