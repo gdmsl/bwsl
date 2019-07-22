@@ -143,15 +143,6 @@ inline Approx::Approx(T val)
   : value_(static_cast<double>(val))
 {}
 
-namespace literals {
-    inline Approx operator "" _a(long double val) {
-        return Approx(val);
-    }
-    inline Approx operator "" _a(unsigned long long val) {
-        return Approx(val);
-    }
-} // end namespace literals
-
 } // namespace bwsl
 
 // vim: set ft=cpp ts=2 sts=2 et sw=2 tw=80: //
