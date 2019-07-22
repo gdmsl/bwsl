@@ -43,12 +43,17 @@ public:
   /// Default destructor
   virtual ~Approx() = default;
 
-  Approx& SetEpsilon(double epsilon) { epsilon_ = epsilon; return *this; };
+  /// Set the absolute value of the error
+  Approx& SetAbs(double abs) { abs_ = std::abs(abs); return *this; };
+
+  /// Set the relative value of the error
+  Approx& SetRel(double rel) { rel_ = std::abs(rel); return *this; };
 
 protected:
 private:
   double value_{};
-  double epsilon_{std::numeric_limits<double>::epsilon() * 100};
+  double abs_{ 0.0 };
+  double rel_{ std::numeric_limits<double>::epsilon() * 100};
 
   template <typename T>
   friend bool operator==(Approx const& lhs, T rhs);
@@ -82,7 +87,7 @@ operator==(T lhs, Approx const& rhs)
 {
   auto lhs_v = static_cast<double>(lhs);
   return std::abs(lhs_v - rhs.value_) <=
-         rhs.epsilon_ * std::max(lhs_v, rhs.value_);
+         std::max(rhs.abs_, rhs.rel_ * std::max(lhs_v, rhs.value_);
 }
 
 template <typename T>
