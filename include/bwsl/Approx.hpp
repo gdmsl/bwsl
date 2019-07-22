@@ -48,7 +48,7 @@ public:
 protected:
 private:
   double value_{};
-  double epsilon_{};
+  double epsilon_{std::numeric_limits<double>::epsilon() * 100};
 
   template <typename T>
   friend bool operator==(Approx const& lhs, T rhs);
