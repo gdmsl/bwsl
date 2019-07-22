@@ -82,7 +82,7 @@ operator==(T lhs, Approx const& rhs)
 {
   auto lhs_v = static_cast<double>(lhs);
   return std::abs(lhs_v - rhs.value_) <=
-         rhs.epsilon_ * std::max(lhs_v rhs.value_);
+         rhs.epsilon_ * std::max(lhs_v, rhs.value_);
 }
 
 template <typename T>
