@@ -14,8 +14,12 @@
 //===---------------------------------------------------------------------===//
 #pragma once
 
-// bwls
+// bwsl 
 #include <bwsl/Accumulator.hpp>
+
+// fmt
+#include <fmt/format.h>
+#include <fmt/ostream.h>
 
 // std
 #include <map>
