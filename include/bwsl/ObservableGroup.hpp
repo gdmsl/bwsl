@@ -104,7 +104,7 @@ inline void
 ObservableGroup<Index_t>::PrintHeaders() const {
   auto out = std::ofstream(output_file_.c_str(), std::ios::trunc);
 
-  auto it = accumulator_.begin()
+  auto it = accumulator_.begin();
   fmt::print(out, "{}", it->first);
   while (++it != accumulator_.end()) {
     fmt::print(out, "{},", it->first);
@@ -117,7 +117,7 @@ inline void
 ObservableGroup<Index_t>::PrintAndReset() {
   auto out = std::ofstream(output_file_.c_str(), std::ios::app);
 
-  auto it = accumulator_.begin()
+  auto it = accumulator_.begin();
   fmt::print(out, "{}", it->second);
   while (++it != accumulator_.end()) {
     fmt::print(out, "{},", it->second.GetResult());
