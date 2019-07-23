@@ -87,7 +87,7 @@ ObservableGroup<Index_t>::ObservableGroup(std::string output_file,
   : output_file_(output_file)
 {
   for (auto i : indices) {
-    accumulator_.emplace(i, bwsl::Accumulator{});
+    accumulator_.try_emplace(i);
   }
 }
 
@@ -131,7 +131,7 @@ template<typename Index_t>
 inline ObservableGroup<Index_t>&
 ObservableGroup<Index_t>::AddObservable(Index_t key)
 {
-  accumulator_.try_emplace(key, bwsl::Accumulator{});
+  accumulator_.try_emplace(key);
   return *this;
 }
 
