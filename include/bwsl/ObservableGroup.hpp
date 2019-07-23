@@ -118,7 +118,7 @@ ObservableGroup<Index_t>::PrintAndReset() {
   auto out = std::ofstream(output_file_.c_str(), std::ios::app);
 
   auto it = accumulator_.begin();
-  fmt::print(out, "{}", it->second);
+  fmt::print(out, "{}", it->second.GetResult());
   while (++it != accumulator_.end()) {
     fmt::print(out, "{},", it->second.GetResult());
     it->second.Reset();
@@ -130,6 +130,7 @@ template <typename Index_t>
 inline ObservableGroup<Index_t>&
 ObservableGroup<Index_t>::AddObservable(Index_t key) {
   accumulator_.try_emplace(key);
+  return *this;
 }
 
 } // namespace bwsl
