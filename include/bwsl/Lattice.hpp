@@ -142,7 +142,7 @@ protected:
   std::vector<realvec_t> ComputeVectors(Bravais const& bravais) const;
 
   /// Compute the vector of distances
-  realvec_t ComputeDistances(Bravais const& bravais) const;
+  realvec_t ComputeDistances(Bravais const& /*bravais*/) const;
 
   /// Create the vector of neighbors
   neighbors_t ComputeNeighbors(Bravais const& bravais) const;
@@ -296,7 +296,7 @@ Lattice::ComputePositions(Bravais const& bravais) const
 }
 
 inline Lattice::realvec_t
-Lattice::ComputeDistances(Bravais const& bravais) const
+Lattice::ComputeDistances(Bravais const& /*bravais*/) const
 {
   auto p = realvec_t{};
   std::transform(vectors_.begin(),
