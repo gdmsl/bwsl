@@ -107,7 +107,7 @@ ObservableGroup<Index_t>::PrintHeaders() const
   auto it = accumulator_.begin();
   fmt::print(out, "{}", it->first);
   while (++it != accumulator_.end()) {
-    fmt::print(out, "{},", it->first);
+    fmt::print(out, ",{}", it->first);
   }
   fmt::print(out, "\n");
 }
@@ -121,7 +121,7 @@ ObservableGroup<Index_t>::PrintAndReset()
   auto it = accumulator_.begin();
   fmt::print(out, "{}", it->second.GetResult());
   while (++it != accumulator_.end()) {
-    fmt::print(out, "{},", it->second.GetResult());
+    fmt::print(out, ",{}", it->second.GetResult());
     it->second.Reset();
   }
   fmt::print(out, "\n");
