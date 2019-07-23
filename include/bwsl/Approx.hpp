@@ -34,7 +34,7 @@ public:
   Approx& operator=(Approx const& that) = delete;
 
   /// Constructor
-  template <typename T>
+  template<typename T>
   Approx(T val);
 
   /// Copy constructor
@@ -44,44 +44,52 @@ public:
   virtual ~Approx() = default;
 
   /// Set the absolute value of the error
-  Approx& SetAbs(double abs) { abs_ = std::abs(abs); return *this; };
+  Approx& SetAbs(double abs)
+  {
+    abs_ = std::abs(abs);
+    return *this;
+  };
 
   /// Set the relative value of the error
-  Approx& SetRel(double rel) { rel_ = std::abs(rel); return *this; };
+  Approx& SetRel(double rel)
+  {
+    rel_ = std::abs(rel);
+    return *this;
+  };
 
 protected:
 private:
   double value_{};
   double abs_{ 0.0 };
-  double rel_{ std::numeric_limits<double>::epsilon() * 100};
+  double rel_{ std::numeric_limits<double>::epsilon() * 100 };
 
-  template <typename T>
+  template<typename T>
   friend bool operator==(Approx const& lhs, T rhs);
-  template <typename T>
+  template<typename T>
   friend bool operator==(T lhs, Approx const& rhs);
-  template <typename T>
+  template<typename T>
   friend bool operator!=(double lhs, Approx const& rhs);
-  template <typename T>
+  template<typename T>
   friend bool operator!=(Approx const& lhs, T rhs);
-  template <typename T>
+  template<typename T>
   friend bool operator<=(T lhs, Approx const& rhs);
-  template <typename T>
+  template<typename T>
   friend bool operator<=(Approx const& lhs, T rhs);
-  template <typename T>
+  template<typename T>
   friend bool operator>=(T lhs, Approx const& rhs);
-  template <typename T>
+  template<typename T>
   friend bool operator>=(Approx const& lhs, T rhs);
-  template <typename T>
+  template<typename T>
   friend bool operator<(Approx lhs, T const& rhs);
-  template <typename T>
+  template<typename T>
   friend bool operator<(T lhs, Approx const& rhs);
-  template <typename T>
+  template<typename T>
   friend bool operator>(Approx lhs, T const& rhs);
-  template <typename T>
+  template<typename T>
   friend bool operator>(T lhs, Approx const& rhs);
 }; // class Approx
 
-template <typename T>
+template<typename T>
 inline bool
 operator==(T lhs, Approx const& rhs)
 {
@@ -90,28 +98,28 @@ operator==(T lhs, Approx const& rhs)
          std::max(rhs.abs_, std::abs(rhs.rel_ * rhs.value_));
 }
 
-template <typename T>
+template<typename T>
 inline bool
 operator==(Approx const& lhs, T rhs)
 {
   return operator==(rhs, lhs);
 }
 
-template <typename T>
+template<typename T>
 inline bool
 operator!=(T lhs, Approx const& rhs)
 {
   return !(lhs == rhs);
 }
 
-template <typename T>
+template<typename T>
 inline bool
 operator!=(Approx const& lhs, T rhs)
 {
   return !(rhs == lhs);
 }
 
-template <typename T>
+template<typename T>
 inline bool
 operator<=(T lhs, Approx const& rhs)
 {
@@ -119,7 +127,7 @@ operator<=(T lhs, Approx const& rhs)
   return lhs_v < rhs.value_ || lhs_v == rhs;
 }
 
-template <typename T>
+template<typename T>
 inline bool
 operator<=(Approx const& lhs, T rhs)
 {
@@ -127,7 +135,7 @@ operator<=(Approx const& lhs, T rhs)
   return lhs.value_ < rhs_v || lhs == rhs_v;
 }
 
-template <typename T>
+template<typename T>
 inline bool
 operator>=(T lhs, Approx const& rhs)
 {
@@ -135,7 +143,7 @@ operator>=(T lhs, Approx const& rhs)
   return lhs_v > rhs.value_ || lhs_v == rhs;
 }
 
-template <typename T>
+template<typename T>
 inline bool
 operator>=(Approx const& lhs, T rhs)
 {
@@ -143,7 +151,7 @@ operator>=(Approx const& lhs, T rhs)
   return lhs.value_ > rhs_v || lhs == rhs_v;
 }
 
-template <typename T>
+template<typename T>
 inline Approx::Approx(T val)
   : value_(static_cast<double>(val))
 {}
