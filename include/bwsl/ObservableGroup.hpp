@@ -120,6 +120,7 @@ ObservableGroup<Index_t>::PrintAndReset()
 
   auto it = accumulator_.begin();
   fmt::print(out, "{}", it->second.GetResult());
+  it->second.Reset();
   while (++it != accumulator_.end()) {
     fmt::print(out, ",{}", it->second.GetResult());
     it->second.Reset();
