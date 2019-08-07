@@ -253,10 +253,10 @@ Lattice::GetJump(size_t a, size_t b) const
     auto& cbi = cb[i];
     auto si = size_[i];
 
-    if (cbi > si / 2) {
+    if (cbi > static_cast<int>(si / 2)) {
       cbi -= si;
     }
-    if (cbi <= -si / 2) {
+    if (cbi <= -static_cast<int>(si / 2)) {
       cbi += si;
     }
   }
