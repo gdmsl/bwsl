@@ -248,6 +248,19 @@ Lattice::GetJump(size_t a, size_t b) const
   assert(b < numsites_);
   auto cb = GetCoordinates(b);
   subtract_into(cb, GetCoordinates(a));
+
+  for (auto i = 0UL; i < dim_; i++) {
+    auto& cbi = cb[i];
+    auto si = size_[i];
+
+    if (cbi > si / 2) {
+      cbi -= si;
+    }
+    if (cbi <= -si / 2) {
+      cbi += si;
+    }
+  }
+
   return cb;
 }
 
