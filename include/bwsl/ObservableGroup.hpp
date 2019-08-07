@@ -14,7 +14,7 @@
 //===---------------------------------------------------------------------===//
 #pragma once
 
-// bwsl 
+// bwsl
 #include <bwsl/Accumulator.hpp>
 
 // fmt
@@ -68,9 +68,7 @@ public:
   ObservableGroup& AddObservable(Index_t key);
 
 protected:
-
 private:
-
   /// Name of the associated output file
   std::string output_file_;
 
@@ -78,58 +76,64 @@ private:
   std::map<Index_t, bwsl::Accumulator> accumulator_{};
 }; // class ObservableGroup
 
-template <typename Index_t>
+template<typename Index_t>
 ObservableGroup<Index_t>::ObservableGroup(std::string output_file)
   : output_file_(output_file)
-{
-}
+{}
 
-template <typename Index_t>
-ObservableGroup<Index_t>::ObservableGroup(std::string output_file, std::vector<Index_t> const& indices)
+template<typename Index_t>
+ObservableGroup<Index_t>::ObservableGroup(std::string output_file,
+                                          std::vector<Index_t> const& indices)
   : output_file_(output_file)
 {
   for (auto i : indices) {
-    accumulator_.emplace(i);
+    accumulator_.try_emplace(i);
   }
 }
 
-template <typename Index_t>
+template<typename Index_t>
 inline void
-ObservableGroup<Index_t>::Measure(Index_t idx, double val) {
+ObservableGroup<Index_t>::Measure(Index_t idx, double val)
+{
   accumulator_.at(idx).add(val);
 }
 
-template <typename Index_t>
+template<typename Index_t>
 inline void
-ObservableGroup<Index_t>::PrintHeaders() const {
+ObservableGroup<Index_t>::PrintHeaders() const
+{
   auto out = std::ofstream(output_file_.c_str(), std::ios::trunc);
 
-  auto it = accumulator_.begin()
+  auto it = accumulator_.begin();
   fmt::print(out, "{}", it->first);
   while (++it != accumulator_.end()) {
-    fmt::print(out, "{},", it->first);
+    fmt::print(out, ",{}", it->first);
   }
   fmt::print(out, "\n");
 }
 
-template <typename Index_t>
+template<typename Index_t>
 inline void
-ObservableGroup<Index_t>::PrintAndReset() {
+ObservableGroup<Index_t>::PrintAndReset()
+{
   auto out = std::ofstream(output_file_.c_str(), std::ios::app);
 
-  auto it = accumulator_.begin()
-  fmt::print(out, "{}", it->second);
+  auto it = accumulator_.begin();
+  fmt::print(out, "{}", it->second.GetResult());
+  it->second.Reset();
   while (++it != accumulator_.end()) {
-    fmt::print(out, "{},", it->second.GetResult());
+    fmt::print(out, ",{}", it->second.GetResult());
     it->second.Reset();
   }
   fmt::print(out, "\n");
 }
 
-template <typename Index_t>
+template<typename Index_t>
 inline ObservableGroup<Index_t>&
-ObservableGroup<Index_t>::AddObservable(Index_t key) {
+ObservableGroup<Index_t>::AddObservable(Index_t key)
+{
   accumulator_.try_emplace(key);
+  return *this;
 }
 
 } // namespace bwsl
