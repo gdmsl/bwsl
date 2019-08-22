@@ -187,7 +187,7 @@ HistAccumulator::GetResults(size_t idx) const
 
 template<class Archive>
 inline void
-HistAccumulator::serialize(Archive& ar, const unsigned int version)
+HistAccumulator::serialize(Archive& ar, const unsigned int /* version */)
 {
   ar& nbins_;
   ar& acc_;

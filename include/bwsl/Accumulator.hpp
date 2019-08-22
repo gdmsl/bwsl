@@ -139,7 +139,7 @@ Accumulator::Reset()
 
 template<class Archive>
 inline void
-Accumulator::serialize(Archive& ar, const unsigned int version)
+Accumulator::serialize(Archive& ar, const unsigned int /* version */)
 {
   ar& measure_;
   ar& weight_;
