@@ -15,8 +15,7 @@
 #pragma once
 
 // boost
-#include <boost/archive/text_iarchive.hpp>
-#include <boost/archive/text_oarchive.hpp>
+#include <boost/serialization/serialization.hpp>
 #include <boost/serialization/version.hpp>
 
 // std

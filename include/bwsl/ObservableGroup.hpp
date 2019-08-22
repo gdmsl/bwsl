@@ -21,7 +21,13 @@
 #include <fmt/format.h>
 #include <fmt/ostream.h>
 
+// boost
+#include <boost/serialization/serialization.hpp>
+#include <boost/serialization/version.hpp>
+
 // std
+#include <fstream>
+#include <iostream>
 #include <map>
 #include <string>
 
@@ -74,6 +80,11 @@ private:
 
   /// Storage for the accumulators
   std::map<Index_t, bwsl::Accumulator> accumulator_{};
+
+  friend class boost::serialization::access;
+
+  template<class Archive>
+  void serialize(Archive & ar, const unsigned int version);
 }; // class ObservableGroup
 
 template<typename Index_t>
@@ -134,6 +145,14 @@ ObservableGroup<Index_t>::AddObservable(Index_t key)
 {
   accumulator_.try_emplace(key);
   return *this;
+}
+
+template<typename Index_t>
+template<class Archive>
+void ObservableGroup<Index_t>::serialize(Archive & ar, const unsigned int /* version */)
+{
+  ar & output_file_;
+  ar & accumulator_;
 }
 
 } // namespace bwsl
