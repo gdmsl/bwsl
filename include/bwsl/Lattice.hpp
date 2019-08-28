@@ -466,7 +466,7 @@ Lattice::ComputeSk(realvec_t occupations) const
   }
 
   for (auto i = 0UL; i < numsites_; i++) {
-    auto const k = GetMomentum(i);
+    auto const k = momenta_[i];
     auto im = 0.0;
     auto re = 0.0;
 
