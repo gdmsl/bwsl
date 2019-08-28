@@ -423,7 +423,7 @@ Lattice::ComputeMomenta(Bravais const& bravais) const
   for (auto i = 0ul; i < numsites_; i++) {
     auto ci = GetCoordinates(i);
     for (auto k = 0ul; k < ci.size(); k++) {
-      ci[k] -= size_[k] / 2ul + 1;
+      ci[k] -= size_[k] / 2ul - 1;
     }
     auto kappa = bravais.GetReciprocalSpace(ci);
     for (auto k = 0ul; k < kappa.size(); k++) {
@@ -489,6 +489,12 @@ inline void
 Lattice::SaveDistances(std::string fname) const {
   auto out = std::ofstream{fname.c_str()};
 
+  fmt::print(out, "Index");
+  for (auto i = 0UL; i < dim_; i++) {
+    fmt::print(out, ",d{}", i);
+  }
+  fmt::print(out, "\n");
+
   for (auto i = 0UL; i < numsites_; i++) {
     auto vec = GetVector(0, i);
     fmt::print(out, "{}", i);
@@ -502,6 +508,12 @@ Lattice::SaveDistances(std::string fname) const {
 inline void
 Lattice::SaveMomenta(std::string fname) const {
   auto out = std::ofstream{fname.c_str()};
+
+  fmt::print(out, "Index");
+  for (auto i = 0UL; i < dim_; i++) {
+    fmt::print(out, ",k{}", i);
+  }
+  fmt::print(out, "\n");
 
   for (auto i = 0UL; i < numsites_; i++) {
     fmt::print(out, "{}", i);
