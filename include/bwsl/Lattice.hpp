@@ -485,7 +485,7 @@ Lattice::ComputeSk(realvec_t occupations) const
   return sk;
 }
 
-void
+inline void
 Lattice::SaveDistances(std::string fname) const {
   auto out = std::ofstream{fname.c_str()};
 
@@ -499,7 +499,7 @@ Lattice::SaveDistances(std::string fname) const {
   }
 }
 
-void
+inline void
 Lattice::SaveMomenta(std::string fname) const {
   auto out = std::ofstream{fname.c_str()};
 
