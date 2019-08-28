@@ -20,13 +20,19 @@
 #include <bwsl/MathUtils.hpp>
 #include <bwsl/Pairs.hpp>
 
+// fmt
+#include <fmt/ostream.h>
+#include <fmt/format.h>
+
 // std
 #include <algorithm>
 #include <cassert>
 #include <cmath>
 #include <iostream>
+#include <fstream>
 #include <memory>
 #include <vector>
+#include <string>
 
 namespace bwsl {
 
@@ -133,6 +139,15 @@ public:
 
   /// Get an allowed momentum
   realvec_t GetMomentum(size_t a) const;
+
+  /// Compute the structure factor given the occupations of the sites
+  realvec_t ComputeSk(realvec_t occupations) const;
+
+  /// Save the distances on a file
+  void SaveDistances(std::string fname) const;
+
+  /// Save the momenta on a file
+  void SaveMomenta(std::string fname) const;
 
 protected:
   /// Compute the positions of all the lattice points
@@ -439,6 +454,63 @@ Lattice::GetMappedSite(size_t a, size_t b) const
   subtract_into(cb, GetCoordinates(a));
   EnforceBoundaries(cb);
   return GetOffset(cb);
+}
+
+inline Lattice::realvec_t
+Lattice::ComputeSk(realvec_t occupations) const
+{
+  auto sk = std::vector<double>(numsites_, 0.0);
+
+  if (openboundaries_) {
+    return sk;
+  }
+
+  for (auto i = 0UL; i < numsites_; i++) {
+    auto const k = GetMomentum(i);
+    auto im = 0.0;
+    auto re = 0.0;
+
+    for (auto j = 0UL; j < numsites_; j++) {
+      auto const x = GetVector(0, i);
+      auto prod = 0.0;
+      for (auto q = 0UL; q < dim_; q++) {
+        prod += k[q] * x[q];
+      }
+      im += sin(prod) * occupations[j];
+      re += cos(prod) * occupations[j];
+    }
+    sk[i] = (square(im) + square(re)) / square(numsites_);
+  }
+
+  return sk;
+}
+
+void
+Lattice::SaveDistances(std::string fname) const {
+  auto out = std::ofstream{fname.c_str()};
+
+  for (auto i = 0UL; i < numsites_; i++) {
+    auto vec = GetVector(0, i);
+    fmt::print(out, "{}", i);
+    for (auto const& v : vec) {
+      fmt::print(out, ",{}", v);
+    }
+    fmt::print(out, "\n");
+  }
+}
+
+void
+Lattice::SaveMomenta(std::string fname) const {
+  auto out = std::ofstream{fname.c_str()};
+
+  for (auto i = 0UL; i < numsites_; i++) {
+    fmt::print(out, "{}", i);
+    for (auto const& k : momenta_[i]) {
+      fmt::print(out, ",{}", k);
+    }
+    fmt::print(out, "\n");
+  }
+
 }
 
 } // namespace bwsl
