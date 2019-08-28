@@ -471,7 +471,7 @@ Lattice::ComputeSk(realvec_t occupations) const
     auto re = 0.0;
 
     for (auto j = 0UL; j < numsites_; j++) {
-      auto const x = GetVector(0, i);
+      auto const x = GetVector(0, j);
       auto prod = 0.0;
       for (auto q = 0UL; q < dim_; q++) {
         prod += k[q] * x[q];
