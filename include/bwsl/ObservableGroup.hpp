@@ -22,8 +22,8 @@
 #include <fmt/ostream.h>
 
 // boost
-#include <boost/serialization/serialization.hpp>
 #include <boost/serialization/map.hpp>
+#include <boost/serialization/serialization.hpp>
 #include <boost/serialization/version.hpp>
 
 // std
@@ -70,7 +70,7 @@ public:
   void PrintHeaders() const;
 
   /// Print the results and reset all the accumulators
-  void PrintAndReset();
+  void PrintAndReset(size_t precision = 10UL);
 
   ObservableGroup& AddObservable(Index_t key);
 
@@ -85,7 +85,7 @@ private:
   friend class boost::serialization::access;
 
   template<class Archive>
-  void serialize(Archive & ar, const unsigned int version);
+  void serialize(Archive& ar, const unsigned int version);
 }; // class ObservableGroup
 
 template<typename Index_t>
@@ -126,15 +126,15 @@ ObservableGroup<Index_t>::PrintHeaders() const
 
 template<typename Index_t>
 inline void
-ObservableGroup<Index_t>::PrintAndReset()
+ObservableGroup<Index_t>::PrintAndReset(size_t precision)
 {
   auto out = std::ofstream(output_file_.c_str(), std::ios::app);
 
   auto it = accumulator_.begin();
-  fmt::print(out, "{}", it->second.GetResult());
+  fmt::print(out, "{:.{}e}", it->second.GetResult(), precision);
   it->second.Reset();
   while (++it != accumulator_.end()) {
-    fmt::print(out, ",{}", it->second.GetResult());
+    fmt::print(out, ",{:.{}e}", it->second.GetResult(), precision);
     it->second.Reset();
   }
   fmt::print(out, "\n");
@@ -150,10 +150,12 @@ ObservableGroup<Index_t>::AddObservable(Index_t key)
 
 template<typename Index_t>
 template<class Archive>
-void ObservableGroup<Index_t>::serialize(Archive & ar, const unsigned int /* version */)
+void
+ObservableGroup<Index_t>::serialize(Archive& ar,
+                                    const unsigned int /* version */)
 {
-  ar & output_file_;
-  ar & accumulator_;
+  ar& output_file_;
+  ar& accumulator_;
 }
 
 } // namespace bwsl
