@@ -14,7 +14,7 @@
 /// \brief      Tests for the EnumString Macro
 ///
 //===---------------------------------------------------------------------===//
-// camarosgf
+// bwsl
 #include <bwsl/EnumString.hpp>
 
 // std

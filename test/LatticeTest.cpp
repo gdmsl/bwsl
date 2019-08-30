@@ -25,6 +25,7 @@
 #include <catch2/catch.hpp>
 
 using namespace bwsl;
+using CApprox = Catch::Detail::Approx;
 
 // TDD example
 TEST_CASE("Square Lattice", "[lattice]")
@@ -47,11 +48,11 @@ TEST_CASE("Square Lattice", "[lattice]")
   }
   SECTION("distances are correct")
   {
-    REQUIRE(structure.GetDistance(0,1) == bwsl::Approx(1.0));
-    REQUIRE(structure.GetDistance(0,2) == bwsl::Approx(1.0));
-    REQUIRE(structure.GetDistance(0,4) == bwsl::Approx(sqrt(2)));
-    REQUIRE(structure.GetDistance(0,8) == bwsl::Approx(sqrt(2)));
-    REQUIRE(structure.GetDistance(4,7) == bwsl::Approx(1.0));
+    REQUIRE(structure.GetDistance(0,1) == CApprox(1.0));
+    REQUIRE(structure.GetDistance(0,2) == CApprox(1.0));
+    REQUIRE(structure.GetDistance(0,4) == CApprox(sqrt(2)));
+    REQUIRE(structure.GetDistance(0,8) == CApprox(sqrt(2)));
+    REQUIRE(structure.GetDistance(4,7) == CApprox(1.0));
   }
 
   SECTION("GetCoordinates and GetOffset invert each other")
@@ -88,8 +89,8 @@ TEST_CASE("Big Square Lattice")
           disty += static_cast<long>(size[1]);
         }
         auto dist = sqrt(static_cast<double>(bwsl::square(distx) + bwsl::square(disty)));
-        REQUIRE(structure.GetDistance(i,j) == bwsl::Approx(dist));
-        REQUIRE(structure.GetDistance(j,i) == bwsl::Approx(dist));
+        REQUIRE(structure.GetDistance(i,j) == CApprox(dist));
+        REQUIRE(structure.GetDistance(j,i) == CApprox(dist));
       }
     }
   }

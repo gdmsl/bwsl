@@ -376,6 +376,16 @@ upper_bound(ForwardIt first, ForwardIt last, const T& value)
   return upper_bound(it, ++to, value);
 }
 
+template<typename T>
+T
+GetGCD(T a, T b)
+{
+  if (b == 0) {
+    return a;
+  }
+  return GetGCD(b, a % b);
+}
+
 } // namespace bwsl
 
 // vim: set ts=2 sts=2 et sw=2 tw=80: //
