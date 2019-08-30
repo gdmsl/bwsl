@@ -2,13 +2,13 @@
 add_compile_options(-W -Wpedantic -Wall -Wextra)
 
 # LatticeTest {{{
-add_executable(LatticeTest LatticeTest.cpp)
-target_link_libraries(LatticeTest
-  PRIVATE
-    bwsl
-    Catch2::Catch2
-  )
-add_test(NAME bwsl.Lattice COMMAND $<TARGET_FILE:LatticeTest>)
+#add_executable(LatticeTest LatticeTest.cpp)
+#target_link_libraries(LatticeTest
+#  PRIVATE
+#    bwsl
+#    Catch2::Catch2
+#  )
+#add_test(NAME bwsl.Lattice COMMAND $<TARGET_FILE:LatticeTest>)
 # }}}
 
 # EnumString {{{

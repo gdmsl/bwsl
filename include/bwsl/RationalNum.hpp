@@ -14,11 +14,17 @@
 //===---------------------------------------------------------------------===//
 #pragma once
 
-/// bwsl
+// bwsl
+#include <bwsl/Exceptions.hpp>
+#include <bwsl/MathUtils.hpp>
 #include <bwsl/RelationalUtils.hpp>
+
+// fmt
+#include <fmt/format.h>
 
 // std
 #include <iostream>
+#include <sstream>
 
 namespace bwsl {
 
@@ -47,12 +53,6 @@ public:
 
   /// Constructor
   RationalNum(T num, T den);
-
-  /// Conversion to double
-  operator double() const { return static_cast<double>(num_) / den_; };
-
-  /// Conversion operator to integer type
-  operator T() const { return num_ / den_; };
 
   /// @name Relational Operators
   /// @{
@@ -125,8 +125,13 @@ operator>>(std::istream& in, RationalNum<T>& rhs)
 {
   auto sep = char{};
   in >> rhs.num_;
-  in >> sep;
-  in >> sep;
+  for (auto i = 0UL; i < 2UL; i++) {
+    in >> sep;
+    if (sep != '/') {
+      in.setstate(std::ios_base::failbit);
+      return in;
+    }
+  }
   in >> rhs.den_;
 
   return in;
@@ -252,6 +257,21 @@ template<class T>
 inline RationalNum<T> operator*(T const& lhs, RationalNum<T> const& rhs)
 {
   return rhs * lhs;
+}
+
+template<class T>
+inline void FromString(std::string const& str, RationalNum<T>& rhs) {
+  auto iss = std::istringstream{str};
+  iss >> rhs;
+
+  if (iss.fail()) {
+    throw bwsl::exception::BadParsing{};
+  }
+}
+
+template<class T>
+inline void ToString(RationalNum<T> const& rhs) {
+  return fmt::format("{}", rhs);
 }
 
 TEMPLATEOVERLOADRELATIONAL(RationalNum<T>, RationalNum<T>, T)
