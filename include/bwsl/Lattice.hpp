@@ -146,6 +146,9 @@ public:
   /// Save the distances on a file
   void SaveDistances(std::string fname) const;
 
+  /// Save the positions on a file
+  void SavePositions(std::string fname) const;
+
   /// Save the momenta on a file
   void SaveMomenta(std::string fname) const;
 
@@ -483,6 +486,26 @@ Lattice::ComputeSk(realvec_t occupations) const
   }
 
   return sk;
+}
+
+inline void
+Lattice::SavePositions(std::string fname) const {
+  auto out = std::ofstream{fname.c_str()};
+
+  fmt::print(out, "Index");
+  for (auto i = 0UL; i < dim_; i++) {
+    fmt::print(out, ",x{}", i);
+  }
+  fmt::print(out, "\n");
+
+  for (auto i = 0UL; i < numsites_; i++) {
+    auto vec = GetPosition(i);
+    fmt::print(out, "{}", i);
+    for (auto const& v : vec) {
+      fmt::print(out, ",{}", v);
+    }
+    fmt::print(out, "\n");
+  }
 }
 
 inline void
