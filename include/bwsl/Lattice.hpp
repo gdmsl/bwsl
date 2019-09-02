@@ -492,7 +492,7 @@ inline void
 Lattice::SavePositions(std::string fname) const {
   auto out = std::ofstream{fname.c_str()};
 
-  fmt::print(out, "Index");
+  fmt::print(out, "i");
   for (auto i = 0UL; i < dim_; i++) {
     fmt::print(out, ",x{}", i);
   }
@@ -512,7 +512,7 @@ inline void
 Lattice::SaveDistances(std::string fname) const {
   auto out = std::ofstream{fname.c_str()};
 
-  fmt::print(out, "Index");
+  fmt::print(out, "i");
   for (auto i = 0UL; i < dim_; i++) {
     fmt::print(out, ",d{}", i);
   }
@@ -532,7 +532,7 @@ inline void
 Lattice::SaveMomenta(std::string fname) const {
   auto out = std::ofstream{fname.c_str()};
 
-  fmt::print(out, "Index");
+  fmt::print(out, "i");
   for (auto i = 0UL; i < dim_; i++) {
     fmt::print(out, ",k{}", i);
   }
