@@ -315,7 +315,7 @@ FromString(std::string const& str, RationalNum<T>& rhs)
 }
 
 template<class T>
-inline void
+inline std::string
 ToString(RationalNum<T> const& rhs)
 {
   return fmt::format("{}", rhs);
