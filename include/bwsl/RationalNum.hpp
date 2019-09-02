@@ -54,37 +54,74 @@ public:
   /// Constructor
   RationalNum(T num, T den);
 
+  /// Explicit conversion to double
+  explicit operator double() { return static_cast<double>(num_) / den_; };
+
+  /// Explicit conversion to integer
+  explicit operator T() { return num_ / den_; };
+
   /// @name Relational Operators
   /// @{
-  friend bool operator<(RationalNum<T> const& rhs, RationalNum<T> const& lhs);
-  friend bool operator<(RationalNum<T> const& rhs, T const& lhs);
-  friend bool operator<(T const& rhs, RationalNum<T> const& lhs);
+  template<class G>
+  friend bool operator<(RationalNum<G> const& rhs, RationalNum<G> const& lhs);
+
+  template<class G>
+  friend bool operator<(RationalNum<G> const& rhs, G const& lhs);
+
+  template<class G>
+  friend bool operator<(G const& rhs, RationalNum<G> const& lhs);
   /// @}
 
   /// @name Arithmetic operations
   /// @{
-  friend RationalNum<T> operator+(RationalNum<T> const& lhs,
-                                  RationalNum<T> const& rhs);
-  friend RationalNum<T> operator-(RationalNum<T> const& lhs,
-                                  RationalNum<T> const& rhs);
-  friend RationalNum<T> operator/(RationalNum<T> const& lhs,
-                                  RationalNum<T> const& rhs);
-  friend RationalNum<T> operator*(RationalNum<T> const& lhs,
-                                  RationalNum<T> const& rhs);
-  friend RationalNum<T> operator+(RationalNum<T> const& lhs, T const& rhs);
-  friend RationalNum<T> operator-(RationalNum<T> const& lhs, T const& rhs);
-  friend RationalNum<T> operator/(RationalNum<T> const& lhs, T const& rhs);
-  friend RationalNum<T> operator*(RationalNum<T> const& lhs, T const& rhs);
-  friend RationalNum<T> operator+(T const& lhs, RationalNum<T> const& rhs);
-  friend RationalNum<T> operator-(T const& lhs, RationalNum<T> const& rhs);
-  friend RationalNum<T> operator/(T const& lhs, RationalNum<T> const& rhs);
-  friend RationalNum<T> operator*(T const& lhs, RationalNum<T> const& rhs);
+  template<class G>
+  friend RationalNum<G> operator+(RationalNum<G> const& lhs,
+                                  RationalNum<G> const& rhs);
+
+  template<class G>
+  friend RationalNum<G> operator-(RationalNum<G> const& lhs,
+                                  RationalNum<G> const& rhs);
+
+  template<class G>
+  friend RationalNum<G> operator/(RationalNum<G> const& lhs,
+                                  RationalNum<G> const& rhs);
+
+  template<class G>
+  friend RationalNum<G> operator*(RationalNum<G> const& lhs,
+                                  RationalNum<G> const& rhs);
+
+  template<class G>
+  friend RationalNum<G> operator+(RationalNum<G> const& lhs, G const& rhs);
+
+  template<class G>
+  friend RationalNum<G> operator-(RationalNum<G> const& lhs, G const& rhs);
+
+  template<class G>
+  friend RationalNum<G> operator/(RationalNum<G> const& lhs, G const& rhs);
+
+  template<class G>
+  friend RationalNum<G> operator*(RationalNum<G> const& lhs, G const& rhs);
+
+  template<class G>
+  friend RationalNum<G> operator+(G const& lhs, RationalNum<G> const& rhs);
+
+  template<class G>
+  friend RationalNum<G> operator-(G const& lhs, RationalNum<G> const& rhs);
+
+  template<class G>
+  friend RationalNum<G> operator/(G const& lhs, RationalNum<G> const& rhs);
+
+  template<class G>
+  friend RationalNum<G> operator*(G const& lhs, RationalNum<G> const& rhs);
   /// @}
 
   /// @name Stream operators
   /// @{
-  friend std::ostream& operator<<(std::ostream& out, RationalNum<T> const&);
-  friend std::istream& operator>>(std::istream& in, RationalNum<T>&);
+  template<class G>
+  friend std::ostream& operator<<(std::ostream& out, RationalNum<G> const&);
+
+  template<class G>
+  friend std::istream& operator>>(std::istream& in, RationalNum<G>&);
   /// @}
 
   /// Check if the number is an integer
@@ -154,114 +191,122 @@ RationalNum<T>::Simplify()
   den_ = den_ / g;
 }
 
-template<class T>
+template<class G>
 inline bool
-operator<(const RationalNum<T>& lhs, const RationalNum<T>& rhs)
+operator<(const RationalNum<G>& lhs, const RationalNum<G>& rhs)
 {
   return lhs.num_ * rhs.den_ < rhs.num_ * lhs.den_;
 }
 
-template<class T>
+template<class G>
 inline bool
-operator<(const RationalNum<T>& lhs, const T& rhs)
+operator<(const RationalNum<G>& lhs, const G& rhs)
 {
   return lhs.num_ / lhs.den_ < rhs;
 }
 
-template<class T>
+template<class G>
 inline bool
-operator<(const T& lhs, const RationalNum<T>& rhs)
+operator<(const G& lhs, const RationalNum<G>& rhs)
 {
   return lhs < rhs.num_ / rhs.den_;
 }
 
-template<class T>
-inline RationalNum<T>
-operator+(RationalNum<T> const& lhs, RationalNum<T> const& rhs)
+TEMPLATEOVERLOADRELATIONAL(RationalNum<G>, RationalNum<G>, G)
+TEMPLATEOVERLOADRELATIONAL(RationalNum<G>, G, G)
+TEMPLATEOVERLOADRELATIONAL(G, RationalNum<G>, G)
+
+template<class G>
+inline RationalNum<G>
+operator+(RationalNum<G> const& lhs, RationalNum<G> const& rhs)
 {
-  return RationalNum<T>(lhs.num_ * rhs.den_ + rhs.num_ * lhs.den_,
+  return RationalNum<G>(lhs.num_ * rhs.den_ + rhs.num_ * lhs.den_,
                         lhs.den_ * rhs.den_);
 }
 
-template<class T>
-inline RationalNum<T>
-operator-(RationalNum<T> const& lhs, RationalNum<T> const& rhs)
+template<class G>
+inline RationalNum<G>
+operator-(RationalNum<G> const& lhs, RationalNum<G> const& rhs)
 {
-  return RationalNum<T>(lhs.num_ * rhs.den_ - rhs.num_ * lhs.den_,
+  return RationalNum<G>(lhs.num_ * rhs.den_ - rhs.num_ * lhs.den_,
                         lhs.den_ * rhs.den_);
 }
 
-template<class T>
-inline RationalNum<T>
-operator/(RationalNum<T> const& lhs, RationalNum<T> const& rhs)
+template<class G>
+inline RationalNum<G>
+operator/(RationalNum<G> const& lhs, RationalNum<G> const& rhs)
 {
-  return RationalNum<T>(lhs.num_ * rhs.den_, rhs.num_ * lhs.den_);
+  return RationalNum<G>(lhs.num_ * rhs.den_, rhs.num_ * lhs.den_);
 }
 
-template<class T>
-inline RationalNum<T> operator*(RationalNum<T> const& lhs,
-                                RationalNum<T> const& rhs)
+template<class G>
+inline RationalNum<G>
+operator*(RationalNum<G> const& lhs, RationalNum<G> const& rhs)
 {
-  return RationalNum<T>(lhs.num_ * rhs.num_, lhs.den_ * rhs.den_);
+  return RationalNum<G>(lhs.num_ * rhs.num_, lhs.den_ * rhs.den_);
 }
 
-template<class T>
-inline RationalNum<T>
-operator+(RationalNum<T> const& lhs, T const& rhs)
+template<class G>
+inline RationalNum<G>
+operator+(RationalNum<G> const& lhs, G const& rhs)
 {
-  return RationalNum<T>(lhs.num_ + rhs * lhs.den_, lhs.den_);
+  return RationalNum<G>(lhs.num_ + rhs * lhs.den_, lhs.den_);
 }
 
-template<class T>
-inline RationalNum<T>
-operator-(RationalNum<T> const& lhs, T const& rhs)
+template<class G>
+inline RationalNum<G>
+operator-(RationalNum<G> const& lhs, G const& rhs)
 {
-  return RationalNum<T>(lhs.num_ - rhs * lhs.den_, lhs.den_);
+  return RationalNum<G>(lhs.num_ - rhs * lhs.den_, lhs.den_);
 }
 
-template<class T>
-inline RationalNum<T>
-operator/(RationalNum<T> const& lhs, T const& rhs)
+template<class G>
+inline RationalNum<G>
+operator/(RationalNum<G> const& lhs, G const& rhs)
 {
-  return RationalNum<T>(lhs.num_, lhs.den_ * rhs);
+  return RationalNum<G>(lhs.num_, lhs.den_ * rhs);
 }
 
-template<class T>
-inline RationalNum<T> operator*(RationalNum<T> const& lhs, T const& rhs)
+template<class G>
+inline RationalNum<G>
+operator*(RationalNum<G> const& lhs, G const& rhs)
 {
-  return RationalNum<T>(lhs.num_ * rhs, lhs.den_);
+  return RationalNum<G>(lhs.num_ * rhs, lhs.den_);
 }
 
-template<class T>
-inline RationalNum<T>
-operator+(T const& lhs, RationalNum<T> const& rhs)
+template<class G>
+inline RationalNum<G>
+operator+(G const& lhs, RationalNum<G> const& rhs)
 {
   return rhs + lhs;
 }
 
-template<class T>
-inline RationalNum<T>
-operator-(T const& lhs, RationalNum<T> const& rhs)
+template<class G>
+inline RationalNum<G>
+operator-(G const& lhs, RationalNum<G> const& rhs)
 {
-  return rhs - lhs;
+  return RationalNum<G>{lhs * rhs.den_ - rhs.num_, rhs.den_};
 }
 
-template<class T>
-inline RationalNum<T>
-operator/(T const& lhs, RationalNum<T> const& rhs)
-{
-  return rhs / lhs;
-}
-
-template<class T>
-inline RationalNum<T> operator*(T const& lhs, RationalNum<T> const& rhs)
+template<class G>
+inline RationalNum<G>
+operator*(G const& lhs, RationalNum<G> const& rhs)
 {
   return rhs * lhs;
 }
 
+template<class G>
+inline RationalNum<G>
+operator/(G const& lhs, RationalNum<G> const& rhs)
+{
+  return RationalNum<G>{lhs * rhs.den_, rhs.num_};
+}
+
 template<class T>
-inline void FromString(std::string const& str, RationalNum<T>& rhs) {
-  auto iss = std::istringstream{str};
+inline void
+FromString(std::string const& str, RationalNum<T>& rhs)
+{
+  auto iss = std::istringstream{ str };
   iss >> rhs;
 
   if (iss.fail()) {
@@ -270,13 +315,11 @@ inline void FromString(std::string const& str, RationalNum<T>& rhs) {
 }
 
 template<class T>
-inline void ToString(RationalNum<T> const& rhs) {
+inline void
+ToString(RationalNum<T> const& rhs)
+{
   return fmt::format("{}", rhs);
 }
-
-TEMPLATEOVERLOADRELATIONAL(RationalNum<T>, RationalNum<T>, T)
-TEMPLATEOVERLOADRELATIONAL(RationalNum<T>, T, T)
-TEMPLATEOVERLOADRELATIONAL(T, RationalNum<T>, T)
 
 } // namespace bwsl
 

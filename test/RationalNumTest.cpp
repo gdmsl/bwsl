@@ -28,8 +28,8 @@ using namespace bwsl;
 // TDD example
 TEST_CASE("Relational operators", "")
 {
-  auto a = RationalLong(10L, 11L);
-  auto b = RationalLong(5L, 7L);
+  auto a = RationalLong(5L, 7L);
+  auto b = RationalLong(10L, 11L);
 
   REQUIRE(a < b);
   REQUIRE(b > a);
