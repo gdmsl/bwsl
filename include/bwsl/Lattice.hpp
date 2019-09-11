@@ -248,7 +248,9 @@ Lattice::GetDistance(size_t a, size_t b) const
 {
   assert(a < numsites_);
   assert(b < numsites_);
-  return distance_[GetPairIndex(a, b)];
+  auto s = GetMappedSite(a, b);
+  assert(s < numsites_);
+  return distance_[s];
 }
 
 inline Lattice::realvec_t
@@ -256,7 +258,9 @@ Lattice::GetVector(size_t a, size_t b) const
 {
   assert(a < numsites_);
   assert(b < numsites_);
-  return vectors_[GetPairIndex(a, b)];
+  auto s = GetMappedSite(a, b);
+  assert(s < numsites_);
+  return vectors_[s];
 }
 
 inline Lattice::coords_t
@@ -342,36 +346,27 @@ Lattice::ComputeDistances(Bravais const& /*bravais*/) const
 inline std::vector<Lattice::realvec_t>
 Lattice::ComputeVectors(Bravais const& bravais) const
 {
-  auto p = std::vector<realvec_t>(numpairs_, realvec_t(dim_, 0.0));
+  auto p = std::vector<realvec_t>(numsites_, realvec_t(dim_, 0.0));
   const auto imgsize = offsets_t(dim_, 3);
   const auto nimg = accumulate_product(imgsize);
 
   const auto c0 = GetCoordinates(0UL);
-  for (auto pair = 0UL; pair < numpairs_; pair++) {
-    auto [i, j] = GetIndividualIndices(pair);
-    if (i > j) {
-      continue;
-    }
-    auto ci = GetCoordinates(i);
-    auto cj = GetCoordinates(j);
-    auto pair2 = GetPairIndex(j, i);
-
-    subtract_into(cj, ci);
-    EnforceBoundaries(cj);
+  for (auto site = 0UL; site < numsites_; site++) {
+    auto cs = GetCoordinates(site);
 
     // minimum distance found
-    auto [mindist, minvec] = bravais.GetDistanceVector(c0, cj);
+    auto [mindist, minvec] = bravais.GetDistanceVector(c0, cs);
 
     // search for the minimum distance across the first shell of
     // periodic images if we are with closed boundary condition
     if (!openboundaries_) {
       for (auto k = 0ul; k < nimg; k++) {
         auto img = IndexToArray<coords_t, offsets_t>(k, imgsize);
-        auto cjm = coords_t(cj);
+        auto csm = coords_t(cs);
         for (auto m = 0UL; m < dim_; m++) {
-          cjm[m] += (img[m] - 1) * size_[m];
+          csm[m] += (img[m] - 1) * size_[m];
         }
-        auto [dist, vec] = bravais.GetDistanceVector(c0, cjm);
+        auto [dist, vec] = bravais.GetDistanceVector(c0, csm);
 
         if (dist < mindist) {
           mindist = dist;
@@ -379,8 +374,7 @@ Lattice::ComputeVectors(Bravais const& bravais) const
         }
       }
     }
-    p[pair] = minvec;
-    p[pair2] = minvec;
+    p[site] = minvec;
   }
   return p;
 }
