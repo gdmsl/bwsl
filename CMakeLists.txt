@@ -27,6 +27,7 @@ endif ()
 
 # Options that control generation of various targets.
 option(BWSL_TEST "Generate the test target." ${MASTER_PROJECT})
+option(BWSL_APPLICATIONS "Generate the applications." ${MASTER_PROJECT})
 
 project(bwl VERSION 1 LANGUAGES CXX)
 
@@ -71,9 +72,6 @@ target_link_libraries(bwsl
     Boost::boost
   )
 
-# Applications
-add_subdirectory(applications)
-
 # Get the git version
 execute_process(COMMAND git describe --tags --dirty=-dirty
     OUTPUT_VARIABLE BWSL_OUTPUT_STRIP_TRAILING_WHITESPACE)
@@ -85,6 +83,11 @@ get_compile_flags(BWSL_CFLAGS)
 
 # Add configs
 add_subdirectory(config/)
+
+# Applications
+if(BWSL_APPLICATIONS)
+  add_subdirectory(applications)
+endif()
 
 # Testing
 if (BWSL_TEST)
