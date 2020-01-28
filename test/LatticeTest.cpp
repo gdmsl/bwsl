@@ -62,6 +62,12 @@ TEST_CASE("Square Lattice", "[lattice]")
       REQUIRE(offs == i);
     }
   }
+
+  SECTION("Jumps are correct")
+  {
+    REQUIRE(structure.GetJump(0, 1)[0] == 1);
+    REQUIRE(structure.GetJump(0, 1)[1] == 0);
+  }
 }
 
 TEST_CASE("Big Square Lattice")
