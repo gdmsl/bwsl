@@ -273,7 +273,7 @@ invert(Container& c)
 ///
 template<class C, class D>
 inline size_t
-ArrayToIndex(C const& a, D const& size)
+array_to_index(C const& a, D const& size)
 {
   static_assert(std::is_same<typename D::value_type, size_t>::value,
                 "type must contain size_t values");
@@ -311,7 +311,7 @@ ArrayToIndex(C const& a, D const& size)
 ///
 template<class C, class D>
 inline C
-IndexToArray(size_t index, D const& size)
+index_to_array(size_t index, D const& size)
 {
   static_assert(std::is_same<typename D::value_type, size_t>::value,
                 "type must contain size_t values");
@@ -376,14 +376,39 @@ upper_bound(ForwardIt first, ForwardIt last, const T& value)
   return upper_bound(it, ++to, value);
 }
 
+/// Greater common denominator
 template<typename T>
 T
-GetGCD(T a, T b)
+get_gcd(T a, T b)
 {
   if (b == 0) {
     return a;
   }
-  return GetGCD(b, a % b);
+  return get_gcd(b, a % b);
+}
+
+/// Heaviside theta function
+template<typename Floating,
+         std::enable_if_t<std::is_floating_point<Floating>::value, int> = 0>
+Floating
+heaviside(Floating x)
+{
+  return x >= 0.0 ? 1.0 : 0.0;
+}
+
+/// Heaviside theta function with half-maximum convention
+template<typename Floating,
+         std::enable_if_t<std::is_floating_point<Floating>::value, int> = 0>
+Floating
+heaviside2(Floating x)
+{
+  if (x == 0.0) {
+    return 0.5;
+  } else if (x > 0.0) {
+    return 1.0;
+  }
+
+  return  0.0;
 }
 
 } // namespace bwsl
