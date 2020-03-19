@@ -116,6 +116,19 @@ sum_squared(const Container& v)
 }
 
 ///
+/// L2 norm
+///
+template<class Container, class T>
+inline T
+l2norm(const Container& v) {
+  T d = 0;
+  for (auto x : v) {
+    d += square(x);
+  }
+  return sqrt(d);
+}
+
+///
 /// Sign function
 ///
 template<typename T>
