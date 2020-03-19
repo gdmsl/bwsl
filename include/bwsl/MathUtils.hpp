@@ -118,10 +118,10 @@ sum_squared(const Container& v)
 ///
 /// L2 norm
 ///
-template<class Container, class T>
-inline T
+template<class Container>
+inline double
 l2norm(const Container& v) {
-  T d = 0;
+  auto d = Container::value_type{ 0 };
   for (auto x : v) {
     d += square(x);
   }
