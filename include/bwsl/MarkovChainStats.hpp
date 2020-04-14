@@ -126,6 +126,9 @@ public:
   /// Compute the average acceptance
   auto GetAverageProbability() const -> double { return prob_.GetResult(); };
 
+  /// Reset all the counters
+  auto Reset() -> void;
+
 protected:
   template<typename T>
   auto UpdateIfProposed(T& var, double prob) -> void;
@@ -206,6 +209,17 @@ MarkovChainStats::UpdateIfNotProposed(T& var) -> void
 
   var += 1UL;
   proposedflag_ = true;
+}
+
+inline auto
+MarkovChainStats::Reset() -> void
+{
+  proposed_ = 0UL;
+  accepted_ = 0UL;
+  rejected_ = 0UL;
+  impossible_ = 0UL;
+  proposedflag_ = false;
+  prob_.Reset();
 }
 
 } // namespace bwsl
