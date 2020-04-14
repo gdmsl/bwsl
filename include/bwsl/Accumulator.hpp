@@ -141,10 +141,13 @@ template<class Archive>
 inline void
 Accumulator::serialize(Archive& ar, const unsigned int /* version */)
 {
-  ar& measure_;
-  ar& weight_;
-  ar& count_;
+  // clang-format off
+  ar & measure_;
+  ar & weight_;
+  ar & count_;
+  // clang-format on
 }
+
 } // namespace bwsl
 
 // vim: set ft=cpp ts=2 sts=2 et sw=2 tw=80: //

@@ -65,8 +65,8 @@ TEST_CASE("Square Lattice", "[lattice]")
 
   SECTION("Jumps are correct")
   {
-    REQUIRE(structure.GetJump(0, 1)[0] == 1);
-    REQUIRE(structure.GetJump(0, 1)[1] == 0);
+    REQUIRE(structure.GetJump(0, 1)[0] == 0);
+    REQUIRE(structure.GetJump(0, 1)[1] == 1);
   }
 }
 

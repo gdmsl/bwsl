@@ -89,13 +89,13 @@ public:
   /// Convert coordinates to an offset
   size_t GetOffset(coords_t const& coords) const
   {
-    return ArrayToIndex(coords, size_);
+    return array_to_index(coords, size_);
   };
 
   /// Convert an offset to coordinates
   coords_t GetCoordinates(size_t offset) const
   {
-    return IndexToArray<coords_t, offsets_t>(offset, size_);
+    return index_to_array<coords_t, offsets_t>(offset, size_);
   };
 
   /// Distance betweeen two sites of the lattice
@@ -361,7 +361,7 @@ Lattice::ComputeVectors(Bravais const& bravais) const
     // periodic images if we are with closed boundary condition
     if (!openboundaries_) {
       for (auto k = 0ul; k < nimg; k++) {
-        auto img = IndexToArray<coords_t, offsets_t>(k, imgsize);
+        auto img = index_to_array<coords_t, offsets_t>(k, imgsize);
         auto csm = coords_t(cs);
         for (auto m = 0UL; m < dim_; m++) {
           csm[m] += (img[m] - 1) * size_[m];

@@ -186,7 +186,7 @@ template<class T>
 inline void
 RationalNum<T>::Simplify()
 {
-  auto g = GetGCD(num_, den_);
+  auto g = get_gcd(num_, den_);
   num_ = num_ / g;
   den_ = den_ / g;
 }

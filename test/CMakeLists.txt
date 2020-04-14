@@ -61,4 +61,15 @@ target_link_libraries(AccumulatorTest
 add_test(NAME bwsl.Accumulator COMMAND $<TARGET_FILE:AccumulatorTest>)
 # }}}
 
+# MarkovChainStatsTest {{{
+add_executable(MarkovChainStatsTest MarkovChainStatsTest.cpp)
+target_link_libraries(MarkovChainStatsTest
+  PRIVATE
+    bwsl
+    Catch2::Catch2
+    fmt-header-only
+  )
+add_test(NAME bwsl.MarkovChainStats COMMAND $<TARGET_FILE:MarkovChainStatsTest>)
+# }}}
+
 # vim: set ft=cmake ts=2 sts=2 et sw=2 tw=80 foldmarker={{{,}}} fdm=marker: #
