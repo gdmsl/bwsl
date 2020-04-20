@@ -120,7 +120,8 @@ sum_squared(const Container& v)
 ///
 template<class Container>
 inline double
-l2norm(const Container& v) {
+l2norm(const Container& v)
+{
   auto d = typename Container::value_type{ 0 };
   for (auto x : v) {
     d += square(x);
@@ -421,22 +422,27 @@ heaviside2(Floating x)
     return 1.0;
   }
 
-  return  0.0;
+  return 0.0;
 }
 
 /// Linear interpolation between @p a and @p b for the parameter @p t.
 /// If @p t is outside the range [0, 1] it performs an extrapolation
-template <typename Floating>
+template<typename Floating>
 Floating
 lerp(Floating a, Floating b, Floating t)
 {
+  static_assert(std::is_floating_point<Floating>::value,
+                "Required floating point type");
   return (1 - t) * a + t * b;
 }
 
-template <typename Floating, typename Integer>
+template<typename Floating, typename Integer>
 Floating
 lerpi(Integer i, Integer j, Floating a, Floating b)
 {
+  static_assert(std::is_integral<Integer>::value, "Required integral type");
+  static_assert(std::is_floating_point<Floating>::value,
+                "Required floating point type");
   auto t = static_cast<Floating>(i) / static_cast<Floating>(j);
   return lerp(a, b, t);
 }
