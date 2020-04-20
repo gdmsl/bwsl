@@ -424,6 +424,23 @@ heaviside2(Floating x)
   return  0.0;
 }
 
+/// Linear interpolation between @p a and @p b for the parameter @p t.
+/// If @p t is outside the range [0, 1] it performs an extrapolation
+template <typename Floating>
+Floating
+lerp(Floating a, Floating b, Floating t)
+{
+  return (1 - t) * a + t * b;
+}
+
+template <typename Floating, typename Integer>
+Floating
+lerpi(Integer i, Integer j, Floating a, Floating b)
+{
+  auto t = static_cast<Floating>(i) / static_cast<Floating>(j);
+  return lerp(a, b, t);
+}
+
 } // namespace bwsl
 
 // vim: set ts=2 sts=2 et sw=2 tw=80: //
