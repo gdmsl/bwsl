@@ -40,23 +40,48 @@ public:
   /// Move assignment operator
   MoveResult& operator=(MoveResult&&) = default;
 
+  /// Constructor
+  MoveResult(MoveStatus status, double prob)
+    : status_(status)
+    , prob_(prob)
+  {}
+
   /// Default destructor
   virtual ~MoveResult() = default;
 
   /// Check whether the move has been accepted
-  auto Accepted() const -> bool { return status_ == MoveStatus::Accepted; };
+  auto IsAccepted() const -> bool { return status_ == MoveStatus::Accepted; };
 
   /// Check whether the move has been rejected
-  auto Rejected() const -> bool { return status_ == MoveStatus::Rejected; };
+  auto IsRejected() const -> bool { return status_ == MoveStatus::Rejected; };
 
   /// Check whether the move has been accepted
-  auto Impossible() const -> bool { return status_ == MoveStatus::Impossible; };
+  auto IsImpossible() const -> bool
+  {
+    return status_ == MoveStatus::Impossible;
+  };
 
   /// Return the probability of the move
   [[nodiscard]] auto Probability() const -> double { return prob_; };
 
   /// Get the status
   [[nodiscard]] auto GetStatus() const -> MoveStatus { return status_; };
+
+  /// @name Builders
+  /// @{
+  [[nodiscard]] static auto Accept(double prob) -> MoveResult
+  {
+    return MoveResult{ MoveStatus::Accepted, prob };
+  };
+  [[nodiscard]] static auto Reject(double prob) -> MoveResult
+  {
+    return MoveResult{ MoveStatus::Rejected, prob };
+  };
+  [[nodiscard]] static auto Impossible(double prob) -> MoveResult
+  {
+    return MoveResult{ MoveStatus::Impossible, 0.0 };
+  };
+  /// @}
 
 protected:
 private:
