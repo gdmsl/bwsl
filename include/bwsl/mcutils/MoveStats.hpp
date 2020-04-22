@@ -1,4 +1,4 @@
-//===-- MarkovChainStats.hpp ----------------------------------*- C++ -*-===//
+//===-- MoveStats.hpp ----------------------------------*- C++ -*-===//
 //
 //                      BeagleWarlord's Support Library
 //
@@ -9,13 +9,15 @@
 ///
 /// @file
 /// @author     Guido Masella (guido.masella@gmail.com)
-/// @brief      Definitions for the MarkovChainStats Class
+/// @brief      Definitions for the MoveStats Class
 ///
 //===---------------------------------------------------------------------===//
 #pragma once
 
 // bwsl
 #include <bwsl/Accumulator.hpp>
+#include <bwsl/mcutils/MoveResult.hpp>
+#include <bwsl/mcutils/MoveStatus.hpp>
 
 // fmt
 #include <fmt/format.h>
@@ -28,7 +30,7 @@
 #include <exception>
 #include <string>
 
-namespace bwsl {
+namespace bwsl::montecarlo {
 
 namespace exception {
 class MoveInvalidSequence : public std::exception
@@ -69,29 +71,29 @@ private:
 ///
 /// Keeps statistics of a Markov Chain Monte Carlo move.
 ///
-class MarkovChainStats
+class MoveStats
 {
 public:
   /// Default constructor
-  MarkovChainStats() = default;
+  MoveStats() = default;
 
   /// Copy constructor
-  MarkovChainStats(const MarkovChainStats&) = default;
+  MoveStats(const MoveStats&) = default;
 
   /// Copy assignment operator
-  MarkovChainStats& operator=(const MarkovChainStats&) = default;
+  MoveStats& operator=(const MoveStats&) = default;
 
   /// Move constructor
-  MarkovChainStats(MarkovChainStats&&) = default;
+  MoveStats(MoveStats&&) = default;
 
   /// Move assignment operator
-  MarkovChainStats& operator=(MarkovChainStats&&) = default;
+  MoveStats& operator=(MoveStats&&) = default;
 
   /// Construct a statistics for a named move
-  MarkovChainStats(std::string name);
+  MoveStats(std::string name);
 
   /// Default destructor
-  virtual ~MarkovChainStats() = default;
+  virtual ~MoveStats() = default;
 
   /// Propose a move
   auto Propose() -> void { UpdateIfNotProposed(proposed_); };
@@ -100,10 +102,13 @@ public:
   auto Accept(double prob) -> void { UpdateIfProposed(accepted_, prob); };
 
   /// The proposed move has been rejected
-  auto Reject(double prob) -> void { UpdateIfProposed(rejected_, prob);};
+  auto Reject(double prob) -> void { UpdateIfProposed(rejected_, prob); };
 
   /// The proposed move is impossible to carry out.
   auto Impossible() -> void { UpdateIfProposed(impossible_, 0.0); };
+
+  ///
+  auto Add(MoveResult const& res) -> void;
 
   /// Compute the acceptance from the collected statistics
   auto GetAcceptedRatio() const -> double
@@ -136,7 +141,6 @@ protected:
   template<typename T>
   auto UpdateIfNotProposed(T& varm) -> void;
 
-
 private:
   /// Name for identify the move
   std::string name_{ "Unknown" };
@@ -165,12 +169,11 @@ private:
   //// Serialization method for the class
   template<class Archive>
   auto serialize(Archive& ar, const unsigned int version) -> void;
-}; // class MarkovChainStats
+}; // class MoveStats
 
 template<class Archive>
 inline auto
-MarkovChainStats::serialize(Archive& ar, const unsigned int /* version */)
-  -> void
+MoveStats::serialize(Archive& ar, const unsigned int /* version */) -> void
 {
   // clang-format off
   ar & prob_;
@@ -182,13 +185,13 @@ MarkovChainStats::serialize(Archive& ar, const unsigned int /* version */)
   // clang-format on
 }
 
-inline MarkovChainStats::MarkovChainStats(std::string name)
+inline MoveStats::MoveStats(std::string name)
   : name_(std::move(name))
 {}
 
 template<typename T>
 inline auto
-MarkovChainStats::UpdateIfProposed(T& var, double prob) -> void
+MoveStats::UpdateIfProposed(T& var, double prob) -> void
 {
   if (!proposedflag_) {
     throw exception::MoveInvalidSequence(name_);
@@ -201,7 +204,7 @@ MarkovChainStats::UpdateIfProposed(T& var, double prob) -> void
 
 template<typename T>
 inline auto
-MarkovChainStats::UpdateIfNotProposed(T& var) -> void
+MoveStats::UpdateIfNotProposed(T& var) -> void
 {
   if (proposedflag_) {
     throw exception::MoveInvalidSequence(name_);
@@ -212,7 +215,7 @@ MarkovChainStats::UpdateIfNotProposed(T& var) -> void
 }
 
 inline auto
-MarkovChainStats::Reset() -> void
+MoveStats::Reset() -> void
 {
   proposed_ = 0UL;
   accepted_ = 0UL;
@@ -220,6 +223,24 @@ MarkovChainStats::Reset() -> void
   impossible_ = 0UL;
   proposedflag_ = false;
   prob_.Reset();
+}
+
+inline auto
+MoveStats::Add(MoveResult const& res) -> void
+{
+  Propose();
+
+  switch (res.GetStatus()) {
+    case MoveStatus::Accepted:
+      Accept(res.Probability());
+      break;
+    case MoveStatus::Rejected:
+      Reject(res.Probability());
+      break;
+    case MoveStatus::Impossible:
+      Impossible();
+      break;
+  }
 }
 
 } // namespace bwsl
