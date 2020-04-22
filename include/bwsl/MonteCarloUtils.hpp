@@ -14,7 +14,7 @@
 //===---------------------------------------------------------------------===//
 #pragma once
 
-#inlcude <bwsl/mcutils/MoveStats.hpp>
+#include <bwsl/mcutils/MoveStats.hpp>
 #include <bwsl/mcutils/MoveResult.hpp>
 
 // vim: set ft=cpp ts=2 sts=2 et sw=2 tw=80: //
