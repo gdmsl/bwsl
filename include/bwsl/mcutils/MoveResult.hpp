@@ -77,7 +77,7 @@ public:
   {
     return MoveResult{ MoveStatus::Rejected, prob };
   };
-  [[nodiscard]] static auto Impossible(double prob) -> MoveResult
+  [[nodiscard]] static auto Impossible() -> MoveResult
   {
     return MoveResult{ MoveStatus::Impossible, 0.0 };
   };
