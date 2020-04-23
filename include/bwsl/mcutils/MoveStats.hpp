@@ -28,8 +28,8 @@
 #include <boost/serialization/version.hpp>
 
 // std
-#include <ostream>
 #include <exception>
+#include <ostream>
 #include <string>
 
 namespace bwsl::montecarlo {
@@ -169,7 +169,8 @@ private:
   friend class boost::serialization::access;
 
   /// Ostream operator
-  friend auto operator<<(std::ostream& os, const MoveStats& dt) -> std::ostream&;
+  friend auto operator<<(std::ostream& os, const MoveStats& dt)
+    -> std::ostream&;
 
   //// Serialization method for the class
   template<class Archive>
@@ -251,12 +252,14 @@ MoveStats::Add(MoveResult const& res) -> void
 inline auto
 operator<<(std::ostream& os, const MoveStats& dt) -> std::ostream&
 {
-  fmt::print(os, "{}(", dt.name_);
-  fmt::print(os, "Accepted: {}, ", dt.GetAcceptedRatio());
-  fmt::print(os, "Rejected: {}, ", dt.GetRejectedRatio());
-  fmt::print(os, "Impossible: {}, ", dt.GetImpossibleRatio());
-  fmt::print(os, "Prob: {}", dt.GetAverageProbability());
-  fmt::print(os, ")");
+  fmt::print(os,
+             "{}(accepted = {:.3e}, rejected = {:.3e}, impossible = {:.3e}, "
+             "probability = {:.3e})",
+             dt.name_,
+             dt.GetAcceptedRatio(),
+             dt.GetRejectedRatio(),
+             dt.GetImpossibleRatio(),
+             dt.GetAverageProbability());
   return os;
 }
 } // namespace bwsl
