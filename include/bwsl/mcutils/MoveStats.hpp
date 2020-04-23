@@ -21,12 +21,14 @@
 
 // fmt
 #include <fmt/format.h>
+#include <fmt/ostream.h>
 
 // boost
 #include <boost/serialization/serialization.hpp>
 #include <boost/serialization/version.hpp>
 
 // std
+#include <ostream>
 #include <exception>
 #include <string>
 
@@ -163,8 +165,11 @@ private:
   /// Probability
   Accumulator prob_{};
 
-  // serialization
+  /// Serialization
   friend class boost::serialization::access;
+
+  /// Ostream operator
+  friend auto operator<<(std::ostream& os, const MoveStats& dt) -> std::ostream&;
 
   //// Serialization method for the class
   template<class Archive>
@@ -243,6 +248,17 @@ MoveStats::Add(MoveResult const& res) -> void
   }
 }
 
+inline auto
+operator<<(std::ostream& os, const MoveStats& dt) -> std::ostream&
+{
+  fmt::print(os, "{}(", dt.name_);
+  fmt::print(os, "Accepted: {}, ", dt.GetAcceptedRatio());
+  fmt::print(os, "Rejected: {}, ", dt.GetRejectedRatio());
+  fmt::print(os, "Impossible: {}, ", dt.GetImpossibleRatio());
+  fmt::print(os, "Prob: {}", dt.GetAverageProbability());
+  fmt::print(os, ")");
+  return os;
+}
 } // namespace bwsl
 
 // vim: set ft=cpp ts=2 sts=2 et sw=2 tw=80: //
