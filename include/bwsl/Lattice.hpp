@@ -134,6 +134,9 @@ public:
   /// Get the coordination number
   size_t GetCoordination(size_t a) const;
 
+  /// Get the coordination number
+  size_t GetCoordination() const;
+
   /// Get a site mapped by a distance on the lattice
   size_t GetMappedSite(size_t a, size_t b) const;
 
@@ -540,6 +543,16 @@ Lattice::SaveMomenta(std::string fname) const {
     fmt::print(out, "\n");
   }
 
+}
+
+inline auto
+Lattice::GetCoordination(size_t a) const -> size_t {
+  return neighbors_[a].size();
+}
+
+inline auto
+Lattice::GetCoordination() const -> size_t {
+  return neighbors_[0].size();
 }
 
 } // namespace bwsl
