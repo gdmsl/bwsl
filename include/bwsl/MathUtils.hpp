@@ -296,25 +296,13 @@ array_to_index(C const& a, D const& size)
   auto dim = size.size();
   assert(a.size() == dim && "Dimensions not matching");
 
-  auto index = 0ul;
-  auto prod = 1ul;
+  auto index = 0UL;
+  auto prod = accumulate_product(size);
+  prod /= size[0UL];
 
-  for (auto i = 0ul; i < dim - 1; i++) {
-    prod *= size[i];
-  }
-  for (auto i = 0ul; i < dim; i++) {
-    auto x = a[i];
-    auto s = size[i];
-    while (x < 0) {
-      x += s;
-    }
-
-    auto xul = static_cast<size_t>(x);
-    while (xul >= s) {
-      xul -= s;
-    }
-    index += prod * xul;
-    prod /= s;
+  for (auto i = 0UL; i < dim; i++) {
+    index += prod * static_cast<size_t>(a[i]);
+    prod /= size[dim - (i + 1UL)];
   }
 
   return index;
@@ -336,13 +324,14 @@ index_to_array(size_t index, D const& size)
 
   auto d = C(dim, 0);
 
-  for (auto i = 0ul; i < dim - 1; i++) {
-    prod *= size[i];
+  for (auto i = 1ul; i < dim; i++) {
+    prod *= size[dim - i];
   }
   for (auto i = 0ul; i < dim; i++) {
     d[i] = static_cast<typename C::value_type>(index / prod);
     index = index % prod;
-    prod /= size[i];
+
+    prod /= size[dim - (i + 1UL)];
   }
 
   return d;

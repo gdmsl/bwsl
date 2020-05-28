@@ -11,6 +11,16 @@ target_link_libraries(LatticeTest
 add_test(NAME bwsl.Lattice COMMAND $<TARGET_FILE:LatticeTest>)
 # }}}
 
+# HyperCubicGrid {{{
+add_executable(HyperCubicGridTest HyperCubicGridTest.cpp)
+target_link_libraries(HyperCubicGridTest
+  PRIVATE
+    bwsl
+    Catch2::Catch2
+  )
+add_test(NAME bwsl.HyperCubicGrid COMMAND $<TARGET_FILE:HyperCubicGridTest>)
+# }}}
+
 # EnumString {{{
 add_executable(EnumString EnumString.cpp)
 target_link_libraries(EnumString
@@ -61,15 +71,15 @@ target_link_libraries(AccumulatorTest
 add_test(NAME bwsl.Accumulator COMMAND $<TARGET_FILE:AccumulatorTest>)
 # }}}
 
-# MarkovChainStatsTest {{{
-add_executable(MarkovChainStatsTest MarkovChainStatsTest.cpp)
-target_link_libraries(MarkovChainStatsTest
+# MoveStatsTest {{{
+add_executable(MoveStatsTest MoveStatsTest.cpp)
+target_link_libraries(MoveStatsTest
   PRIVATE
     bwsl
     Catch2::Catch2
     fmt-header-only
   )
-add_test(NAME bwsl.MarkovChainStats COMMAND $<TARGET_FILE:MarkovChainStatsTest>)
+add_test(NAME bwsl.MoveStats COMMAND $<TARGET_FILE:MoveStatsTest>)
 # }}}
 
 # vim: set ft=cmake ts=2 sts=2 et sw=2 tw=80 foldmarker={{{,}}} fdm=marker: #

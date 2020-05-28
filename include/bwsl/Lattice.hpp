@@ -19,40 +19,35 @@
 #include <bwsl/Bravais.hpp>
 #include <bwsl/MathUtils.hpp>
 #include <bwsl/Pairs.hpp>
+#include <bwsl/HyperCubicGrid.hpp>
 
 // fmt
-#include <fmt/ostream.h>
 #include <fmt/format.h>
+#include <fmt/ostream.h>
 
 // std
 #include <algorithm>
 #include <cassert>
 #include <cmath>
-#include <iostream>
 #include <fstream>
+#include <iostream>
 #include <memory>
-#include <vector>
 #include <string>
+#include <vector>
 
 namespace bwsl {
 
 ///
 /// Representation of a Lattice.
 ///
-class Lattice
+class Lattice : public HyperCubicGrid
 {
 public:
-  /// Unsigned type for sizes and indices
-  using size_t = std::size_t;
-
-  /// Coordinates of a point on a lattice
-  using coords_t = std::vector<int>;
-
   /// Vector of offsets
-  using offsets_t = std::vector<size_t>;
+  using vectorindex_t = std::vector<index_t>;
 
   /// Vector of neighbors
-  using neighbors_t = std::vector<offsets_t>;
+  using neighbors_t = std::vector<vectorindex_t>;
 
   /// Shorthand for real valued vectors
   using realvec_t = std::vector<double>;
@@ -62,8 +57,8 @@ public:
 
   /// Construct a lattice with given size from an infinite bravais lattice
   Lattice(Bravais const& bravais,
-          offsets_t const& size,
-          bool openboundaries = false);
+          gridsize_t const& size,
+          boundaries_t openboundaries = boundaries_t::Closed);
 
   /// Copy constructor
   Lattice(Lattice const& that) = default;
@@ -74,86 +69,56 @@ public:
   /// Copy assignment operator
   Lattice& operator=(Lattice const& that) = default;
 
-  /// Get the dimensionality of the lattice
-  size_t GetDim() const { return dim_; };
-
-  /// Get the size of the lattice
-  const offsets_t& GetSize() const { return size_; }
-
-  /// Get the number of sites in the lattice
-  size_t GetNumSites() const { return numsites_; };
-
   /// Get nearest neighbors of site i
-  offsets_t const& GetNeighbors(size_t i) const { return neighbors_[i]; }
-
-  /// Convert coordinates to an offset
-  size_t GetOffset(coords_t const& coords) const
+  auto GetNeighbors(index_t i) const -> vectorindex_t const&
   {
-    return array_to_index(coords, size_);
-  };
-
-  /// Convert an offset to coordinates
-  coords_t GetCoordinates(size_t offset) const
-  {
-    return index_to_array<coords_t, offsets_t>(offset, size_);
-  };
+    return neighbors_[i];
+  }
 
   /// Distance betweeen two sites of the lattice
-  double GetDistance(size_t a, size_t b) const;
+  auto GetDistance(index_t a, index_t b) const -> double;
 
   /// Get the vector spawning from site @p a to site @p b .
-  realvec_t GetVector(size_t a, size_t b) const;
+  auto GetVector(index_t a, index_t b) const -> realvec_t;
 
   /// Get the winding number times the system size for a hopping between the
   /// sites @p a and @p b .
-  coords_t GetJump(size_t a, size_t b) const;
+  auto GetJump(size_t a, size_t b) const -> coords_t;
 
   /// Given an accumulator for the winding number return the total winding.
   /// The total winding is defined as the number of times we jump around the
   /// boundaries.
-  coords_t GetWinding(coords_t jump) const;
+  auto GetWinding(coords_t jump) const -> coords_t;
 
   /// Get the real space coordinates of site @p a .
-  realvec_t GetPosition(size_t a) const;
+  auto GetPosition(index_t a) const -> realvec_t;
 
   /// Change a vector so that he will match the boundary conditions
-  void EnforceBoundaries(coords_t& coords) const;
-
-  /// Check if the coordinates are within the boundaries
-  bool IsInBoundaries(coords_t const& coords) const;
+  auto EnforceBoundaries(coords_t& coords) const -> void;
 
   /// Check if two sites are neighbors
-  bool AreNeighbors(size_t a, size_t b) const;
-
-  /// Unique index for pairs of sites
-  size_t GetPairIndex(size_t a, size_t b) const;
-
-  /// Destructure a pair and return the two indices
-  std::pair<size_t, size_t> GetIndividualIndices(size_t pair) const;
+  auto AreNeighbors(index_t a, index_t b) const -> bool;
 
   /// Get the coordination number
-  size_t GetCoordination(size_t a) const;
+  index_t GetCoordination(index_t a) const;
 
   /// Get the coordination number
-  size_t GetCoordination() const;
-
-  /// Get a site mapped by a distance on the lattice
-  size_t GetMappedSite(size_t a, size_t b) const;
+  index_t GetCoordination() const;
 
   /// Get an allowed momentum
   realvec_t GetMomentum(size_t a) const;
 
   /// Compute the structure factor given the occupations of the sites
-  realvec_t ComputeSk(realvec_t occupations) const;
+  auto ComputeSk(realvec_t occupations) const -> realvec_t;
 
   /// Save the distances on a file
-  void SaveDistances(std::string fname) const;
+  auto SaveDistances(std::string fname) const -> void;
 
   /// Save the positions on a file
-  void SavePositions(std::string fname) const;
+  auto SavePositions(std::string fname) const -> void;
 
   /// Save the momenta on a file
-  void SaveMomenta(std::string fname) const;
+  auto SaveMomenta(std::string fname) const -> void;
 
 protected:
   /// Compute the positions of all the lattice points
@@ -171,21 +136,6 @@ protected:
   /// Compute the allowed momenta
   std::vector<realvec_t> ComputeMomenta(Bravais const& bravais) const;
 
-  /// Dimensionality of the lattice
-  size_t dim_{ 0 };
-
-  /// Size of the lattice
-  offsets_t size_{};
-
-  /// Number of sites in the lattice
-  size_t numsites_{ 0 };
-
-  /// Number of pairs of lattice sites
-  size_t numpairs_{ 0 };
-
-  /// Flag for closed/open boundary conditions
-  bool openboundaries_{ false };
-
 private:
   /// Positions of all the sites
   /// Assuming that the first site has position `(0,0)`
@@ -202,17 +152,12 @@ private:
 
   /// Allowed values momenta
   std::vector<realvec_t> momenta_{};
-
 }; // class Lattice
 
 inline Lattice::Lattice(Bravais const& bravais,
-                        offsets_t const& size,
-                        bool openboundaries)
-  : dim_(size.size())
-  , size_(size)
-  , numsites_(accumulate_product(size))
-  , numpairs_(pairs::GetNumPairs(numsites_))
-  , openboundaries_(openboundaries)
+                        gridsize_t const& size,
+                        boundaries_t boundaries)
+  : HyperCubicGrid(size, boundaries)
   , position_(ComputePositions(bravais))
   , vectors_(ComputeVectors(bravais))
   , distance_(ComputeDistances(bravais))
@@ -223,8 +168,8 @@ inline Lattice::Lattice(Bravais const& bravais,
 inline void
 Lattice::EnforceBoundaries(coords_t& coords) const
 {
-  for (auto i = 0ul; i < dim_; i++) {
-    auto s = size_[i];
+  for (auto i = 0ul; i < GetDim(); i++) {
+    auto s = GetSize()[i];
     while (coords[i] < 0) {
       coords[i] += s;
     }
@@ -234,49 +179,32 @@ Lattice::EnforceBoundaries(coords_t& coords) const
   }
 }
 
-inline bool
-Lattice::IsInBoundaries(coords_t const& coords) const
-{
-  assert(coords.size() == dim_);
-  for (auto i = 0ul; i < dim_; i++) {
-    if (coords[i] < 0 || coords[i] >= static_cast<long>(size_[i])) {
-      return false;
-    }
-  }
-  return true;
-}
-
 inline double
 Lattice::GetDistance(size_t a, size_t b) const
 {
-  assert(a < numsites_);
-  assert(b < numsites_);
+  assert(IndexIsValid(a) && IndexIsValid(b));
   auto s = GetMappedSite(a, b);
-  assert(s < numsites_);
   return distance_[s];
 }
 
-inline Lattice::realvec_t
-Lattice::GetVector(size_t a, size_t b) const
+inline auto
+Lattice::GetVector(size_t a, size_t b) const -> realvec_t
 {
-  assert(a < numsites_);
-  assert(b < numsites_);
+  assert(IndexIsValid(a) && IndexIsValid(b));
   auto s = GetMappedSite(a, b);
-  assert(s < numsites_);
   return vectors_[s];
 }
 
-inline Lattice::coords_t
-Lattice::GetJump(size_t a, size_t b) const
+inline auto
+Lattice::GetJump(size_t a, size_t b) const -> coords_t
 {
-  assert(a < numsites_);
-  assert(b < numsites_);
+  assert(IndexIsValid(a) && IndexIsValid(b));
   auto cb = GetCoordinates(b);
   subtract_into(cb, GetCoordinates(a));
 
-  for (auto i = 0UL; i < dim_; i++) {
+  for (auto i = 0UL; i < GetDim(); i++) {
     auto& cbi = cb[i];
-    auto si = size_[i];
+    auto si = GetSize()[i];
 
     if (cbi > static_cast<int>(si / 2)) {
       cbi -= si;
@@ -289,14 +217,14 @@ Lattice::GetJump(size_t a, size_t b) const
   return cb;
 }
 
-inline Lattice::coords_t
-Lattice::GetWinding(Lattice::coords_t jumps) const
+inline auto
+Lattice::GetWinding(coords_t jumps) const -> coords_t
 {
-  assert(jumps.size() == dim_);
+  assert(HasSameDimension(jumps));
 
   std::transform(jumps.begin(),
                  jumps.end(),
-                 size_.begin(),
+                 GetSize().cbegin(),
                  jumps.begin(),
                  std::divides<typename coords_t::value_type>());
 
@@ -304,14 +232,14 @@ Lattice::GetWinding(Lattice::coords_t jumps) const
 }
 
 inline Lattice::realvec_t
-Lattice::GetPosition(size_t a) const
+Lattice::GetPosition(index_t a) const
 {
-  assert(a < numsites_);
+  assert(IndexIsValid(a));
   return position_[a];
 }
 
 inline bool
-Lattice::AreNeighbors(size_t a, size_t b) const
+Lattice::AreNeighbors(index_t a, index_t b) const
 {
   assert(a < neighbors_.size());
 
@@ -325,7 +253,7 @@ Lattice::ComputePositions(Bravais const& bravais) const
 {
   auto p = std::vector<realvec_t>{};
   auto c0 = GetCoordinates(0);
-  for (auto i = 0UL; i < numsites_; i++) {
+  for (auto i = 0UL; i < GetNumSites(); i++) {
     auto x = bravais.GetVector(c0, GetCoordinates(i));
     p.push_back(x);
   }
@@ -349,12 +277,12 @@ Lattice::ComputeDistances(Bravais const& /*bravais*/) const
 inline std::vector<Lattice::realvec_t>
 Lattice::ComputeVectors(Bravais const& bravais) const
 {
-  auto p = std::vector<realvec_t>(numsites_, realvec_t(dim_, 0.0));
-  const auto imgsize = offsets_t(dim_, 3);
+  auto p = std::vector<realvec_t>(GetNumSites(), realvec_t(GetDim(), 0.0));
+  const auto imgsize = gridsize_t(GetDim(), 3);
   const auto nimg = accumulate_product(imgsize);
 
   const auto c0 = GetCoordinates(0UL);
-  for (auto site = 0UL; site < numsites_; site++) {
+  for (auto site = 0UL; site < GetNumSites(); site++) {
     auto cs = GetCoordinates(site);
 
     // minimum distance found
@@ -362,12 +290,12 @@ Lattice::ComputeVectors(Bravais const& bravais) const
 
     // search for the minimum distance across the first shell of
     // periodic images if we are with closed boundary condition
-    if (!openboundaries_) {
+    if (HasClosedBoundaries()) {
       for (auto k = 0ul; k < nimg; k++) {
-        auto img = index_to_array<coords_t, offsets_t>(k, imgsize);
+        auto img = index_to_array<coords_t, gridsize_t>(k, imgsize);
         auto csm = coords_t(cs);
-        for (auto m = 0UL; m < dim_; m++) {
-          csm[m] += (img[m] - 1) * size_[m];
+        for (auto m = 0UL; m < GetDim(); m++) {
+          csm[m] += (img[m] - 1) * GetSize()[m];
         }
         auto [dist, vec] = bravais.GetDistanceVector(c0, csm);
 
@@ -388,17 +316,17 @@ Lattice::ComputeNeighbors(Bravais const& bravais) const
   auto p = neighbors_t{};
   const auto gamma = bravais.GetGamma();
 
-  for (auto i = 0ul; i < numsites_; i++) {
-    auto nn = offsets_t{};
+  for (auto i = 0ul; i < GetNumSites(); i++) {
+    auto nn = gridsize_t{};
     auto ci = GetCoordinates(i);
     for (auto j = 0ul; j < gamma; j++) {
       auto cj = bravais.GetNeighbor(ci, j);
 
       // add the sites to the list of neighbors accordingly with the
       // boundary conditions set
-      if (!openboundaries_ || IsInBoundaries(cj)) {
+      if (HasClosedBoundaries() || IsOnGrid(cj)) {
         EnforceBoundaries(cj);
-        nn.push_back(GetOffset(cj));
+        nn.push_back(GetIndex(cj));
       }
     }
     p.push_back(std::move(nn));
@@ -413,21 +341,21 @@ Lattice::ComputeMomenta(Bravais const& bravais) const
   auto p = std::vector<realvec_t>{};
 
   // with open boundary conditions the momenta are not defined
-  if (openboundaries_) {
+  if (HasOpenBoundaries()) {
     return p;
   }
 
   // in a lattice with periodic boundary conditions the number
   // of reciprocal lattice vectors are the same number as the
   // sites of the direct lattice
-  for (auto i = 0ul; i < numsites_; i++) {
+  for (auto i = 0ul; i < GetNumSites(); i++) {
     auto ci = GetCoordinates(i);
     for (auto k = 0ul; k < ci.size(); k++) {
-      ci[k] -= size_[k] / 2ul - 1;
+      ci[k] -= GetSize()[k] / 2ul - 1;
     }
     auto kappa = bravais.GetReciprocalSpace(ci);
     for (auto k = 0ul; k < kappa.size(); k++) {
-      kappa[k] /= size_[k];
+      kappa[k] /= GetSize()[k];
     }
     p.push_back(kappa);
   }
@@ -435,67 +363,48 @@ Lattice::ComputeMomenta(Bravais const& bravais) const
   return p;
 }
 
-inline size_t
-Lattice::GetPairIndex(size_t a, size_t b) const
+inline auto
+Lattice::ComputeSk(realvec_t occupations) const -> realvec_t
 {
-  return bwsl::pairs::GetPairIndex(a, b, numsites_);
-}
+  auto n = GetNumSites();
+  auto sk = std::vector<double>(n, 0.0);
 
-inline std::pair<size_t, size_t>
-Lattice::GetIndividualIndices(size_t pair) const
-{
-  return bwsl::pairs::GetPair(pair, numsites_);
-}
-
-inline size_t
-Lattice::GetMappedSite(size_t a, size_t b) const
-{
-  auto cb = GetCoordinates(b);
-  subtract_into(cb, GetCoordinates(a));
-  EnforceBoundaries(cb);
-  return GetOffset(cb);
-}
-
-inline Lattice::realvec_t
-Lattice::ComputeSk(realvec_t occupations) const
-{
-  auto sk = std::vector<double>(numsites_, 0.0);
-
-  if (openboundaries_) {
+  if (HasOpenBoundaries()) {
     return sk;
   }
 
-  for (auto i = 0UL; i < numsites_; i++) {
+  for (auto i = 0UL; i < GetNumSites(); i++) {
     auto const k = momenta_[i];
     auto im = 0.0;
     auto re = 0.0;
 
-    for (auto j = 0UL; j < numsites_; j++) {
+    for (auto j = 0UL; j < n; j++) {
       auto const x = GetVector(0, j);
       auto prod = 0.0;
-      for (auto q = 0UL; q < dim_; q++) {
+      for (auto q = 0UL; q < GetDim(); q++) {
         prod += k[q] * x[q];
       }
       im += sin(prod) * occupations[j];
       re += cos(prod) * occupations[j];
     }
-    sk[i] = (square(im) + square(re)) / square(numsites_);
+    sk[i] = (square(im) + square(re)) / square(n);
   }
 
   return sk;
 }
 
-inline void
-Lattice::SavePositions(std::string fname) const {
-  auto out = std::ofstream{fname.c_str()};
+inline auto
+Lattice::SavePositions(std::string fname) const -> void
+{
+  auto out = std::ofstream{ fname.c_str() };
 
   fmt::print(out, "i");
-  for (auto i = 0UL; i < dim_; i++) {
+  for (auto i = 0UL; i < GetDim(); i++) {
     fmt::print(out, ",x{}", i);
   }
   fmt::print(out, "\n");
 
-  for (auto i = 0UL; i < numsites_; i++) {
+  for (auto i = 0UL; i < GetNumSites(); i++) {
     auto vec = GetPosition(i);
     fmt::print(out, "{}", i);
     for (auto const& v : vec) {
@@ -505,17 +414,18 @@ Lattice::SavePositions(std::string fname) const {
   }
 }
 
-inline void
-Lattice::SaveDistances(std::string fname) const {
-  auto out = std::ofstream{fname.c_str()};
+inline auto
+Lattice::SaveDistances(std::string fname) const -> void
+{
+  auto out = std::ofstream{ fname.c_str() };
 
   fmt::print(out, "i");
-  for (auto i = 0UL; i < dim_; i++) {
+  for (auto i = 0UL; i < GetDim(); i++) {
     fmt::print(out, ",d{}", i);
   }
   fmt::print(out, "\n");
 
-  for (auto i = 0UL; i < numsites_; i++) {
+  for (auto i = 0UL; i < GetNumSites(); i++) {
     auto vec = GetVector(0, i);
     fmt::print(out, "{}", i);
     for (auto const& v : vec) {
@@ -526,32 +436,34 @@ Lattice::SaveDistances(std::string fname) const {
 }
 
 inline void
-Lattice::SaveMomenta(std::string fname) const {
-  auto out = std::ofstream{fname.c_str()};
+Lattice::SaveMomenta(std::string fname) const
+{
+  auto out = std::ofstream{ fname.c_str() };
 
   fmt::print(out, "i");
-  for (auto i = 0UL; i < dim_; i++) {
+  for (auto i = 0UL; i < GetDim(); i++) {
     fmt::print(out, ",k{}", i);
   }
   fmt::print(out, "\n");
 
-  for (auto i = 0UL; i < numsites_; i++) {
+  for (auto i = 0UL; i < GetNumSites(); i++) {
     fmt::print(out, "{}", i);
     for (auto const& k : momenta_[i]) {
       fmt::print(out, ",{}", k);
     }
     fmt::print(out, "\n");
   }
-
 }
 
 inline auto
-Lattice::GetCoordination(size_t a) const -> size_t {
+Lattice::GetCoordination(size_t a) const -> size_t
+{
   return neighbors_[a].size();
 }
 
 inline auto
-Lattice::GetCoordination() const -> size_t {
+Lattice::GetCoordination() const -> size_t
+{
   return neighbors_[0].size();
 }
 

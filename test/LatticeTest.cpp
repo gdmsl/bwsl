@@ -46,6 +46,7 @@ TEST_CASE("Square Lattice", "[lattice]")
     REQUIRE(structure.AreNeighbors(8,2));
     REQUIRE(structure.AreNeighbors(8,6));
   }
+
   SECTION("distances are correct")
   {
     REQUIRE(structure.GetDistance(0,1) == CApprox(1.0));
@@ -55,18 +56,45 @@ TEST_CASE("Square Lattice", "[lattice]")
     REQUIRE(structure.GetDistance(4,7) == CApprox(1.0));
   }
 
-  SECTION("GetCoordinates and GetOffset invert each other")
-  {
-    for (auto i = 0ul; i < structure.GetNumSites(); i++) {
-      auto offs = structure.GetOffset(structure.GetCoordinates(i));
-      REQUIRE(offs == i);
-    }
-  }
-
-  SECTION("Jumps are correct")
+  SECTION("jumps are correct")
   {
     REQUIRE(structure.GetJump(0, 1)[0] == 0);
     REQUIRE(structure.GetJump(0, 1)[1] == 1);
+  }
+}
+
+TEST_CASE("Rectangular Lattice")
+{
+  auto structure = Lattice(SquareLattice, {3UL, 4UL});
+
+  SECTION("neighbors are correct")
+  {
+    REQUIRE(structure.AreNeighbors(0, 1));
+    REQUIRE(structure.AreNeighbors(0, 4));
+    REQUIRE(structure.AreNeighbors(0, 8));
+    REQUIRE(structure.AreNeighbors(0, 3));
+    REQUIRE(structure.AreNeighbors(7, 4));
+    REQUIRE(structure.AreNeighbors(7, 3));
+    REQUIRE(structure.AreNeighbors(7, 11));
+    REQUIRE(structure.AreNeighbors(7, 6));
+    REQUIRE(structure.AreNeighbors(5, 1));
+    REQUIRE(structure.AreNeighbors(5, 6));
+    REQUIRE(structure.AreNeighbors(5, 4));
+    REQUIRE(structure.AreNeighbors(5, 9));
+  }
+
+  SECTION("distances are correct")
+  {
+    REQUIRE(structure.GetDistance(0,1) == CApprox(1.0));
+    REQUIRE(structure.GetDistance(0,2) == CApprox(2.0));
+    REQUIRE(structure.GetDistance(0,5) == CApprox(sqrt(2.0)));
+    REQUIRE(structure.GetDistance(0,11) == CApprox(sqrt(2.0)));
+    REQUIRE(structure.GetDistance(0,8) == CApprox(1.0));
+    REQUIRE(structure.GetDistance(6,7) == CApprox(1.0));
+    REQUIRE(structure.GetDistance(6,5) == CApprox(1.0));
+    REQUIRE(structure.GetDistance(6,1) == CApprox(sqrt(2.0)));
+    REQUIRE(structure.GetDistance(6,9) == CApprox(sqrt(2.0)));
+    REQUIRE(structure.GetDistance(6,4) == CApprox(2.0));
   }
 }
 

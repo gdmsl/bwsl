@@ -1,4 +1,4 @@
-//===-- MarkovChainStatsTest.cpp ------------------------------*- C++ -*-===//
+//===-- MoveStatsTest.cpp --------------------------------------*- C++ -*-===//
 //
 //                       BeagleWarlord's Support Library
 //
@@ -9,11 +9,11 @@
 ///
 /// @file
 /// @author     Guido Masella (guido.masella@gmail.com)
-/// @brief      Tests for the MarkovChainStats Class
+/// @brief      Tests for the MoveStats Class
 ///
 //===---------------------------------------------------------------------===//
 // bwsl
-#include <bwsl/MarkovChainStats.hpp>
+#include <bwsl/MonteCarloUtils.hpp>
 
 // std
 #include <vector>
@@ -22,13 +22,13 @@
 #define CATCH_CONFIG_MAIN
 #include <catch2/catch.hpp>
 
-using namespace bwsl;
+using namespace bwsl::montecarlo;
 
 // TDD example
 TEST_CASE("vectors can be sized and resized", "[vector]")
 {
 
-  auto movestats = MarkovChainStats("TestMove");
+  auto movestats = MoveStats("TestMove");
 
   SECTION("")
   {

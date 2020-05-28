@@ -31,13 +31,13 @@ class Bravais
 {
 public:
   /// Coordinates of a point in the lattice
-  using coords_t = std::vector<int>;
+  using coords_t = std::vector<long>;
 
   /// Shorthand for real valued vectors
   using realvec_t = std::vector<double>;
 
   /// Vector of coordinates
-  using neighbors_t = std::vector<int>;
+  using neighbors_t = std::vector<long>;
 
   /// Construct an abstract lattice
   Bravais(size_t dim_,
