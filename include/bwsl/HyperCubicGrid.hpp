@@ -114,6 +114,12 @@ public:
   /// Check if the index is valid
   auto IndexIsValid(index_t i) const -> bool { return i < numsites_; }
 
+  /// Get the boundaries
+  auto GetBoundaries() const -> boundaries_t { return boundaries_; }
+
+  /// Get this
+  auto GetGrid() const -> HyperCubicGrid { return *this; }
+
 protected:
   /// Check the dimensions
   template<class C>

@@ -58,7 +58,7 @@ public:
   /// Construct a lattice with given size from an infinite bravais lattice
   Lattice(Bravais const& bravais,
           gridsize_t const& size,
-          boundaries_t openboundaries = boundaries_t::Closed);
+          boundaries_t boundaries = boundaries_t::Closed);
 
   /// Copy constructor
   Lattice(Lattice const& that) = default;
