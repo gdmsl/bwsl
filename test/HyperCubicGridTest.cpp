@@ -67,6 +67,13 @@ TEST_CASE("Grid with closed boundaries addressed with indices and coordinates", 
     REQUIRE(h.GetMappedSite(1UL, 1UL) == 0UL);
     REQUIRE(h.GetMappedSite(0UL, 0UL) == 0UL);
   }
+
+  SECTION("Mapping and unmapping indices") {
+    for (auto i = 0UL; i < h.GetNumSites(); i++) {
+      for (auto j = 0UL; j < h.GetNumSites(); j++)
+      REQUIRE(h.GetUnMappedSite(h.GetMappedSite(i, j), i) == j);
+    }
+  }
 }
 
 TEST_CASE("Grid with open boundaries addressed with indices and coordinates", "[index][coordinates]")

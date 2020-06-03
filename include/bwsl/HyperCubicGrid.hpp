@@ -84,8 +84,11 @@ public:
   /// Get the size of the grid
   auto GetSize() const -> std::vector<size_t> const& { return size_; }
 
-  /// Get the mapped site
+  /// Get the site i mapping (a, b) to (0, i)
   auto GetMappedSite(index_t a, index_t b) const -> index_t;
+
+  /// Get the site j mapping (0, a) to (b, j)
+  auto GetUnMappedSite(index_t a, index_t b) const -> index_t;
 
   /// Convert an offset to coordinates
   auto GetCoordinates(index_t offset) const -> coords_t;
@@ -162,6 +165,15 @@ HyperCubicGrid::GetMappedSite(index_t a, index_t b) const -> index_t
 {
   auto cb = GetCoordinates(b);
   subtract_into(cb, GetCoordinates(a));
+  EnforceBoundaries(cb);
+  return GetIndex(cb);
+}
+
+inline auto
+HyperCubicGrid::GetUnMappedSite(index_t a, index_t b) const -> index_t
+{
+  auto cb = GetCoordinates(b);
+  sum_into(cb, GetCoordinates(a));
   EnforceBoundaries(cb);
   return GetIndex(cb);
 }
