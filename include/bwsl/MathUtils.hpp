@@ -283,6 +283,19 @@ invert(Container& c)
 }
 
 ///
+/// Invert each component of a vector
+///
+template<class Container>
+inline Container
+get_inverted(Container c)
+{
+  for (auto& x : c) {
+    x = -x;
+  }
+  return c;
+}
+
+///
 /// Transform coordinates to index
 ///
 template<class C, class D>
