@@ -138,7 +138,7 @@ HistAccumulator::force_add(size_t idx, T val)
   while (idx >= nbins_) {
     acc_.emplace_back();
     nbins_++;
-    assert(nbins_ = acc_.size());
+    assert(nbins_ == acc_.size());
   }
   acc_[idx].add(val);
   count_ += 1ul;
