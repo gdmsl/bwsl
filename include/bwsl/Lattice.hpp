@@ -22,7 +22,6 @@
 #include <bwsl/HyperCubicGrid.hpp>
 
 // fmt
-#include <fmt/format.h>
 #include <fmt/ostream.h>
 
 // std
