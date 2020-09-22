@@ -71,6 +71,26 @@ target_link_libraries(AccumulatorTest
 add_test(NAME bwsl.Accumulator COMMAND $<TARGET_FILE:AccumulatorTest>)
 # }}}
 
+# KahanAccumulatorTest {{{
+add_executable(KahanAccumulatorTest KahanAccumulatorTest.cpp)
+target_link_libraries(KahanAccumulatorTest
+  PRIVATE
+    bwsl
+    Catch2::Catch2
+  )
+add_test(NAME bwsl.KahanAccumulator COMMAND $<TARGET_FILE:KahanAccumulatorTest>)
+# }}}
+
+# NeumaierAccumulatorTest {{{
+add_executable(NeumaierAccumulatorTest NeumaierAccumulatorTest.cpp)
+target_link_libraries(NeumaierAccumulatorTest
+  PRIVATE
+    bwsl
+    Catch2::Catch2
+  )
+add_test(NAME bwsl.NeumaierAccumulator COMMAND $<TARGET_FILE:NeumaierAccumulatorTest>)
+# }}}
+
 # MoveStatsTest {{{
 add_executable(MoveStatsTest MoveStatsTest.cpp)
 target_link_libraries(MoveStatsTest
