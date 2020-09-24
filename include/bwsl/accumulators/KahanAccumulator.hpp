@@ -53,10 +53,13 @@ class KahanAccumulator {
    auto Add(double x) -> void;
 
    /// Return the final result
-   [[nodiscard]] auto GetResult() const -> double { return sum_; };
+   [[nodiscard]] auto Sum() const -> double { return sum_; };
+
+   /// Return the final result
+   [[nodiscard]] auto Mean() const -> double { return sum_ / count_; };
 
    /// Get the number of values added
-   [[nodiscard]] auto GetCount() const -> unsigned long { return count_; };
+   [[nodiscard]] auto Count() const -> unsigned long { return count_; };
 
    /// Reset the accumulator
    auto Reset() -> void;

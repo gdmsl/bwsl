@@ -15,7 +15,7 @@
 #pragma once
 
 // bwsl
-#include <bwsl/Accumulator.hpp>
+#include <bwsl/Accumulators.hpp>
 
 // fmt
 #include <fmt/format.h>
@@ -80,7 +80,7 @@ private:
   std::string output_file_;
 
   /// Storage for the accumulators
-  std::map<Index_t, bwsl::Accumulator> accumulator_{};
+  std::map<Index_t, bwsl::KahanAccumulator> accumulator_{};
 
   friend class boost::serialization::access;
 
@@ -107,7 +107,7 @@ template<typename Index_t>
 inline void
 ObservableGroup<Index_t>::Measure(Index_t idx, double val)
 {
-  accumulator_.at(idx).add(val);
+  accumulator_.at(idx).Add(val);
 }
 
 template<typename Index_t>
@@ -131,10 +131,10 @@ ObservableGroup<Index_t>::PrintAndReset(size_t precision)
   auto out = std::ofstream(output_file_.c_str(), std::ios::app);
 
   auto it = accumulator_.begin();
-  fmt::print(out, "{:.{}e}", it->second.GetResult(), precision);
+  fmt::print(out, "{:.{}e}", it->second.Mean(), precision);
   it->second.Reset();
   while (++it != accumulator_.end()) {
-    fmt::print(out, ",{:.{}e}", it->second.GetResult(), precision);
+    fmt::print(out, ",{:.{}e}", it->second.Mean(), precision);
     it->second.Reset();
   }
   fmt::print(out, "\n");

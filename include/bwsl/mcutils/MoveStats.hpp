@@ -15,7 +15,7 @@
 #pragma once
 
 // bwsl
-#include <bwsl/Accumulator.hpp>
+#include <bwsl/Accumulators.hpp>
 #include <bwsl/mcutils/MoveResult.hpp>
 #include <bwsl/mcutils/MoveStatus.hpp>
 
@@ -131,7 +131,7 @@ public:
   };
 
   /// Compute the average acceptance
-  auto GetAverageProbability() const -> double { return prob_.GetResult(); };
+  auto GetAverageProbability() const -> double { return prob_.Mean(); };
 
   /// Reset all the counters
   auto Reset() -> void;
@@ -163,7 +163,7 @@ private:
   unsigned long impossible_{ 0UL };
 
   /// Probability
-  Accumulator prob_{};
+  KahanAccumulator prob_{};
 
   /// Serialization
   friend class boost::serialization::access;
@@ -205,7 +205,7 @@ MoveStats::UpdateIfProposed(T& var, double prob) -> void
 
   var += 1UL;
   proposedflag_ = false;
-  prob_.add(prob);
+  prob_.Add(prob);
 }
 
 template<typename T>
