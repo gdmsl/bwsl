@@ -14,49 +14,60 @@
 //===---------------------------------------------------------------------===//
 #pragma once
 
+// bwsl
+#include <bwsl/accumulators/AccumulatorsExceptions.hpp>
+
 // boost
 #include <boost/serialization/serialization.hpp>
 #include <boost/serialization/version.hpp>
+
+// std
+#include <limits>
 
 namespace bwsl {
 
 ///
 /// Accumulator following the Neumaier summation algorithm
 ///
-class NeumaierAccumulator {
- public:
-   /// Default constructor
-   NeumaierAccumulator() = default;
+class NeumaierAccumulator
+{
+public:
+  /// Default constructor
+  NeumaierAccumulator() = default;
 
-   /// Copy constructor
-   NeumaierAccumulator(NeumaierAccumulator const& that) = default;
+  /// Copy constructor
+  NeumaierAccumulator(NeumaierAccumulator const& that) = default;
 
-   /// Copy constructor
-   NeumaierAccumulator(NeumaierAccumulator&& that) = default;
+  /// Copy constructor
+  NeumaierAccumulator(NeumaierAccumulator&& that) = default;
 
-   /// Default destructor
-   virtual ~NeumaierAccumulator() = default;
+  /// Default destructor
+  virtual ~NeumaierAccumulator() = default;
 
-   /// Copy assignment operator
-   auto operator=(NeumaierAccumulator const& that) -> NeumaierAccumulator& = default;
+  /// Copy assignment operator
+  auto operator=(NeumaierAccumulator const& that)
+    -> NeumaierAccumulator& = default;
 
-   /// Copy assignment operator
-   auto operator=(NeumaierAccumulator&& that) -> NeumaierAccumulator& = default;
+  /// Copy assignment operator
+  auto operator=(NeumaierAccumulator&& that) -> NeumaierAccumulator& = default;
 
-   /// Add a number to the sum
-   template<typename T>
-   auto Add(T x) -> void;
+  /// Add a number to the sum
+  auto Add(double x) -> void;
 
-   /// Return the final result
-   [[nodiscard]] auto GetResult() const -> double { return sum_ + c_; };
+  /// Sum of the accumulated values
+  [[nodiscard]] auto Sum() const -> double { return sum_ + c_; };
 
-   /// Get the number of values added
-   [[nodiscard]] auto GetCount() const -> unsigned long { return count_; };
+  /// Average of the accumulated values
+  [[nodiscard]] auto Mean() const -> double { return Sum() / Count(); };
 
-   /// Reset the accumulator
-   auto Reset() -> void;
- protected:
- private:
+  /// Number of accumulated values
+  [[nodiscard]] auto Count() const -> unsigned long { return count_; };
+
+  /// Reset the accumulator
+  auto Reset() -> void;
+
+protected:
+private:
   /// Accumulator for the sum
   double sum_{ 0.0 };
 
@@ -72,10 +83,14 @@ class NeumaierAccumulator {
   void serialize(Archive& ar, unsigned int version);
 }; // class NeumaierAccumulator
 
-template<typename T>
 inline auto
-NeumaierAccumulator::Add(T x) -> void
+NeumaierAccumulator::Add(double x) -> void
 {
+  // protect against too many measurements
+  if (count_ == std::numeric_limits<unsigned long>::max()) {
+    throw exception::AccumulatorOverflow();
+  }
+
   auto t = sum_ + x;
   if (std::abs(sum_) >= std::abs(x)) {
     c_ += (sum_ - t) + x;
@@ -91,7 +106,7 @@ NeumaierAccumulator::Reset() -> void
 {
   sum_ = 0.0;
   c_ = 0.0;
-    count_ = 0.0;
+  count_ = 0.0;
 }
 
 template<class Archive>

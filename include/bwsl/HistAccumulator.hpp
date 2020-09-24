@@ -93,7 +93,7 @@ protected:
   size_t nbins_{ 0ul };
 
   /// Accumulators
-  std::vector<Accumulator> acc_{};
+  std::vector<> acc_{};
 
   /// Number of measurements
   unsigned long count_{ 0ul };

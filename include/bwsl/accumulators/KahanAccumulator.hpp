@@ -14,9 +14,15 @@
 //===---------------------------------------------------------------------===//
 #pragma once
 
+// bwsl
+#include <bwsl/accumulators/AccumulatorsExceptions.hpp>
+
 // boost
 #include <boost/serialization/serialization.hpp>
 #include <boost/serialization/version.hpp>
+
+// std
+#include <limits>
 
 namespace bwsl {
 
@@ -44,8 +50,7 @@ class KahanAccumulator {
    auto operator=(KahanAccumulator&& that) -> KahanAccumulator& = default;
 
    /// Add a number to the sum
-   template<typename T>
-   auto Add(T x) -> void;
+   auto Add(double x) -> void;
 
    /// Return the final result
    [[nodiscard]] auto GetResult() const -> double { return sum_; };
@@ -72,17 +77,19 @@ class KahanAccumulator {
   void serialize(Archive& ar, unsigned int version);
 }; // class KahanAccumulator
 
-template<typename T>
 inline auto
-KahanAccumulator::Add(T x) -> void
+KahanAccumulator::Add(double x) -> void
 {
+  if (count_ == std::numeric_limits<unsigned long>::max()) {
+    throw exception::AccumulatorOverflow();
+  }
+
   auto y = x - c_;
   auto t = sum_ + y;
   c_ = (t - sum_) - y;
   sum_ = t;
   count_++;
 }
-
 
 inline auto
 KahanAccumulator::Reset() -> void
