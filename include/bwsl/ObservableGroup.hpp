@@ -80,7 +80,7 @@ private:
   std::string output_file_;
 
   /// Storage for the accumulators
-  std::map<Index_t, bwsl::KahanAccumulator> accumulator_{};
+  std::map<Index_t, accumulators::KahanAccumulator> accumulator_{};
 
   friend class boost::serialization::access;
 

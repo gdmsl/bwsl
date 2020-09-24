@@ -24,7 +24,7 @@
 // std
 #include <limits>
 
-namespace bwsl {
+namespace bwsl::accumulators {
 
 ///
 /// Accumulator following the Kahan summation algorithm
@@ -113,6 +113,6 @@ KahanAccumulator::serialize(Archive& ar, const unsigned int /* version */)
   // clang-format on
 }
 
-} // namespace swmc
+} // namespace bwsl::accumulators
 
 // vim: set ft=cpp ts=2 sts=2 et sw=2 tw=80: //

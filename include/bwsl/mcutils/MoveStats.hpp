@@ -163,7 +163,7 @@ private:
   unsigned long impossible_{ 0UL };
 
   /// Probability
-  KahanAccumulator prob_{};
+  accumulators::KahanAccumulator prob_{};
 
   /// Serialization
   friend class boost::serialization::access;
