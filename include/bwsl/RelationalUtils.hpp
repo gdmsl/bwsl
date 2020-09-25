@@ -1,15 +1,15 @@
-//===-- Foo.hpp ------------------------------------------------*- C++ -*-===//
+//===-- RelationalUtils.hpp ------------------------------------*- C++ -*-===//
 //
 //                       BeagleWarlord's Support Library
 //
-// Copyright 2016-2019 Guido Masella. All Rights Reserved.
+// Copyright 2016-2020 Guido Masella. All Rights Reserved.
 // See LICENSE file for details
 //
 //===---------------------------------------------------------------------===//
 ///
 /// @file
 /// @author     Guido Masella (guido.masella@gmail.com)
-/// @brief      Definitions for the Foo Class
+/// @brief      Macros for fast definition of relational operators
 ///
 //===---------------------------------------------------------------------===//
 #pragma once

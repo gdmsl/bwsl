@@ -2,7 +2,7 @@
 //
 //                       BeagleWarlord's Support Library
 //
-// Copyright 2016-2019 Guido Masella. All Rights Reserved.
+// Copyright 2016-2020 Guido Masella. All Rights Reserved.
 // See LICENSE file for details
 //
 //===---------------------------------------------------------------------===//
@@ -102,7 +102,8 @@ LinSpace<T>::operator()()
 }
 
 template<typename T>
-LinSpace<T>& LinSpace<T>::operator++()
+LinSpace<T>&
+LinSpace<T>::operator++()
 {
   ++step_;
   current_value_ = first_ + stepsize_ * static_cast<T>(step_);
@@ -110,7 +111,8 @@ LinSpace<T>& LinSpace<T>::operator++()
 }
 
 template<typename T>
-LinSpace<T> LinSpace<T>::operator++(int)
+LinSpace<T>
+LinSpace<T>::operator++(int)
 {
   LinSpace<T> tmp(*this);
   operator++();

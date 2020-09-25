@@ -2,7 +2,7 @@
 //
 //                       BeagleWarlord's Support Library
 //
-// Copyright 2016-2019 Guido Masella. All Rights Reserved.
+// Copyright 2016-2020 Guido Masella. All Rights Reserved.
 // See LICENSE file for details
 //
 //===---------------------------------------------------------------------===//
@@ -25,7 +25,8 @@ namespace bwsl {
 /// This code is based on this answer
 /// http://stackoverflow.com/a/37575457/4477378
 ///
-bool compare_files(const std::string& p1, const std::string& p2)
+bool
+compare_files(const std::string& p1, const std::string& p2)
 {
   std::ifstream f1(p1, std::ifstream::binary | std::ifstream::ate);
   std::ifstream f2(p2, std::ifstream::binary | std::ifstream::ate);

@@ -2,7 +2,7 @@
 //
 //                       BeagleWarlord's Support Library
 //
-// Copyright 2016-2019 Guido Masella. All Rights Reserved.
+// Copyright 2016-2020 Guido Masella. All Rights Reserved.
 // See LICENSE file for details
 //
 //===---------------------------------------------------------------------===//
@@ -17,9 +17,9 @@
 // bwsl
 #include <bwsl/Approx.hpp>
 #include <bwsl/Bravais.hpp>
+#include <bwsl/HyperCubicGrid.hpp>
 #include <bwsl/MathUtils.hpp>
 #include <bwsl/Pairs.hpp>
-#include <bwsl/HyperCubicGrid.hpp>
 
 // fmt
 #include <fmt/ostream.h>

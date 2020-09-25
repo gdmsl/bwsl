@@ -2,7 +2,7 @@
 //
 //                       BeagleWarlord's Support Library
 //
-// Copyright 2016-2019 Guido Masella. All Rights Reserved.
+// Copyright 2016-2020 Guido Masella. All Rights Reserved.
 // See LICENSE file for details
 //
 //===---------------------------------------------------------------------===//
@@ -82,7 +82,8 @@ public:
   /// Get the distance vector in real space between two points
   double GetDistance(coords_t const& first, coords_t const& second) const;
 
-  std::pair<double, realvec_t> GetDistanceVector(coords_t const& first, coords_t const& second) const;
+  std::pair<double, realvec_t> GetDistanceVector(coords_t const& first,
+                                                 coords_t const& second) const;
 
   /// Get one of the neighbors of a lattice point
   Bravais::coords_t GetNeighbor(coords_t const& point, size_t idx) const;
@@ -107,10 +108,10 @@ private:
 }; // class Bravais
 
 inline Bravais::Bravais(size_t dim,
-                 size_t gamma,
-                 realvec_t pvectors,
-                 realvec_t pivectors,
-                 neighbors_t neighbors)
+                        size_t gamma,
+                        realvec_t pvectors,
+                        realvec_t pivectors,
+                        neighbors_t neighbors)
   : dim_(dim)
   , gamma_(gamma)
   , pvectors_(std::move(pvectors))

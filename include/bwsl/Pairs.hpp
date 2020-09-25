@@ -2,7 +2,7 @@
 //
 //                       BeagleWarlord's Support Library
 //
-// Copyright 2016-2019 Guido Masella. All Rights Reserved.
+// Copyright 2016-2020 Guido Masella. All Rights Reserved.
 // See LICENSE file for details
 //
 //===---------------------------------------------------------------------===//
@@ -18,13 +18,11 @@
 #include <bwsl/MathUtils.hpp>
 
 // std
-#include <utility>
 #include <cmath>
 #include <cstdlib>
+#include <utility>
 
-namespace bwsl {
-
-namespace pairs {
+namespace bwsl::pairs {
 
 ///
 /// Get the index of a pair from the values of the two single indices
@@ -40,8 +38,7 @@ GetPairIndex(size_t a, size_t b, size_t maxval)
 /// Get the index of the pair from the pair of indices
 ///
 inline size_t
-GetPairIndex(const std::pair<size_t, size_t> pair,
-             const size_t maxval)
+GetPairIndex(const std::pair<size_t, size_t> pair, const size_t maxval)
 {
   return GetPairIndex(pair.first, pair.second, maxval);
 }
@@ -64,7 +61,6 @@ GetNumPairs(size_t maxval)
   return square(maxval);
 }
 
-} // namespace pairs
-} // namespace bwsl
+} // namespace bwsl::pairs
 
 // vim: set ft=cpp ts=2 sts=2 et sw=2 tw=80: //

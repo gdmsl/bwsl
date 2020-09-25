@@ -2,7 +2,7 @@
 //
 //                       BeagleWarlord's Support Library
 //
-// Copyright 2016-2019 Guido Masella. All Rights Reserved.
+// Copyright 2016-2020 Guido Masella. All Rights Reserved.
 // See LICENSE file for details
 //
 //===---------------------------------------------------------------------===//
@@ -12,15 +12,15 @@
 /// @brief      Tests for the Foo Class
 ///
 //===---------------------------------------------------------------------===//
-// camarosgf
-#include <Foo.hpp>
+// bwsl
+#include <bwsl/Foo.hpp>
 
 // std
 #include <vector>
 
 // catch
 #define CATCH_CONFIG_MAIN
-#include <catch/catch.hpp>
+#include <catch2/catch.hpp>
 
 using namespace bwsl;
 

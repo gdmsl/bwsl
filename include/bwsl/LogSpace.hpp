@@ -2,7 +2,7 @@
 //
 //                       BeagleWarlord's Support Library
 //
-// Copyright 2016-2019 Guido Masella. All Rights Reserved.
+// Copyright 2016-2020 Guido Masella. All Rights Reserved.
 // See LICENSE file for details
 //
 //===---------------------------------------------------------------------===//
@@ -14,21 +14,21 @@
 //===---------------------------------------------------------------------===//
 #pragma once
 
-//bwsl
+// bwsl
 #include <bwsl/MathUtils.hpp>
 
 // std
-#include <vector>
 #include <algorithm>
 #include <cassert>
 #include <cmath>
+#include <vector>
 
 namespace bwsl {
 
 ///
 /// Generate logarithmically spaced numbers.
 ///
-template <typename T>
+template<typename T>
 class LogSpace
 {
 public:
@@ -92,7 +92,7 @@ private:
   }
 }; // class LogSpace
 
-template <typename T>
+template<typename T>
 LogSpace<T>::LogSpace(long start, long stop, unsigned long steps, double base)
   : nsteps_(steps)
   , step_(0)
@@ -104,7 +104,7 @@ LogSpace<T>::LogSpace(long start, long stop, unsigned long steps, double base)
   current_value_ = pow(base, start);
 }
 
-template <typename T>
+template<typename T>
 LogSpace<T>::LogSpace(T first, T last, unsigned long steps)
   : first_(first)
   , last_(last)
@@ -116,7 +116,7 @@ LogSpace<T>::LogSpace(T first, T last, unsigned long steps)
   current_value_ = first;
 }
 
-template <typename T>
+template<typename T>
 T
 LogSpace<T>::operator()()
 {
@@ -125,23 +125,25 @@ LogSpace<T>::operator()()
   return retval;
 }
 
-template <typename T>
-LogSpace<T>& LogSpace<T>::operator++()
+template<typename T>
+LogSpace<T>&
+LogSpace<T>::operator++()
 {
   current_value_ *= base_;
   ++step_;
   return *this;
 }
 
-template <typename T>
-LogSpace<T> LogSpace<T>::operator++(int)
+template<typename T>
+LogSpace<T>
+LogSpace<T>::operator++(int)
 {
   LogSpace<T> tmp(*this);
   operator++();
   return tmp;
 }
 
-template <typename T>
+template<typename T>
 LogSpace<T>
 LogSpace<T>::begin()
 {
@@ -151,7 +153,7 @@ LogSpace<T>::begin()
   return tmp;
 }
 
-template <typename T>
+template<typename T>
 LogSpace<T>
 LogSpace<T>::end()
 {
@@ -161,7 +163,7 @@ LogSpace<T>::end()
   return tmp;
 }
 
-template <typename T>
+template<typename T>
 std::vector<T>
 LogSpace<T>::Collect(unsigned long n)
 {

@@ -2,7 +2,7 @@
 //
 //                       BeagleWarlord's Support Library
 //
-// Copyright 2016-2019 Guido Masella. All Rights Reserved.
+// Copyright 2016-2020 Guido Masella. All Rights Reserved.
 // See LICENSE file for details
 //
 //===---------------------------------------------------------------------===//
@@ -285,7 +285,7 @@ template<class G>
 inline RationalNum<G>
 operator-(G const& lhs, RationalNum<G> const& rhs)
 {
-  return RationalNum<G>{lhs * rhs.den_ - rhs.num_, rhs.den_};
+  return RationalNum<G>{ lhs * rhs.den_ - rhs.num_, rhs.den_ };
 }
 
 template<class G>
@@ -299,7 +299,7 @@ template<class G>
 inline RationalNum<G>
 operator/(G const& lhs, RationalNum<G> const& rhs)
 {
-  return RationalNum<G>{lhs * rhs.den_, rhs.num_};
+  return RationalNum<G>{ lhs * rhs.den_, rhs.num_ };
 }
 
 template<class T>
