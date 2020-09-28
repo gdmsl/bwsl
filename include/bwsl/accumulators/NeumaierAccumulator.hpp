@@ -86,12 +86,12 @@ private:
 inline auto
 NeumaierAccumulator::Add(double x) -> void
 {
-#ifndef NBWSL_ACCUMULATORS_CHECKS
+#ifdef BWSL_ACCUMULATORS_CHECKS
   // protect against too many measurements
   if (count_ == std::numeric_limits<unsigned long>::max()) {
     throw exception::AccumulatorOverflow();
   }
-#endif //ndef NBWSL_ACCUMULATORS_CHECKS
+#endif // BWSL_ACCUMULATORS_CHECKS
 
   auto t = sum_ + x;
   if (std::abs(sum_) >= std::abs(x)) {
