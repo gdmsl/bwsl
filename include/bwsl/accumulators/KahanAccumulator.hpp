@@ -83,9 +83,11 @@ class KahanAccumulator {
 inline auto
 KahanAccumulator::Add(double x) -> void
 {
+#ifndef NBWSL_ACCUMULATORS_CHECKS
   if (count_ == std::numeric_limits<unsigned long>::max()) {
     throw exception::AccumulatorOverflow();
   }
+#endif // ndef NBWSL_ACCUMULATORS_CHECKS
 
   auto y = x - c_;
   auto t = sum_ + y;
