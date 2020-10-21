@@ -310,8 +310,8 @@ array_to_index(C const& a, D const& size)
   assert(a.size() == dim && "Dimensions not matching");
 
   auto index = 0UL;
-  auto prod = accumulate_product(size);
-  prod /= size[0UL];
+  auto prod = std::accumulate(
+    std::next(std::begin(size)), end(size), 1UL, std::multiplies<size_t>());
 
   for (auto i = 0UL; i < dim; i++) {
     index += prod * static_cast<size_t>(a[i]);

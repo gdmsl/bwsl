@@ -1,4 +1,4 @@
-//===-- KnuthWelfordAccumulator.hpp ----------------------------*- C++ -*-===//
+//===-- WestAccumulator.hpp ------------------------------------*- C++ -*-===//
 //
 //                       BeagleWarlord's Support Library
 //
@@ -9,7 +9,7 @@
 ///
 /// @file
 /// @author     Guido Masella (guido.masella@gmail.com)
-/// @brief      Definitions for the KnuthWelfordAccumulator Class
+/// @brief      Definitions for the WestAccumulator Class
 ///
 //===---------------------------------------------------------------------===//
 #pragma once
@@ -29,30 +29,29 @@
 namespace bwsl {
 
 ///
-/// Accumulator using KnuthWelford algorithm
+/// Accumulator using West algorithm.
+/// It computed weighted mean and variance.
 ///
-class KnuthWelfordAccumulator
+class WestAccumulator
 {
 public:
   /// Default constructor
-  KnuthWelfordAccumulator() = default;
+  WestAccumulator() = default;
 
   /// Copy constructor
-  KnuthWelfordAccumulator(KnuthWelfordAccumulator const& that) = default;
+  WestAccumulator(WestAccumulator const& that) = default;
 
   /// Move constructor
-  KnuthWelfordAccumulator(KnuthWelfordAccumulator&& that) = default;
+  WestAccumulator(WestAccumulator&& that) = default;
 
   /// Default destructor
-  virtual ~KnuthWelfordAccumulator() = default;
+  virtual ~WestAccumulator() = default;
 
   /// Copy assignment operator
-  auto operator=(KnuthWelfordAccumulator const& that)
-    -> KnuthWelfordAccumulator& = default;
+  auto operator=(WestAccumulator const& that) -> WestAccumulator& = default;
 
   /// Copy assignment operator
-  auto operator=(KnuthWelfordAccumulator&& that)
-    -> KnuthWelfordAccumulator& = default;
+  auto operator=(WestAccumulator&& that) -> WestAccumulator& = default;
 
   /// Add a measurement with unit weight
   auto Add(double m) -> void;
@@ -63,11 +62,16 @@ public:
   /// Average of the accumulated values
   [[nodiscard]] auto Mean() const -> double { return mean_; };
 
-  /// Average of the accumulated values
-  [[nodiscard]] auto Variance(bool corrected) const -> double;
+  /// Biased estimation of the variance
+  [[nodiscard]] auto PopulationVariance() const -> double;
 
-  /// Average of the accumulated values
-  [[nodiscard]] auto StandardDeviation(bool corrected) const -> double;
+  /// Unbiased estimation of the variance
+  /// To be used in the case the weights are frequencies weights.
+  [[nodiscard]] auto SampleFrequencyVariance() const -> double;
+
+  /// Unbiased estimation of the variance
+  /// To be used in the case the weights are reliability weights.
+  [[nodiscard]] auto SampleReliabilityVariance() const -> double;
 
   /// Get the number of measurements
   [[nodiscard]] auto Count() const -> unsigned long { return count_; };
@@ -77,6 +81,12 @@ public:
 
 protected:
 private:
+  /// Sum of the weights
+  double sum_weights_{ 0.0 };
+
+  /// Sum of the squared weights
+  double sum_weights2_{ 0.0 };
+
   /// Mean of the measurements
   double mean_{ 0.0 };
 
@@ -92,10 +102,10 @@ private:
   /// Serialization method for the class
   template<class Archive>
   void serialize(Archive& ar, const unsigned int version);
-}; // class KnuthWelfordAccumulator
+}; // class WestAccumulator
 
 inline auto
-KnuthWelfordAccumulator::Add(double x) -> void
+WestAccumulator::Add(double x, double w) -> void
 {
 #ifdef BWSL_ACCUMULATORS_CHECKS
   // protect against too many measurements
@@ -106,33 +116,48 @@ KnuthWelfordAccumulator::Add(double x) -> void
 
   count_ += 1ul;
 
-  double delta = x - mean_;
-  mean_ += delta / count_;
-  double delta2 = x - mean_;
-  m2_ += delta * delta2;
+  sum_weights_ += w;
+  sum_weights2_ += w * w;
+  double oldmean = mean_;
+  mean_ += (w / sum_weights_) * (x - oldmean);
+  m2_ += w * (x - oldmean) * (x - mean_);
 }
 
 inline auto
-KnuthWelfordAccumulator::Variance(bool corrected) const -> double
+WestAccumulator::PopulationVariance() const -> double
 {
   if (count_ < 2) {
     return std::nan("");
   }
 
-  auto ccount = corrected ? count_ - 1UL : count_;
-
-  return m2_ / ccount;
+  return m2_ / sum_weights_;
 }
 
 inline auto
-KnuthWelfordAccumulator::StandardDeviation(bool corrected) const -> double
+WestAccumulator::SampleFrequencyVariance() const -> double
 {
-  return std::sqrt(Variance(corrected));
+  if (count_ < 2) {
+    return std::nan("");
+  }
+
+  return m2_ / (sum_weights_ - 1);
 }
 
 inline auto
-KnuthWelfordAccumulator::Reset() -> void
+WestAccumulator::SampleReliabilityVariance() const -> double
 {
+  if (count_ < 2) {
+    return std::nan("");
+  }
+
+  return m2_ / (sum_weights_ - sum_weights2_ / sum_weights_);
+}
+
+inline auto
+WestAccumulator::Reset() -> void
+{
+  sum_weights_ = 0.0;
+  sum_weights2_ = 0.0;
   mean_ = 0.0;
   m2_ = 0.0;
   count_ = 0UL;
@@ -140,10 +165,11 @@ KnuthWelfordAccumulator::Reset() -> void
 
 template<class Archive>
 inline void
-KnuthWelfordAccumulator::serialize(Archive& ar,
-                                   const unsigned int /* version */)
+WestAccumulator::serialize(Archive& ar, const unsigned int /* version */)
 {
   // clang-format off
+  ar & sum_weights_;
+  ar & sum_weights2_;
   ar & mean_;
   ar & m2_;
   ar & count_;

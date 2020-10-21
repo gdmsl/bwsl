@@ -154,8 +154,10 @@ void
 ObservableGroup<Index_t>::serialize(Archive& ar,
                                     const unsigned int /* version */)
 {
-  ar& output_file_;
-  ar& accumulator_;
+  // clang-format off
+  ar & output_file_;
+  ar & accumulator_;
+  // clang-format on
 }
 
 } // namespace bwsl

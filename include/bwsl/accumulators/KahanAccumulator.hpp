@@ -29,42 +29,44 @@ namespace bwsl::accumulators {
 ///
 /// Accumulator following the Kahan summation algorithm
 ///
-class KahanAccumulator {
- public:
-   /// Default constructor
-   KahanAccumulator() = default;
+class KahanAccumulator
+{
+public:
+  /// Default constructor
+  KahanAccumulator() = default;
 
-   /// Copy constructor
-   KahanAccumulator(KahanAccumulator const& that) = default;
+  /// Copy constructor
+  KahanAccumulator(KahanAccumulator const& that) = default;
 
-   /// Copy constructor
-   KahanAccumulator(KahanAccumulator&& that) = default;
+  /// Copy constructor
+  KahanAccumulator(KahanAccumulator&& that) = default;
 
-   /// Default destructor
-   virtual ~KahanAccumulator() = default;
+  /// Default destructor
+  virtual ~KahanAccumulator() = default;
 
-   /// Copy assignment operator
-   auto operator=(KahanAccumulator const& that) -> KahanAccumulator& = default;
+  /// Copy assignment operator
+  auto operator=(KahanAccumulator const& that) -> KahanAccumulator& = default;
 
-   /// Copy assignment operator
-   auto operator=(KahanAccumulator&& that) -> KahanAccumulator& = default;
+  /// Copy assignment operator
+  auto operator=(KahanAccumulator&& that) -> KahanAccumulator& = default;
 
-   /// Add a number to the sum
-   auto Add(double x) -> void;
+  /// Add a number to the sum
+  auto Add(double x) -> void;
 
-   /// Return the final result
-   [[nodiscard]] auto Sum() const -> double { return sum_; };
+  /// Return the final result
+  [[nodiscard]] auto Sum() const -> double { return sum_; };
 
-   /// Return the final result
-   [[nodiscard]] auto Mean() const -> double { return sum_ / count_; };
+  /// Return the final result
+  [[nodiscard]] auto Mean() const -> double { return sum_ / count_; };
 
-   /// Get the number of values added
-   [[nodiscard]] auto Count() const -> unsigned long { return count_; };
+  /// Get the number of values added
+  [[nodiscard]] auto Count() const -> unsigned long { return count_; };
 
-   /// Reset the accumulator
-   auto Reset() -> void;
- protected:
- private:
+  /// Reset the accumulator
+  auto Reset() -> void;
+
+protected:
+private:
   /// Accumulator for the sum
   double sum_{ 0.0 };
 
@@ -101,7 +103,7 @@ KahanAccumulator::Reset() -> void
 {
   sum_ = 0.0;
   c_ = 0.0;
-    count_ = 0.0;
+  count_ = 0.0;
 }
 
 template<class Archive>
