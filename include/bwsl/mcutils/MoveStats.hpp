@@ -115,7 +115,7 @@ public:
   /// Compute the acceptance from the collected statistics
   auto GetAcceptedRatio() const -> double
   {
-    return static_cast<double>(accepted_) / proposed_;
+    return proposed_ == 0UL ? 0.0 : static_cast<double>(accepted_) / proposed_;
   };
 
   /// Compute the rejection ratio from the collected statistics
