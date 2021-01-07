@@ -119,6 +119,8 @@ public:
   /// Save the momenta on a file
   auto SaveMomenta(std::string fname) const -> void;
 
+  /// Save the distances on a file
+  auto SavePairs(std::string fname) const -> void;
 protected:
   /// Compute the positions of all the lattice points
   std::vector<realvec_t> ComputePositions(Bravais const& bravais) const;
@@ -451,6 +453,51 @@ Lattice::SaveMomenta(std::string fname) const
       fmt::print(out, ",{}", k);
     }
     fmt::print(out, "\n");
+  }
+}
+
+inline auto
+Lattice::SavePairs(std::string fname) const -> void
+{
+  auto out = std::ofstream{ fname.c_str() };
+
+  fmt::print(out, "i,a,b");
+
+  auto npairs = pairs::GetNumPairs(GetNumSites());
+  auto nsites = GetNumSites();
+
+  for (auto i = 0UL; i < GetDim(); i++) {
+    fmt::print(out, ",x{}", i);
+  }
+  for (auto i = 0UL; i < GetDim(); i++) {
+    fmt::print(out, ",y{}", i);
+  }
+  for (auto i = 0UL; i < GetDim(); i++) {
+    fmt::print(out, ",d{}", i);
+  }
+  fmt::print(out, "\n");
+
+  for (auto i = 0UL; i < nsites; i++) {
+    auto vi = GetVector(0, i);
+    for (auto j = 0UL; j < nsites; j++) {
+      fmt::print(out, "{},{},{}", pairs::GetPairIndex(i,j,nsites),i,j);
+
+      for (auto const& v : vi) {
+        fmt::print(out, ",{}", v);
+      }
+
+      auto vj = GetVector(0, j);
+      for (auto const& v : vj) {
+        fmt::print(out, ",{}", v);
+      }
+
+      auto vec = GetVector(i, j);
+      for (auto const& v : vec) {
+        fmt::print(out, ",{}", v);
+      }
+
+      fmt::print(out, "\n");
+    }
   }
 }
 
