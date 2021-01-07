@@ -477,27 +477,27 @@ Lattice::SavePairs(std::string fname) const -> void
   }
   fmt::print(out, "\n");
 
-  for (auto i = 0UL; i < nsites; i++) {
-    auto vi = GetVector(0, i);
-    for (auto j = 0UL; j < nsites; j++) {
-      fmt::print(out, "{},{},{}", pairs::GetPairIndex(i,j,nsites),i,j);
+  for (auto i = 0UL; i < npairs; i++) {
+    auto [a, b] = bwsl::pairs::GetPair(i, nsites);
 
-      for (auto const& v : vi) {
-        fmt::print(out, ",{}", v);
-      }
+    auto va = GetVector(0, a);
+    fmt::print(out, "{},{},{}", bwsl::pairs::GetPairIndex(a,b,nsites),a,b);
 
-      auto vj = GetVector(0, j);
-      for (auto const& v : vj) {
-        fmt::print(out, ",{}", v);
-      }
-
-      auto vec = GetVector(i, j);
-      for (auto const& v : vec) {
-        fmt::print(out, ",{}", v);
-      }
-
-      fmt::print(out, "\n");
+    for (auto const& v : va) {
+      fmt::print(out, ",{}", v);
     }
+
+    auto vb = GetVector(0, b);
+    for (auto const& v : vb) {
+      fmt::print(out, ",{}", v);
+    }
+
+    auto vec = GetVector(a, b);
+    for (auto const& v : vec) {
+      fmt::print(out, ",{}", v);
+    }
+
+    fmt::print(out, "\n");
   }
 }
 
