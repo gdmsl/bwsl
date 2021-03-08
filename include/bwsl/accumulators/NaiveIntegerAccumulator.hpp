@@ -1,4 +1,4 @@
-//===-- KnuthWelfordAccumulator.hpp ----------------------------*- C++ -*-===//
+//===-- NaiveInteger.hpp ---------------------------------------*- C++ -*-===//
 //
 //                       BeagleWarlord's Support Library
 //
@@ -9,7 +9,7 @@
 ///
 /// @file
 /// @author     Guido Masella (guido.masella@gmail.com)
-/// @brief      Definitions for the KnuthWelfordAccumulator Class
+/// @brief      Definitions for the NaiveInteger Class
 ///
 //===---------------------------------------------------------------------===//
 #pragma once
@@ -31,37 +31,37 @@ namespace bwsl {
 ///
 /// Accumulator using KnuthWelford algorithm
 ///
-class KnuthWelfordAccumulator
+class NaiveInteger
 {
 public:
   /// Default constructor
-  KnuthWelfordAccumulator() = default;
+  NaiveInteger() = default;
 
   /// Copy constructor
-  KnuthWelfordAccumulator(KnuthWelfordAccumulator const& that) = default;
+  NaiveInteger(NaiveInteger const& that) = default;
 
   /// Move constructor
-  KnuthWelfordAccumulator(KnuthWelfordAccumulator&& that) = default;
+  NaiveInteger(NaiveInteger&& that) = default;
 
   /// Default destructor
-  virtual ~KnuthWelfordAccumulator() = default;
+  virtual ~NaiveInteger() = default;
 
   /// Copy assignment operator
-  auto operator=(KnuthWelfordAccumulator const& that)
-    -> KnuthWelfordAccumulator& = default;
+  auto operator=(NaiveInteger const& that)
+    -> NaiveInteger& = default;
 
   /// Copy assignment operator
-  auto operator=(KnuthWelfordAccumulator&& that)
-    -> KnuthWelfordAccumulator& = default;
+  auto operator=(NaiveInteger&& that)
+    -> NaiveInteger& = default;
 
   /// Add a measurement with unit weight
-  auto Add(double m) -> void;
+  auto Add(long) -> void;
 
   /// Sum of the accumulated values
-  [[nodiscard]] auto Sum() const -> double { return mean_ * Count(); };
+  [[nodiscard]] auto Sum() const -> long { return sum_; };
 
   /// Average of the accumulated values
-  [[nodiscard]] auto Mean() const -> double { return mean_; };
+  [[nodiscard]] auto Mean() const -> double { return static_cast<double>(sum_) / Count(); };
 
   /// Variance of the accumulated values
   [[nodiscard]] auto Variance(bool corrected) const -> double;
@@ -80,11 +80,11 @@ public:
 
 protected:
 private:
-  /// Mean of the measurements
-  double mean_{ 0.0 };
+  /// Accumulates the sum of the given values
+  long sum_{ 0L };
 
-  /// Hold informations ofr the variance
-  double m2_{ 0.0 };
+  /// Accumulates the squares of the given values
+  long sum2_{ 0L };
 
   /// Number of measurements
   unsigned long count_{ 0UL };
@@ -95,28 +95,32 @@ private:
   /// Serialization method for the class
   template<class Archive>
   void serialize(Archive& ar, const unsigned int version);
-}; // class KnuthWelfordAccumulator
+}; // class NaiveInteger
 
 inline auto
-KnuthWelfordAccumulator::Add(double x) -> void
+NaiveInteger::Add(long x) -> void
 {
 #ifdef BWSL_ACCUMULATORS_CHECKS
   // protect against too many measurements
   if (count_ == std::numeric_limits<unsigned long>::max()) {
     throw exception::AccumulatorOverflow();
   }
+  if (std::numeric_limits<unsigned long>::max() - sum_ <= x) {
+    throw exception::AccumulatorOverflow();
+  }
+  if (std::numeric_limits<unsigned long>::max() < sum2_ <= x*x) {
+    throw exception::AccumulatorOverflow();
+  }
 #endif // BWSL_ACCUMULATORS_CHECKS
 
   count_ += 1ul;
 
-  double delta = x - mean_;
-  mean_ += delta / count_;
-  double delta2 = x - mean_;
-  m2_ += delta * delta2;
+  sum_ += x;
+  sum2_ += x*x;
 }
 
 inline auto
-KnuthWelfordAccumulator::Variance(bool corrected) const -> double
+NaiveInteger::Variance(bool corrected) const -> double
 {
   if (count_ < 2) {
     return std::nan("");
@@ -124,41 +128,41 @@ KnuthWelfordAccumulator::Variance(bool corrected) const -> double
 
   auto ccount = corrected ? count_ - 1UL : count_;
 
-  return m2_ / ccount;
+  return static_cast<double>(sum2_ - sum_ * sum_ ) / (count_ * ccount);
 }
 
 inline auto
-KnuthWelfordAccumulator::ScaledVariance() const -> double
+NaiveInteger::ScaledVariance() const -> double
 {
   if (count_ < 2) {
     return std::nan("");
   }
 
-  return m2_;
+  return static_cast<double>(sum2_ - sum_ * sum_) / count_;
 }
 
 inline auto
-KnuthWelfordAccumulator::StandardDeviation(bool corrected) const -> double
+NaiveInteger::StandardDeviation(bool corrected) const -> double
 {
   return std::sqrt(Variance(corrected));
 }
 
 inline auto
-KnuthWelfordAccumulator::Reset() -> void
+NaiveInteger::Reset() -> void
 {
-  mean_ = 0.0;
-  m2_ = 0.0;
+  sum_ = 0L;
+  sum2_ = 0L;
   count_ = 0UL;
 }
 
 template<class Archive>
 inline void
-KnuthWelfordAccumulator::serialize(Archive& ar,
+NaiveInteger::serialize(Archive& ar,
                                    const unsigned int /* version */)
 {
   // clang-format off
-  ar & mean_;
-  ar & m2_;
+  ar & sum_;
+  ar & sum2_;
   ar & count_;
   // clang-format on
 }
