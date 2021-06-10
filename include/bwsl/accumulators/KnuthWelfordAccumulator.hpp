@@ -26,7 +26,7 @@
 #include <exception>
 #include <limits>
 
-namespace bwsl {
+namespace bwsl::accumulators {
 
 ///
 /// Accumulator using KnuthWelford algorithm
