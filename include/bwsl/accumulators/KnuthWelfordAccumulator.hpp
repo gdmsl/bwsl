@@ -72,6 +72,9 @@ public:
   /// Standard deviation of the accumulated values
   [[nodiscard]] auto StandardDeviation(bool corrected) const -> double;
 
+  /// Get the error on the mean
+  [[nodiscard]] auto Error(bool corrected) const -> double;
+
   /// Get the number of measurements
   [[nodiscard]] auto Count() const -> unsigned long { return count_; };
 
@@ -141,6 +144,12 @@ inline auto
 KnuthWelfordAccumulator::StandardDeviation(bool corrected) const -> double
 {
   return std::sqrt(Variance(corrected));
+}
+
+inline auto
+KnuthWelfordAccumulator::Error(bool corrected) const -> double
+{
+  return StandardDeviation(corrected) / std::sqrt(Count());
 }
 
 inline auto
