@@ -13,8 +13,8 @@
 ///
 //===---------------------------------------------------------------------===//
 // bwsl
-#include <bwsl/NeumaierAccumulator.hpp>
-#include <bwsl/KahanAccumulator.hpp>
+#include <bwsl/accumulators/NeumaierAccumulator.hpp>
+#include <bwsl/accumulators/KahanAccumulator.hpp>
 
 // std
 #include <vector>
@@ -24,7 +24,7 @@
 #define CATCH_CONFIG_MAIN
 #include <catch2/catch.hpp>
 
-using namespace bwsl;
+using namespace bwsl::accumulators;
 
 auto
 epsilon() -> double {
@@ -49,7 +49,7 @@ TEST_CASE("produce correct sum", "[sum]")
       k.Add(static_cast<double>(x));
       s += x;
     }
-    REQUIRE(k.GetResult() == Approx(s));
+    REQUIRE(k.Sum() == Approx(s));
   }
 }
 
@@ -68,7 +68,7 @@ TEST_CASE("The sum is correct")
     k.Add(eps);
     k.Add(-eps);
 
-    REQUIRE(k.GetResult() == 1.0);
+    REQUIRE(k.Sum() == 1.0);
   }
 
   SECTION("Wikipedia test")
@@ -86,8 +86,8 @@ TEST_CASE("The sum is correct")
     l.Add(1.0);
     l.Add(-a);
 
-    REQUIRE(l.GetResult() == Approx(0.0));
-    REQUIRE(k.GetResult() == Approx(2.0));
+    REQUIRE(l.Sum() == Approx(0.0));
+    REQUIRE(k.Sum() == Approx(2.0));
   }
 }
 

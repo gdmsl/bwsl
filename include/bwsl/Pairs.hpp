@@ -27,8 +27,8 @@ namespace bwsl::pairs {
 ///
 /// Get the index of a pair from the values of the two single indices
 ///
-inline size_t
-GetPairIndex(size_t a, size_t b, size_t maxval)
+inline auto
+GetPairIndex(std::size_t a, std::size_t b, std::size_t maxval) -> std::size_t
 {
   auto i = b * maxval + a;
   return i;
@@ -37,8 +37,9 @@ GetPairIndex(size_t a, size_t b, size_t maxval)
 ///
 /// Get the index of the pair from the pair of indices
 ///
-inline size_t
-GetPairIndex(const std::pair<size_t, size_t> pair, const size_t maxval)
+inline auto
+GetPairIndex(const std::pair<std::size_t, std::size_t> pair,
+             const std::size_t maxval) -> std::size_t
 {
   return GetPairIndex(pair.first, pair.second, maxval);
 }
@@ -46,8 +47,9 @@ GetPairIndex(const std::pair<size_t, size_t> pair, const size_t maxval)
 ///
 /// Get a pair of indices from the index of the pair
 ///
-inline std::pair<size_t, size_t>
-GetPair(size_t i, const size_t maxval)
+inline auto
+GetPair(std::size_t i, const std::size_t maxval)
+  -> std::pair<std::size_t, std::size_t>
 {
   return std::make_pair(i % maxval, i / maxval);
 }
@@ -55,8 +57,8 @@ GetPair(size_t i, const size_t maxval)
 ///
 /// Get the number of indices of pairs of unsigned values
 ///
-inline size_t
-GetNumPairs(size_t maxval)
+inline auto
+GetNumPairs(std::size_t maxval) -> std::size_t
 {
   return square(maxval);
 }

@@ -51,14 +51,14 @@ public:
   /// Copy constructor
   HyperCubicGrid(const HyperCubicGrid&) = default;
 
-  /// Copy assignment operator
-  HyperCubicGrid& operator=(const HyperCubicGrid&) = default;
-
   /// Move constructor
   HyperCubicGrid(HyperCubicGrid&&) = default;
 
+  /// Copy assignment operator
+  auto operator=(const HyperCubicGrid&) -> HyperCubicGrid& = default;
+
   /// Move assignment operator
-  HyperCubicGrid& operator=(HyperCubicGrid&&) = default;
+  auto operator=(HyperCubicGrid&&) -> HyperCubicGrid& = default;
 
   /// Constructor
   HyperCubicGrid(gridsize_t const& size, boundaries_t boundaries);
@@ -67,58 +67,68 @@ public:
   virtual ~HyperCubicGrid() = default;
 
   /// Get the number of dimension of the grid
-  auto GetDim() const -> size_t { return dim_; }
+  [[nodiscard]] auto GetDim() const -> size_t { return dim_; }
 
   /// Check if the grid has open boundaries
-  auto HasOpenBoundaries() const -> bool
+  [[nodiscard]] auto HasOpenBoundaries() const -> bool
   {
     return boundaries_ == boundaries_t::Open;
   }
 
   /// Check if the grid has open boundaries
-  auto HasClosedBoundaries() const -> bool
+  [[nodiscard]] auto HasClosedBoundaries() const -> bool
   {
     return boundaries_ == boundaries_t::Closed;
   }
 
   /// Get the size of the grid
-  auto GetSize() const -> std::vector<size_t> const& { return size_; }
+  [[nodiscard]] auto GetSize() const -> std::vector<size_t> const&
+  {
+    return size_;
+  }
 
   /// Get the site i mapping (a, b) to (0, i)
-  auto GetMappedSite(index_t a, index_t b) const -> index_t;
+  [[nodiscard]] auto GetMappedSite(index_t a, index_t b) const -> index_t;
 
   /// Get the site i mapping (0, i) to (a, b)
-  auto GetUnMappedSite(index_t i, index_t a) const -> index_t;
+  [[nodiscard]] auto GetUnMappedSite(index_t i, index_t a) const -> index_t;
 
   /// Convert an offset to coordinates
-  auto GetCoordinates(index_t offset) const -> coords_t;
+  [[nodiscard]] auto GetCoordinates(index_t offset) const -> coords_t;
 
   /// Convert coordinates to an offset
-  auto GetIndex(coords_t const& coords) const -> index_t;
+  [[nodiscard]] auto GetIndex(coords_t const& coords) const -> index_t;
 
   /// Change the coordinates so that they will match the boundary conditions
   auto EnforceBoundaries(coords_t& coords) const -> void;
 
   /// Check if the vector is on the grid
-  auto IsOnGrid(coords_t const& coords) const -> bool;
+  [[nodiscard]] auto IsOnGrid(coords_t const& coords) const -> bool;
 
   /// Destructure a pair and return the two indices
-  auto GetIndividualIndices(index_t pair) const -> std::pair<index_t, index_t>;
+  [[nodiscard]] auto GetIndividualIndices(index_t pair) const
+    -> std::pair<index_t, index_t>;
 
   /// Unique index for pairs of sites
-  auto GetPairIndex(index_t a, index_t b) const -> index_t;
+  [[nodiscard]] auto GetPairIndex(index_t a, index_t b) const -> index_t;
 
   /// Get the number of sites on the grid
-  auto GetNumSites() const -> size_t { return numsites_; }
+  [[nodiscard]] auto GetNumSites() const -> size_t { return numsites_; }
 
   /// Check if the index is valid
-  auto IndexIsValid(index_t i) const -> bool { return i < numsites_; }
+  [[nodiscard]] auto IndexIsValid(index_t i) const -> bool
+  {
+    return i < numsites_;
+  }
 
   /// Get the boundaries
-  auto GetBoundaries() const -> boundaries_t { return boundaries_; }
+  [[nodiscard]] auto GetBoundaries() const -> boundaries_t
+  {
+    return boundaries_;
+  }
 
   /// Get this
-  auto GetGrid() const -> HyperCubicGrid { return *this; }
+  [[nodiscard]] auto GetGrid() const -> HyperCubicGrid { return *this; }
 
 protected:
   /// Check the dimensions
@@ -189,8 +199,8 @@ HyperCubicGrid::EnforceBoundaries(coords_t& coords) const -> void
 {
   assert(coords.size() == dim_);
   if (HasClosedBoundaries()) {
-    for (auto i = 0ul; i < dim_; i++) {
-      auto s = size_[i];
+    for (auto i = 0UL; i < dim_; i++) {
+      auto s = static_cast<long>(size_[i]);
       while (coords[i] < 0) {
         coords[i] += s;
       }

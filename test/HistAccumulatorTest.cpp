@@ -28,26 +28,26 @@
 
 using namespace bwsl;
 
-int factorial(int n)
+auto factorial(int n) -> int
 {
   return (n == 1 || n == 0) ? 1 : factorial(n - 1) * n;
 }
 
-double poisson(int n, int mu) {
+auto poisson(int n, int mu) -> double {
   return exp(-mu) * std::pow(mu, n) / factorial(n);
 }
 
 // TDD example
 TEST_CASE("histograms can be constructed", "")
 {
-  auto n = 10ul;
+  auto n = 10UL;
   auto h = HistAccumulator(n);
 
   REQUIRE(h.GetNbins() == n);
 
   SECTION("newly created histograms have all components zero")
   {
-    for (auto i = 0ul; i < n; i++) {
+    for (auto i = 0UL; i < n; i++) {
       REQUIRE(h.GetResult(i) == 0.0);
     }
   }
@@ -65,7 +65,7 @@ TEST_CASE("sampling discrete distribution")
 
   for (auto i = 0UL; i < count; i++) {
     auto val = d(gen);
-    h.add(val);
+    h.Add(val);
   }
 
   for (auto i = 0UL; i < weights.size(); i++) {

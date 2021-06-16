@@ -61,16 +61,6 @@ target_link_libraries(HistAccumulatorTest
 add_test(NAME bwsl.HistAccumulator COMMAND $<TARGET_FILE:HistAccumulatorTest>)
 # }}}
 
-# AccumulatorTest {{{
-add_executable(AccumulatorTest AccumulatorTest.cpp)
-target_link_libraries(AccumulatorTest
-  PRIVATE
-    bwsl
-    Catch2::Catch2
-  )
-add_test(NAME bwsl.Accumulator COMMAND $<TARGET_FILE:AccumulatorTest>)
-# }}}
-
 # KahanAccumulatorTest {{{
 add_executable(KahanAccumulatorTest KahanAccumulatorTest.cpp)
 target_link_libraries(KahanAccumulatorTest

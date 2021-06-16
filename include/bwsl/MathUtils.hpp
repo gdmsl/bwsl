@@ -42,8 +42,8 @@ using DiffType = long;
 /// Square functions
 ///
 template<typename T>
-inline T
-square(T x)
+inline auto
+square(T x) -> T
 {
   static_assert(std::is_arithmetic<T>::value, "Wrong type for square function");
   return x * x;
@@ -53,8 +53,8 @@ square(T x)
 /// Cube functions
 ///
 template<typename T>
-inline T
-cube(T x)
+inline auto
+cube(T x) -> T
 {
   static_assert(std::is_arithmetic<T>::value, "Wrong type for cube function");
   return x * x * x;
@@ -64,8 +64,8 @@ cube(T x)
 /// Product of all the elements of a container
 ///
 template<class Container, class T = typename Container::value_type>
-inline T
-accumulate_product(const Container& v)
+inline auto
+accumulate_product(const Container& v) -> T
 {
   return std::accumulate(
     v.begin(), v.end(), static_cast<T>(1), std::multiplies<T>());
@@ -75,8 +75,8 @@ accumulate_product(const Container& v)
 /// Sum of all the elements of a container
 ///
 template<class Container, class T = typename Container::value_type>
-inline T
-accumulate_sum(const Container& v)
+inline auto
+accumulate_sum(const Container& v) -> T
 {
   return std::accumulate(v.begin(), v.end(), static_cast<T>(0));
 }
@@ -85,8 +85,8 @@ accumulate_sum(const Container& v)
 /// Return the maximum value in a container
 ///
 template<class Container>
-inline typename Container::value_type
-max(const Container& v)
+inline auto
+max(const Container& v) -> typename Container::value_type
 {
   return *std::max_element(v.begin(), v.end());
 }
@@ -95,8 +95,8 @@ max(const Container& v)
 /// Return the minimum value in a container
 ///
 template<class Container>
-inline typename Container::value_type
-min(const Container& v)
+inline auto
+min(const Container& v) -> typename Container::value_type
 {
   return *std::min_element(v.begin(), v.end());
 }
@@ -105,8 +105,8 @@ min(const Container& v)
 /// Square sum of the elements of a container
 ///
 template<class Container, class T>
-inline T
-sum_squared(const Container& v)
+inline auto
+sum_squared(const Container& v) -> T
 {
   T d = 0;
   for (auto x : v) {
@@ -119,8 +119,8 @@ sum_squared(const Container& v)
 /// L2 norm
 ///
 template<class Container>
-inline double
-l2norm(const Container& v)
+inline auto
+l2norm(const Container& v) -> double
 {
   auto d = typename Container::value_type{ 0 };
   for (auto x : v) {
@@ -133,8 +133,8 @@ l2norm(const Container& v)
 /// Sign function
 ///
 template<typename T>
-inline int
-sgn(T val)
+inline auto
+sgn(T val) -> int
 {
   return (T(0) < val) - (val < T(0));
 }
@@ -143,8 +143,8 @@ sgn(T val)
 /// Do the difference between unsigned types or return `abs(a-b)`
 ///
 template<typename T>
-inline T
-absdiff(T a, T b)
+inline auto
+absdiff(T a, T b) -> T
 {
   return (a > b) ? (a - b) : (b - a);
 }
@@ -153,8 +153,8 @@ absdiff(T a, T b)
 /// Do the difference between unsigned types giving signed result
 ///
 template<typename T, typename R>
-inline R
-signeddiff(T a, T b)
+inline auto
+signeddiff(T a, T b) -> R
 {
   static_assert(!std::is_signed<T>::value,
                 "Non valid unsigned type for signeddifference");
@@ -168,8 +168,8 @@ signeddiff(T a, T b)
 /// Uses a multiplicative formula
 ///
 template<typename T = long>
-inline double
-cbinomial(T n, T k)
+inline auto
+cbinomial(T n, T k) -> double
 {
   T res = 1;
 
@@ -194,8 +194,8 @@ cbinomial(T n, T k)
 /// Choose between the probabilities given
 ///
 template<class T = std::vector<double>, typename G>
-inline SizeType
-choose_between(const T& probs, G& rng)
+inline auto
+choose_between(const T& probs, G& rng) -> SizeType
 {
   auto comul = probs;
 
@@ -215,8 +215,8 @@ choose_between(const T& probs, G& rng)
 /// Choose between the comulative probabilities given
 ///
 template<class T = std::vector<double>, typename G>
-inline SizeType
-choose_between_psums(const T& comul, G& rng)
+inline auto
+choose_between_psums(const T& comul, G& rng) -> SizeType
 {
   std::uniform_real_distribution<typename T::value_type> udist(0.0,
                                                                comul.back());
@@ -232,8 +232,8 @@ choose_between_psums(const T& comul, G& rng)
 /// Choose with given probability
 ///
 template<typename T = double, typename G>
-inline bool
-choose_with_probability(T prob, G& rng)
+inline auto
+choose_with_probability(T prob, G& rng) -> bool
 {
   auto udist = std::uniform_real_distribution<T>{ 0.0, 1.0 };
   return static_cast<bool>(udist(rng) < prob);
@@ -243,8 +243,8 @@ choose_with_probability(T prob, G& rng)
 /// Add the second array to the first one
 ///
 template<class Container>
-inline Container&
-sum_into(Container& left, const Container& right)
+inline auto
+sum_into(Container& left, const Container& right) -> Container&
 {
   std::transform(left.begin(),
                  left.end(),
@@ -258,8 +258,8 @@ sum_into(Container& left, const Container& right)
 /// Subtract the second array to the first one
 ///
 template<class Container>
-inline Container&
-subtract_into(Container& left, const Container& right)
+inline auto
+subtract_into(Container& left, const Container& right) -> Container&
 {
   std::transform(left.begin(),
                  left.end(),
@@ -273,8 +273,8 @@ subtract_into(Container& left, const Container& right)
 /// Invert each component of a vector
 ///
 template<class Container>
-inline Container&
-invert(Container& c)
+inline auto
+invert(Container& c) -> Container&
 {
   for (auto& x : c) {
     x = -x;
@@ -286,8 +286,8 @@ invert(Container& c)
 /// Invert each component of a vector
 ///
 template<class Container>
-inline Container
-get_inverted(Container c)
+inline auto
+get_inverted(Container c) -> Container
 {
   for (auto& x : c) {
     x = -x;
@@ -299,8 +299,8 @@ get_inverted(Container c)
 /// Transform coordinates to index
 ///
 template<class C, class D>
-inline size_t
-array_to_index(C const& a, D const& size)
+inline auto
+array_to_index(C const& a, D const& size) -> size_t
 {
   static_assert(std::is_same<typename D::value_type, size_t>::value,
                 "type must contain size_t values");
@@ -325,8 +325,8 @@ array_to_index(C const& a, D const& size)
 /// Transform an index to coordinates
 ///
 template<class C, class D>
-inline C
-index_to_array(size_t index, D const& size)
+inline auto
+index_to_array(size_t index, D const& size) -> C
 {
   static_assert(std::is_same<typename D::value_type, size_t>::value,
                 "type must contain size_t values");
@@ -355,8 +355,8 @@ index_to_array(size_t index, D const& size)
 /// performances. Interpolation search is done until a window of 10000
 /// elements is reached. For smaller windows a binary search is performed.
 template<class ForwardIt, class T>
-inline ForwardIt
-upper_bound(ForwardIt first, ForwardIt last, const T& value)
+inline auto
+upper_bound(ForwardIt first, ForwardIt last, const T& value) -> ForwardIt
 {
   auto count = std::distance(first, last);
   auto it = first;
@@ -394,8 +394,8 @@ upper_bound(ForwardIt first, ForwardIt last, const T& value)
 
 /// Greater common denominator
 template<typename T>
-T
-get_gcd(T a, T b)
+auto
+get_gcd(T a, T b) -> T
 {
   if (b == 0) {
     return a;
@@ -406,8 +406,8 @@ get_gcd(T a, T b)
 /// Heaviside theta function
 template<typename Floating,
          std::enable_if_t<std::is_floating_point<Floating>::value, int> = 0>
-Floating
-heaviside(Floating x)
+auto
+heaviside(Floating x) -> Floating
 {
   return x >= 0.0 ? 1.0 : 0.0;
 }
@@ -415,8 +415,8 @@ heaviside(Floating x)
 /// Heaviside theta function with half-maximum convention
 template<typename Floating,
          std::enable_if_t<std::is_floating_point<Floating>::value, int> = 0>
-Floating
-heaviside2(Floating x)
+auto
+heaviside2(Floating x) -> Floating
 {
   if (x == 0.0) {
     return 0.5;
@@ -430,8 +430,8 @@ heaviside2(Floating x)
 /// Linear interpolation between @p a and @p b for the parameter @p t.
 /// If @p t is outside the range [0, 1] it performs an extrapolation
 template<typename Floating>
-Floating
-lerp(Floating a, Floating b, Floating t)
+auto
+lerp(Floating a, Floating b, Floating t) -> Floating
 {
   static_assert(std::is_floating_point<Floating>::value,
                 "Required floating point type");
@@ -439,8 +439,8 @@ lerp(Floating a, Floating b, Floating t)
 }
 
 template<typename Floating, typename Integer>
-Floating
-lerpi(Integer i, Integer j, Floating a, Floating b)
+auto
+lerpi(Integer i, Integer j, Floating a, Floating b) -> Floating
 {
   static_assert(std::is_integral<Integer>::value, "Required integral type");
   static_assert(std::is_floating_point<Floating>::value,

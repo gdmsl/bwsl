@@ -15,7 +15,7 @@
 #pragma once
 
 // bwsl
-#include <bwsl/Accumulator.hpp>
+#include <bwsl/Accumulators.hpp>
 
 // boost
 #include <boost/archive/text_iarchive.hpp>
@@ -41,13 +41,19 @@ public:
   HistAccumulator(size_t nbins);
 
   /// Copy constructor
-  HistAccumulator(const HistAccumulator& that) = default;
+  HistAccumulator(HistAccumulator const& that) = default;
+
+  /// Move constructor
+  HistAccumulator(HistAccumulator&& that) = default;
 
   /// Default destructor
   virtual ~HistAccumulator() = default;
 
   /// Copy assignment operator
-  HistAccumulator& operator=(const HistAccumulator& that) = default;
+  auto operator=(HistAccumulator const& that) -> HistAccumulator& = default;
+
+  /// Move assignment operator
+  auto operator=(HistAccumulator&& that) -> HistAccumulator& = default;
 
   /// Resize the histogram
   void Resize(size_t nbins);
@@ -57,91 +63,89 @@ public:
 
   /// Add a measurement
   template<class T>
-  void add(size_t idx, T val);
+  auto Add(size_t idx, T val) -> void;
 
   /// Add a unitary measurement
-  void add(size_t idx) { add(idx, 1.0); };
+  auto Add(size_t idx) -> void { Add(idx, 1.0); };
 
   /// Add a measurement and increase the number of bins
   template<class T>
-  void force_add(size_t idx, T val);
+  auto ForceAdd(size_t idx, T val) -> void;
 
   /// Add an unitary measurement and increase the number of bins
-  void force_add(size_t idx) { force_add(idx, 1.0); };
+  auto ForceAdd(size_t idx) -> void { ForceAdd(idx, 1.0); };
 
   /// Get a single component result
-  double GetResult(size_t idx) const;
+  [[nodiscard]] auto GetResult(size_t idx) const -> double;
 
   /// Get the result of all the components
-  std::vector<double> GetResults() const;
+  [[nodiscard]] auto GetResults() const -> std::vector<double>;
 
   /// Get the results of all the components but divide by the one
   /// given.
-  std::vector<double> GetResults(size_t idx) const;
+  [[nodiscard]] auto GetResults(size_t idx) const -> std::vector<double>;
 
   /// Get the number of measurements in total
-  size_t GetCount() const { return count_; };
+  [[nodiscard]] auto GetCount() const -> size_t { return count_; };
 
   /// Get the count of a single observable
-  size_t GetCount(size_t idx) const { return acc_[idx].GetCount(); }
+  [[nodiscard]] auto GetCount(size_t idx) const -> size_t { return acc_[idx].Count(); }
 
   /// Get the number of bins
-  size_t GetNbins() const { return nbins_; };
+  [[nodiscard]] auto GetNbins() const -> size_t { return nbins_; };
 
 protected:
+private:
   /// Number of bins
-  size_t nbins_{ 0ul };
+  size_t nbins_{ 0UL };
 
   /// Accumulators
-  std::vector<> acc_{};
+  std::vector<bwsl::accumulators::NeumaierAccumulator> acc_{};
 
   /// Number of measurements
-  unsigned long count_{ 0ul };
+  unsigned long count_{ 0UL };
 
   // serializaton
   friend class boost::serialization::access;
 
   /// Serialization method for the class
   template<class Archive>
-  void serialize(Archive& ar, const unsigned int version);
-
-private:
+  void serialize(Archive& ar,  unsigned int version);
 }; // class HistAccumulator
 
 inline HistAccumulator::HistAccumulator(size_t nbins)
   : nbins_(nbins)
   , acc_(nbins)
-  , count_(0ul)
 {}
 
-inline void
-HistAccumulator::Reset()
+inline auto
+HistAccumulator::Reset() -> void
 {
   for (auto& a : acc_) {
     a.Reset();
   }
-  count_ = 0ul;
+  count_ = 0UL;
 }
 
 template<class T>
-inline void
-HistAccumulator::add(size_t idx, T val)
+inline auto
+HistAccumulator::Add(size_t idx, T val) -> void
 {
-  acc_[idx].add(val);
-  count_ += 1ul;
+  acc_[idx].Add(val);
+  count_ += 1UL;
 }
 
 template<class T>
-inline void
-HistAccumulator::force_add(size_t idx, T val)
+inline auto
+HistAccumulator::ForceAdd(size_t idx, T val) -> void
 {
   while (idx >= nbins_) {
     acc_.emplace_back();
     nbins_++;
     assert(nbins_ == acc_.size());
   }
-  acc_[idx].add(val);
-  count_ += 1ul;
+  acc_[idx].Add(val);
+  count_ += 1UL;
 }
 
 inline void
@@ -151,32 +155,32 @@ HistAccumulator::Resize(size_t nbins)
   acc_.resize(nbins);
 }
 
-inline double
-HistAccumulator::GetResult(size_t idx) const
+inline auto
+HistAccumulator::GetResult(size_t idx) const -> double
 {
-  auto& c = acc_[idx];
+  auto const& c = acc_[idx];
 
-  if (c.GetCount() == 0ul) {
+  if (c.Count() == 0UL) {
     return 0.0;
   }
 
-  return c.GetResult() * (c.GetCount() / static_cast<double>(count_));
+  return c.Sum() / static_cast<double>(count_);
 }
 
-inline std::vector<double>
-HistAccumulator::GetResults() const
+inline auto
+HistAccumulator::GetResults() const -> std::vector<double>
 {
   auto r = std::vector<double>(nbins_, 0.0);
 
-  for (auto i = 0ul; i < nbins_; i++) {
+  for (auto i = 0UL; i < nbins_; i++) {
     r[i] = GetResult(i);
   }
 
   return r;
 }
 
-inline std::vector<double>
-HistAccumulator::GetResults(size_t idx) const
+inline auto
+HistAccumulator::GetResults(size_t idx) const -> std::vector<double>
 {
   auto r = GetResults();
   for (auto& v : r) {
@@ -186,8 +190,8 @@ HistAccumulator::GetResults(size_t idx) const
 }
 
 template<class Archive>
-inline void
-HistAccumulator::serialize(Archive& ar, const unsigned int /* version */)
+inline auto
+HistAccumulator::serialize(Archive& ar, const unsigned int /* version */) -> void
 {
   ar& nbins_;
   ar& acc_;
