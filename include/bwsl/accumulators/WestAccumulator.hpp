@@ -101,26 +101,28 @@ private:
 
   /// Serialization method for the class
   template<class Archive>
-  void serialize(Archive& ar,  unsigned int version);
+  void serialize(Archive& ar, unsigned int version);
 }; // class WestAccumulator
 
 inline auto
 WestAccumulator::Add(double m, double w) -> void
 {
+  if (w > 0.0) {
 #ifdef BWSL_ACCUMULATORS_CHECKS
-  // protect against too many measurements
-  if (count_ == std::numeric_limits<unsigned long>::max()) {
-    throw exception::AccumulatorOverflow();
-  }
+    // protect against too many measurements
+    if (count_ == std::numeric_limits<unsigned long>::max()) {
+      throw exception::AccumulatorOverflow();
+    }
 #endif // BWSL_ACCUMULATORS_CHECKS
 
-  count_ += 1UL;
+    count_ += 1UL;
 
-  sum_weights_ += w;
-  sum_weights2_ += w * w;
-  double oldmean = mean_;
-  mean_ += (w / sum_weights_) * (m - oldmean);
-  m2_ += w * (m - oldmean) * (m - mean_);
+    sum_weights_ += w;
+    sum_weights2_ += w * w;
+    double oldmean = mean_;
+    mean_ += (w / sum_weights_) * (m - oldmean);
+    m2_ += w * (m - oldmean) * (m - mean_);
+  } // if (w > 0)
 }
 
 inline auto
