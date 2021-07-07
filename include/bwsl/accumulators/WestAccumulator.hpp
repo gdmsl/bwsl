@@ -26,7 +26,7 @@
 #include <exception>
 #include <limits>
 
-namespace bwsl {
+namespace bwsl::accumulators {
 
 ///
 /// Accumulator using West algorithm.
@@ -54,10 +54,10 @@ public:
   auto operator=(WestAccumulator&& that) -> WestAccumulator& = default;
 
   /// Add a measurement with unit weight
-  auto Add(double m) -> void;
+  auto Add(double m, double w) -> void;
 
   /// Sum of the accumulated values
-  [[nodiscard]] auto Sum() const -> double { return mean_ * Count(); };
+  [[nodiscard]] auto Sum() const -> double { return mean_ * sum_weights_; };
 
   /// Average of the accumulated values
   [[nodiscard]] auto Mean() const -> double { return mean_; };
@@ -101,11 +101,11 @@ private:
 
   /// Serialization method for the class
   template<class Archive>
-  void serialize(Archive& ar, const unsigned int version);
+  void serialize(Archive& ar,  unsigned int version);
 }; // class WestAccumulator
 
 inline auto
-WestAccumulator::Add(double x, double w) -> void
+WestAccumulator::Add(double m, double w) -> void
 {
 #ifdef BWSL_ACCUMULATORS_CHECKS
   // protect against too many measurements
@@ -114,13 +114,13 @@ WestAccumulator::Add(double x, double w) -> void
   }
 #endif // BWSL_ACCUMULATORS_CHECKS
 
-  count_ += 1ul;
+  count_ += 1UL;
 
   sum_weights_ += w;
   sum_weights2_ += w * w;
   double oldmean = mean_;
-  mean_ += (w / sum_weights_) * (x - oldmean);
-  m2_ += w * (x - oldmean) * (x - mean_);
+  mean_ += (w / sum_weights_) * (m - oldmean);
+  m2_ += w * (m - oldmean) * (m - mean_);
 }
 
 inline auto

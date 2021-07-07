@@ -31,6 +31,7 @@
 #include <iostream>
 #include <map>
 #include <string>
+#include <utility>
 
 namespace bwsl {
 
@@ -46,13 +47,13 @@ public:
   ObservableGroup(const ObservableGroup&) = default;
 
   /// Copy assignment operator
-  ObservableGroup& operator=(const ObservableGroup&) = default;
+  auto operator=(const ObservableGroup&) -> ObservableGroup& = default;
 
   /// Move constructor
-  ObservableGroup(ObservableGroup&&) = default;
+  ObservableGroup(ObservableGroup&&) noexcept = default;
 
   /// Move assignment operator
-  ObservableGroup& operator=(ObservableGroup&&) = default;
+  auto operator=(ObservableGroup&&) noexcept -> ObservableGroup& = default;
 
   /// Default destructor
   virtual ~ObservableGroup() = default;
@@ -72,7 +73,7 @@ public:
   /// Print the results and reset all the accumulators
   void PrintAndReset(size_t precision = 10UL);
 
-  ObservableGroup& AddObservable(Index_t key);
+  auto AddObservable(Index_t key) -> ObservableGroup&;
 
 protected:
 private:
@@ -85,18 +86,18 @@ private:
   friend class boost::serialization::access;
 
   template<class Archive>
-  void serialize(Archive& ar, const unsigned int version);
+  void serialize(Archive& ar, unsigned int version);
 }; // class ObservableGroup
 
 template<typename Index_t>
 ObservableGroup<Index_t>::ObservableGroup(std::string output_file)
-  : output_file_(output_file)
+  : output_file_(std::move(output_file))
 {}
 
 template<typename Index_t>
 ObservableGroup<Index_t>::ObservableGroup(std::string output_file,
                                           std::vector<Index_t> const& indices)
-  : output_file_(output_file)
+  : output_file_(std::move(output_file))
 {
   for (auto i : indices) {
     accumulator_.try_emplace(i);
@@ -141,8 +142,9 @@ ObservableGroup<Index_t>::PrintAndReset(size_t precision)
 }
 
 template<typename Index_t>
-inline ObservableGroup<Index_t>&
+inline auto
 ObservableGroup<Index_t>::AddObservable(Index_t key)
+  -> ObservableGroup<Index_t>&
 {
   accumulator_.try_emplace(key);
   return *this;

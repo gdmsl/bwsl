@@ -17,6 +17,7 @@
 #include <bwsl/accumulators/KnuthWelfordAccumulator.hpp>
 #include <bwsl/accumulators/KahanAccumulator.hpp>
 #include <bwsl/accumulators/NeumaierAccumulator.hpp>
+#include <bwsl/accumulators/WestAccumulator.hpp>
 
 namespace bwsl {
 
