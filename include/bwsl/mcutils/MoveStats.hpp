@@ -113,7 +113,7 @@ public:
   auto Add(MoveResult const& res) -> void;
 
   /// Get the name of the move
-  auto GetName() -> std::string { return name_; };
+  [[nodiscard]] auto GetName() const -> std::string { return name_; };
 
   /// Compute the acceptance from the collected statistics
   [[nodiscard]] auto GetAcceptedRatio() const -> double
