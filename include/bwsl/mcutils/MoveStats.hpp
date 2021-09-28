@@ -109,29 +109,32 @@ public:
   /// The proposed move is impossible to carry out.
   auto Impossible() -> void { UpdateIfProposed(impossible_, 0.0); };
 
-  ///
+  /// Add to the statistics
   auto Add(MoveResult const& res) -> void;
 
+  /// Get the name of the move
+  auto GetName() -> std::string { return name_; };
+
   /// Compute the acceptance from the collected statistics
-  auto GetAcceptedRatio() const -> double
+  [[nodiscard]] auto GetAcceptedRatio() const -> double
   {
     return proposed_ == 0UL ? 0.0 : static_cast<double>(accepted_) / proposed_;
   };
 
   /// Compute the rejection ratio from the collected statistics
-  auto GetRejectedRatio() const -> double
+  [[nodiscard]] auto GetRejectedRatio() const -> double
   {
     return static_cast<double>(rejected_) / proposed_;
   };
 
   /// Compute the ratio of cancellations from the collected statistics
-  auto GetImpossibleRatio() const -> double
+  [[nodiscard]] auto GetImpossibleRatio() const -> double
   {
     return static_cast<double>(impossible_) / proposed_;
   };
 
   /// Compute the average acceptance
-  auto GetAverageProbability() const -> double { return prob_.Mean(); };
+  [[nodiscard]] auto GetAverageProbability() const -> double { return prob_.Mean(); };
 
   /// Reset all the counters
   auto Reset() -> void;
