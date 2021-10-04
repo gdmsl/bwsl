@@ -38,37 +38,51 @@ namespace exception {
 class MoveInvalidSequence : public std::exception
 {
 public:
-  MoveInvalidSequence(std::string name)
-    : name_(name)
+  MoveInvalidSequence(std::string const& name)
+    : message_(buildmessage(name))
   {}
 
-  const char* what() const throw()
+  [[nodiscard]] auto what() const noexcept -> const char* override
   {
+    return message_.c_str();
+  }
+
+protected:
+  [[nodiscard]] static auto buildmessage(std::string const& name) -> std::string
+  {
+
     return fmt::format("{} move: invalid sequence of proposals, accpetances or "
                        "rejections",
-                       name_)
-      .c_str();
+                       name);
   }
 
 private:
-  std::string name_{ "Unknown" };
-};
+  std::string message_{};
+}; // class MoveInvalidSequence
 
 class InvalidProbability : public std::exception
 {
 public:
   InvalidProbability(double prob)
-    : prob_(prob)
+    : message_(buildmessage(prob))
   {}
-  const char* what() const throw()
+
+  [[nodiscard]] auto what() const noexcept -> const char* override
   {
-    return fmt::format("{} is not a valid probability", prob_).c_str();
+    return message_.c_str();
+  }
+
+protected:
+  [[nodiscard]] static auto buildmessage(double prob) -> std::string
+  {
+    return fmt::format("{} is not a valid probability", prob);
   }
 
 private:
-  double prob_{};
-};
-}
+  std::string message_{};
+}; // class InvalidProbability
+
+} // namespace bwsl::montecarlo::exception
 
 ///
 /// Keeps statistics of a Markov Chain Monte Carlo move.
@@ -134,7 +148,10 @@ public:
   };
 
   /// Compute the average acceptance
-  [[nodiscard]] auto GetAverageProbability() const -> double { return prob_.Mean(); };
+  [[nodiscard]] auto GetAverageProbability() const -> double
+  {
+    return prob_.Mean();
+  };
 
   /// Reset all the counters
   auto Reset() -> void;
