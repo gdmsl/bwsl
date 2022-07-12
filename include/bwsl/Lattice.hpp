@@ -115,7 +115,15 @@ public:
   [[nodiscard]] auto GetMomentum(size_t a) const -> realvec_t;
 
   /// Compute the structure factor given the occupations of the sites
-  [[nodiscard]] auto ComputeSk(realvec_t occupations) const -> realvec_t;
+  template<class T>
+  auto AccumulateSk(std::vector<T> const& occupations,
+                    realvec_t& sk,
+                    double mult = 1.0) const -> void;
+
+  /// Compute the structure factor given the occupations of the sites
+  template<class T>
+  [[nodiscard]] auto ComputeSk(std::vector<T> const& occupations,
+                               double mult = 1.0) const -> realvec_t;
 
   /// Save the distances on a file
   auto SaveDistances(const std::string& fname) const -> void;
@@ -177,7 +185,8 @@ inline Lattice::Lattice(Bravais const& bravais,
   , distance_(ComputeDistances(bravais))
   , neighbors_(ComputeNeighbors(bravais))
   , momenta_(ComputeMomenta(bravais))
-{}
+{
+}
 
 inline void
 Lattice::EnforceBoundaries(coords_t& coords) const
@@ -381,14 +390,16 @@ Lattice::ComputeMomenta(Bravais const& bravais) const
   return p;
 }
 
+template<class T>
 inline auto
-Lattice::ComputeSk(realvec_t occupations) const -> realvec_t
+Lattice::AccumulateSk(std::vector<T> const& occupations,
+                      realvec_t& sk,
+                      double mult) const -> void
 {
   auto n = GetNumSites();
-  auto sk = std::vector<double>(n, 0.0);
 
   if (HasOpenBoundaries()) {
-    return sk;
+    return;
   }
 
   for (auto i = 0UL; i < GetNumSites(); i++) {
@@ -405,7 +416,20 @@ Lattice::ComputeSk(realvec_t occupations) const -> realvec_t
       im += sin(prod) * occupations[j];
       re += cos(prod) * occupations[j];
     }
-    sk[i] = (square(im) + square(re)) / square(n);
+    sk[i] += mult * (square(im) + square(re)) / static_cast<double>(square(n));
+  }
+}
+
+template<class T>
+inline auto
+Lattice::ComputeSk(std::vector<T> const& occupations, double mult) const
+  -> realvec_t
+{
+  auto n = GetNumSites();
+  auto sk = std::vector<double>(n, 0.0);
+
+  if (!HasOpenBoundaries()) {
+    AccumulateSk(occupations, sk, mult);
   }
 
   return sk;
