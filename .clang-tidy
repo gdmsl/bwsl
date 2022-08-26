@@ -1,2 +1,5 @@
 Checks: '-*,bugprone-*,misc-*,modernize-*,cppcoreguidelines-*,performance-*,readability-*,-cppcoreguidelines-avoid-magic-numbers,-readability-magic-numbers'
 FormatStyle: mozilla
+MinimumVariableNameLength: 1
+MinimumParameterNameLength: 1
+MinimumLoopCounterNameLength: 1

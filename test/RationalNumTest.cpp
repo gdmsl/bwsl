@@ -37,7 +37,6 @@ TEST_CASE("Relational operators", "")
   REQUIRE(b <= b);
   REQUIRE(a <= b);
   REQUIRE(b >= a);
-
 }
 
 TEST_CASE("Arithmetic operators", "")
@@ -60,12 +59,13 @@ TEST_CASE("Arithmetic operators", "")
   REQUIRE(a / 11L == RationalLong(5L, 99L));
 }
 
-TEST_CASE("Parsing") {
-  auto str = std::string{"3//2"};
+TEST_CASE("Parsing")
+{
+  auto str = std::string{ "3//2" };
   auto x = RationalLong{};
 
   FromString(str, x);
-  REQUIRE(x == RationalLong{3L, 2L});
+  REQUIRE(x == RationalLong{ 3L, 2L });
 }
 
 // vim: set ft=cpp ts=2 sts=2 et sw=2 tw=80: //

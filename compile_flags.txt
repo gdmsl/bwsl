@@ -1,3 +1,8 @@
--Iinclude
--I./
 -std=c++20
+-Iinclude
+-I.
+-Ibuild
+-Ilibs/catch/src/
+-Ilibs/fmt/include
+-DLINT
+

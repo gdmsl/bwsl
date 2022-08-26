@@ -2,7 +2,7 @@
 //
 //                       BeagleWarlord's Support Library
 //
-// Copyright 2016-2020 Guido Masella. All Rights Reserved.
+// Copyright 2016-2022 Guido Masella. All Rights Reserved.
 // See LICENSE file for details
 //
 //===---------------------------------------------------------------------===//
@@ -30,18 +30,42 @@
   {                                                                            \
     return !(a < b) && !(b < a);                                               \
   }                                                                            \
-  inline bool operator!=(T const& a, S const& b) { return !(a == b); }         \
-  inline bool operator<=(T const& a, S const& b) { return !(b < a); }          \
-  inline bool operator>(T const& a, S const& b) { return b < a; }              \
-  inline bool operator>=(T const& a, S const& b) { return !(a < b); }
+  inline bool operator!=(T const& a, S const& b)                               \
+  {                                                                            \
+    return !(a == b);                                                          \
+  }                                                                            \
+  inline bool operator<=(T const& a, S const& b)                               \
+  {                                                                            \
+    return !(b < a);                                                           \
+  }                                                                            \
+  inline bool operator>(T const& a, S const& b)                                \
+  {                                                                            \
+    return b < a;                                                              \
+  }                                                                            \
+  inline bool operator>=(T const& a, S const& b)                               \
+  {                                                                            \
+    return !(a < b);                                                           \
+  }
 
 /// Overload the relational operators starting from the already implemented
 /// `operator<` and `operator==`
 #define OVERLOADRELATIONALNOEQ(T, S)                                           \
-  inline bool operator!=(T const& a, S const& b) { return !(a == b); }         \
-  inline bool operator<=(T const& a, S const& b) { return !(b < a); }          \
-  inline bool operator>(T const& a, S const& b) { return b < a; }              \
-  inline bool operator>=(T const& a, S const& b) { return !(a < b); }
+  inline bool operator!=(T const& a, S const& b)                               \
+  {                                                                            \
+    return !(a == b);                                                          \
+  }                                                                            \
+  inline bool operator<=(T const& a, S const& b)                               \
+  {                                                                            \
+    return !(b < a);                                                           \
+  }                                                                            \
+  inline bool operator>(T const& a, S const& b)                                \
+  {                                                                            \
+    return b < a;                                                              \
+  }                                                                            \
+  inline bool operator>=(T const& a, S const& b)                               \
+  {                                                                            \
+    return !(a < b);                                                           \
+  }
 
 /// Overload the relational operators starting from an already implemented
 /// `operator<`

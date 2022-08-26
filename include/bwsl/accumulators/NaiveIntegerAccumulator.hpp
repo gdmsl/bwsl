@@ -2,7 +2,7 @@
 //
 //                       BeagleWarlord's Support Library
 //
-// Copyright 2016-2020 Guido Masella. All Rights Reserved.
+// Copyright 2016-2022 Guido Masella. All Rights Reserved.
 // See LICENSE file for details
 //
 //===---------------------------------------------------------------------===//
@@ -47,12 +47,10 @@ public:
   virtual ~NaiveInteger() = default;
 
   /// Copy assignment operator
-  auto operator=(NaiveInteger const& that)
-    -> NaiveInteger& = default;
+  auto operator=(NaiveInteger const& that) -> NaiveInteger& = default;
 
   /// Copy assignment operator
-  auto operator=(NaiveInteger&& that)
-    -> NaiveInteger& = default;
+  auto operator=(NaiveInteger&& that) -> NaiveInteger& = default;
 
   /// Add a measurement with unit weight
   auto Add(long) -> void;
@@ -61,7 +59,10 @@ public:
   [[nodiscard]] auto Sum() const -> long { return sum_; };
 
   /// Average of the accumulated values
-  [[nodiscard]] auto Mean() const -> double { return static_cast<double>(sum_) / Count(); };
+  [[nodiscard]] auto Mean() const -> double
+  {
+    return static_cast<double>(sum_) / Count();
+  };
 
   /// Variance of the accumulated values
   [[nodiscard]] auto Variance(bool corrected) const -> double;
@@ -108,7 +109,7 @@ NaiveInteger::Add(long x) -> void
   if (std::numeric_limits<unsigned long>::max() - sum_ <= x) {
     throw exception::AccumulatorOverflow();
   }
-  if (std::numeric_limits<unsigned long>::max() < sum2_ <= x*x) {
+  if (std::numeric_limits<unsigned long>::max() < sum2_ <= x * x) {
     throw exception::AccumulatorOverflow();
   }
 #endif // BWSL_ACCUMULATORS_CHECKS
@@ -116,7 +117,7 @@ NaiveInteger::Add(long x) -> void
   count_ += 1ul;
 
   sum_ += x;
-  sum2_ += x*x;
+  sum2_ += x * x;
 }
 
 inline auto
@@ -128,7 +129,7 @@ NaiveInteger::Variance(bool corrected) const -> double
 
   auto ccount = corrected ? count_ - 1UL : count_;
 
-  return static_cast<double>(sum2_ - sum_ * sum_ ) / (count_ * ccount);
+  return static_cast<double>(sum2_ - sum_ * sum_) / (count_ * ccount);
 }
 
 inline auto
@@ -157,8 +158,7 @@ NaiveInteger::Reset() -> void
 
 template<class Archive>
 inline void
-NaiveInteger::serialize(Archive& ar,
-                                   const unsigned int /* version */)
+NaiveInteger::serialize(Archive& ar, const unsigned int /* version */)
 {
   // clang-format off
   ar & sum_;

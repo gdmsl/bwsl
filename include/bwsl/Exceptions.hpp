@@ -1,8 +1,8 @@
-//===-- Foo.hpp ------------------------------------------------*- C++ -*-===//
+//===-- Exceptions.hpp -----------------------------------------*- C++ -*-===//
 //
 //                       BeagleWarlord's Support Library
 //
-// Copyright 2016-2020 Guido Masella. All Rights Reserved.
+// Copyright 2016-2022 Guido Masella. All Rights Reserved.
 // See LICENSE file for details
 //
 //===---------------------------------------------------------------------===//

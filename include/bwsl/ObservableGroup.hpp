@@ -2,7 +2,7 @@
 //
 //                       BeagleWarlord's Support Library
 //
-// Copyright 2016-2020 Guido Masella. All Rights Reserved.
+// Copyright 2016-2022 Guido Masella. All Rights Reserved.
 // See LICENSE file for details
 //
 //===---------------------------------------------------------------------===//
@@ -92,7 +92,8 @@ private:
 template<typename Index_t>
 ObservableGroup<Index_t>::ObservableGroup(std::string output_file)
   : output_file_(std::move(output_file))
-{}
+{
+}
 
 template<typename Index_t>
 ObservableGroup<Index_t>::ObservableGroup(std::string output_file,

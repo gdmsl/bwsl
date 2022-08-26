@@ -2,16 +2,14 @@
 //
 //                       BeagleWarlord's Support Library
 //
-// Copyright 2016-2010 Guido Masella. All Rights Reserved.
+// Copyright 2016-2022 Guido Masella. All Rights Reserved.
 // See LICENSE file for details
 //
 //===---------------------------------------------------------------------===//
 ///
-/// \file
-/// \version    0.1
-/// \author     Guido Masella (guido.masella@gmail.com)
-/// \date       May, 2017
-/// \brief      Dump the status of a fresh initialized marsenne twister
+/// @file
+/// @author     Guido Masella (guido.masella@gmail.com)
+/// @brief      Dump the status of a fresh initialized marsenne twister
 ///
 //===---------------------------------------------------------------------===//
 

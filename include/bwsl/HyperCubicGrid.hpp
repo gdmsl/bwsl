@@ -2,7 +2,7 @@
 //
 //                       BeagleWarlord's Support Library
 //
-// Copyright 2016-2020 Guido Masella. All Rights Reserved.
+// Copyright 2016-2022 Guido Masella. All Rights Reserved.
 // See LICENSE file for details
 //
 //===---------------------------------------------------------------------===//
@@ -162,7 +162,8 @@ inline HyperCubicGrid::HyperCubicGrid(gridsize_t const& size,
   , numsites_(accumulate_product(size))
   , numpairs_(pairs::GetNumPairs(numsites_))
   , boundaries_(boundaries)
-{}
+{
+}
 
 inline auto
 HyperCubicGrid::GetCoordinates(index_t offset) const -> coords_t

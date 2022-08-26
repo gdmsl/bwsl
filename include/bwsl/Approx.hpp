@@ -2,7 +2,7 @@
 //
 //                       BeagleWarlord's Support Library
 //
-// Copyright 2016-2020 Guido Masella. All Rights Reserved.
+// Copyright 2016-2022 Guido Masella. All Rights Reserved.
 // See LICENSE file for details
 //
 //===---------------------------------------------------------------------===//
@@ -133,7 +133,8 @@ operator>=(Approx const& lhs, double rhs) -> bool
 
 inline Approx::Approx(double val)
   : value_(static_cast<double>(val))
-{}
+{
+}
 
 } // namespace bwsl
 

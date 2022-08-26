@@ -2,7 +2,7 @@
 //
 //                       BeagleWarlord's Support Library
 //
-// Copyright 2016-2020 Guido Masella. All Rights Reserved.
+// Copyright 2016-2022 Guido Masella. All Rights Reserved.
 // See LICENSE file for details
 //
 //===---------------------------------------------------------------------===//
@@ -19,7 +19,7 @@
 
 namespace bwsl::exception {
 
-class AccumulatorOverflow: public std::exception
+class AccumulatorOverflow : public std::exception
 {
   const char* what() const throw()
   {

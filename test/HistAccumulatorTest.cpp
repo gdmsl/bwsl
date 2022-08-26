@@ -18,9 +18,9 @@
 
 // std
 #include <algorithm>
-#include <vector>
-#include <random>
 #include <cmath>
+#include <random>
+#include <vector>
 
 // catch
 #include <catch2/catch_approx.hpp>
@@ -29,12 +29,15 @@
 using namespace bwsl;
 using Catch::Approx;
 
-auto factorial(int n) -> int
+auto
+factorial(int n) -> int
 {
   return (n == 1 || n == 0) ? 1 : factorial(n - 1) * n;
 }
 
-auto poisson(int n, int mu) -> double {
+auto
+poisson(int n, int mu) -> double
+{
   return exp(-mu) * std::pow(mu, n) / factorial(n);
 }
 
@@ -57,7 +60,7 @@ TEST_CASE("histograms can be constructed", "")
 TEST_CASE("sampling discrete distribution")
 {
   std::mt19937 gen(19890501UL);
-  auto weights = std::vector<double>{{40, 10, 10, 40}};
+  auto weights = std::vector<double>{ { 40, 10, 10, 40 } };
   auto s = std::accumulate(weights.begin(), weights.end(), 0.0);
   std::discrete_distribution<> d(weights.begin(), weights.end());
   auto count = 10000000UL;
@@ -74,6 +77,5 @@ TEST_CASE("sampling discrete distribution")
     REQUIRE(h.GetResult(i) == Approx(p).epsilon(0.01));
   }
 }
-
 
 // vim: set ft=cpp ts=2 sts=2 et sw=2 tw=80: //

@@ -1,11 +1,15 @@
+#== CMakeLists.txt ---------------------------------------------------------==#
 #
-#                                   BWSL
+#                       BeagleWarlord's Support Library
 #
-# libs/CMAkeLists.txt
-# Third party libraries required by BWSL
+# Copyright 2016-2022 Guido Masella. All Rights Reserved.
+# See LICENSE file for details.
+#
+#==------------------------------------------------------------------------==#
 #
 # Guido Masella (guido.masella@gmail.com)
 #
+#==------------------------------------------------------------------------==#
 
 # boost
 if (MASTER_PROJECT)

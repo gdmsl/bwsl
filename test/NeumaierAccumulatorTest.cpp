@@ -13,12 +13,12 @@
 ///
 //===---------------------------------------------------------------------===//
 // bwsl
-#include <bwsl/accumulators/NeumaierAccumulator.hpp>
 #include <bwsl/accumulators/KahanAccumulator.hpp>
+#include <bwsl/accumulators/NeumaierAccumulator.hpp>
 
 // std
-#include <vector>
 #include <iostream>
+#include <vector>
 
 // catch
 #include <catch2/catch_approx.hpp>
@@ -28,7 +28,8 @@ using namespace bwsl::accumulators;
 using Catch::Approx;
 
 auto
-epsilon() -> double {
+epsilon() -> double
+{
   auto eps = 1.0;
   while (1.0 + eps != 1.0) {
     eps = eps / 2.0;
@@ -43,7 +44,7 @@ TEST_CASE("produce correct sum", "[sum]")
 
   SECTION("Testing on a vector of integers")
   {
-    auto v = std::vector<long>{{ 1, 2, 3, 4, 5, 6, 7, 8 }};
+    auto v = std::vector<long>{ { 1, 2, 3, 4, 5, 6, 7, 8 } };
     auto s = 0L;
 
     for (auto x : v) {
@@ -74,7 +75,7 @@ TEST_CASE("The sum is correct")
 
   SECTION("Wikipedia test")
   {
-    auto l =  KahanAccumulator();
+    auto l = KahanAccumulator();
     auto a = 1.0e100;
 
     k.Add(1.0);
@@ -91,6 +92,5 @@ TEST_CASE("The sum is correct")
     REQUIRE(k.Sum() == Approx(2.0));
   }
 }
-
 
 // vim: set ft=cpp ts=2 sts=2 et sw=2 tw=80: //

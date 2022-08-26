@@ -32,7 +32,7 @@ TEST_CASE("Pairs with self pair", "[math]")
     const auto n = 489;
     for (auto s1 = 0ul; s1 < n; s1++) {
       for (auto s2 = s1; s2 < n; s2++) {
-        auto k = GetPairIndex(s1,s2,n);
+        auto k = GetPairIndex(s1, s2, n);
         auto indices = GetPair(k, n);
         REQUIRE(s1 == indices.first);
         REQUIRE(s2 == indices.second);

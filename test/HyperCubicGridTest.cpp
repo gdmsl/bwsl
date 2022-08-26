@@ -24,14 +24,16 @@
 
 using namespace bwsl;
 
-TEST_CASE("Grid with closed boundaries addressed with indices and coordinates", "[index][coordinates]")
+TEST_CASE("Grid with closed boundaries addressed with indices and coordinates",
+          "[index][coordinates]")
 {
-  auto h = HyperCubicGrid({3UL, 4UL}, HyperCubicGrid::boundaries_t::Closed);
+  auto h = HyperCubicGrid({ 3UL, 4UL }, HyperCubicGrid::boundaries_t::Closed);
 
   // The grid has the same number of points
   REQUIRE(h.GetNumSites() == 12UL);
 
-  SECTION("Conversion between indices and coordinates") {
+  SECTION("Conversion between indices and coordinates")
+  {
     for (auto i = 0UL; i < h.GetNumSites(); i++) {
       auto c = h.GetCoordinates(i);
       auto ic = h.GetIndex(c);
@@ -45,7 +47,8 @@ TEST_CASE("Grid with closed boundaries addressed with indices and coordinates", 
     }
   }
 
-  SECTION("Mapping indices works") {
+  SECTION("Mapping indices works")
+  {
     REQUIRE(h.GetMappedSite(0UL, 1UL) == 1UL);
     REQUIRE(h.GetMappedSite(0UL, 2UL) == 2UL);
     REQUIRE(h.GetMappedSite(0UL, 3UL) == 3UL);
@@ -58,9 +61,9 @@ TEST_CASE("Grid with closed boundaries addressed with indices and coordinates", 
     REQUIRE(h.GetMappedSite(0UL, 10UL) == 10UL);
     REQUIRE(h.GetMappedSite(0UL, 11UL) == 11UL);
 
-    REQUIRE(h.GetMappedSite(6UL,7UL) == 1UL);
-    REQUIRE(h.GetMappedSite(6UL,2UL) == 8UL);
-    REQUIRE(h.GetMappedSite(6UL,1UL) == 11UL);
+    REQUIRE(h.GetMappedSite(6UL, 7UL) == 1UL);
+    REQUIRE(h.GetMappedSite(6UL, 2UL) == 8UL);
+    REQUIRE(h.GetMappedSite(6UL, 1UL) == 11UL);
 
     REQUIRE(h.GetMappedSite(8UL, 8UL) == 0UL);
     REQUIRE(h.GetMappedSite(2UL, 2UL) == 0UL);
@@ -68,22 +71,25 @@ TEST_CASE("Grid with closed boundaries addressed with indices and coordinates", 
     REQUIRE(h.GetMappedSite(0UL, 0UL) == 0UL);
   }
 
-  SECTION("Mapping and unmapping indices") {
+  SECTION("Mapping and unmapping indices")
+  {
     for (auto i = 0UL; i < h.GetNumSites(); i++) {
       for (auto j = 0UL; j < h.GetNumSites(); j++)
-      REQUIRE(h.GetUnMappedSite(h.GetMappedSite(i, j), i) == j);
+        REQUIRE(h.GetUnMappedSite(h.GetMappedSite(i, j), i) == j);
     }
   }
 }
 
-TEST_CASE("Grid with open boundaries addressed with indices and coordinates", "[index][coordinates]")
+TEST_CASE("Grid with open boundaries addressed with indices and coordinates",
+          "[index][coordinates]")
 {
-  auto h = HyperCubicGrid({3UL, 4UL}, HyperCubicGrid::boundaries_t::Open);
+  auto h = HyperCubicGrid({ 3UL, 4UL }, HyperCubicGrid::boundaries_t::Open);
 
   // The grid has the expected number of points
   REQUIRE(h.GetNumSites() == 12UL);
 
-  SECTION("Conversion between indices and coordinates") {
+  SECTION("Conversion between indices and coordinates")
+  {
     for (auto i = 0UL; i < h.GetNumSites(); i++) {
       auto c = h.GetCoordinates(i);
       auto ic = h.GetIndex(c);

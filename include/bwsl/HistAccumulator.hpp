@@ -2,7 +2,7 @@
 //
 //                       BeagleWarlord's Support Library
 //
-// Copyright 2016-2020 Guido Masella. All Rights Reserved.
+// Copyright 2016-2022 Guido Masella. All Rights Reserved.
 // See LICENSE file for details
 //
 //===---------------------------------------------------------------------===//
@@ -89,7 +89,10 @@ public:
   [[nodiscard]] auto GetCount() const -> size_t { return count_; };
 
   /// Get the count of a single observable
-  [[nodiscard]] auto GetCount(size_t idx) const -> size_t { return acc_[idx].Count(); }
+  [[nodiscard]] auto GetCount(size_t idx) const -> size_t
+  {
+    return acc_[idx].Count();
+  }
 
   /// Get the number of bins
   [[nodiscard]] auto GetNbins() const -> size_t { return nbins_; };
@@ -110,13 +113,14 @@ private:
 
   /// Serialization method for the class
   template<class Archive>
-  void serialize(Archive& ar,  unsigned int version);
+  void serialize(Archive& ar, unsigned int version);
 }; // class HistAccumulator
 
 inline HistAccumulator::HistAccumulator(size_t nbins)
   : nbins_(nbins)
   , acc_(nbins)
-{}
+{
+}
 
 inline auto
 HistAccumulator::Reset() -> void
@@ -191,7 +195,8 @@ HistAccumulator::GetResults(size_t idx) const -> std::vector<double>
 
 template<class Archive>
 inline auto
-HistAccumulator::serialize(Archive& ar, const unsigned int /* version */) -> void
+HistAccumulator::serialize(Archive& ar, const unsigned int /* version */)
+  -> void
 {
   ar& nbins_;
   ar& acc_;

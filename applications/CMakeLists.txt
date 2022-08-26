@@ -1,12 +1,15 @@
-# =========================================================================== #
-#                                   BWSL
-# =========================================================================== #
+#== CMakeLists.txt ---------------------------------------------------------==#
 #
-# applications/CMAkeLists.txt
-# Applications and examples included in the BWSL
+#                       BeagleWarlord's Support Library
 #
-# AUTHOR: Guido Masella (guido.masella@gmail.com)
-# =========================================================================== #
+# Copyright 2016-2022 Guido Masella. All Rights Reserved.
+# See LICENSE file for details.
+#
+#==------------------------------------------------------------------------==#
+#
+# Guido Masella (guido.masella@gmail.com)
+#
+#==------------------------------------------------------------------------==#
 
 # dumpmt {{{
 add_executable(dumpmt dumpmt.cpp)

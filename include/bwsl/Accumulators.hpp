@@ -1,8 +1,8 @@
-//===-- Accumulators.hpp ------------------------------------------------*- C++ -*-===//
+//===-- Accumulators.hpp ---------------------------------------*- C++ -*-===//
 //
 //                       BeagleWarlord's Support Library
 //
-// Copyright 2016-2020 Guido Masella. All Rights Reserved.
+// Copyright 2016-2022 Guido Masella. All Rights Reserved.
 // See LICENSE file for details
 //
 //===---------------------------------------------------------------------===//
@@ -14,8 +14,8 @@
 //===---------------------------------------------------------------------===//
 #pragma once
 
-#include <bwsl/accumulators/KnuthWelfordAccumulator.hpp>
 #include <bwsl/accumulators/KahanAccumulator.hpp>
+#include <bwsl/accumulators/KnuthWelfordAccumulator.hpp>
 #include <bwsl/accumulators/NeumaierAccumulator.hpp>
 #include <bwsl/accumulators/WestAccumulator.hpp>
 
