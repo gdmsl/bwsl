@@ -17,6 +17,7 @@ target_link_libraries(LatticeTest
   PRIVATE
     bwsl
     Catch2::Catch2WithMain
+    fmt-header-only
   )
 target_compile_options(LatticeTest
   PRIVATE
