@@ -33,25 +33,25 @@ public:
   LinSpace(T first, T last, unsigned long steps);
 
   /// Function call operator for generate usage
-  T operator()();
+  auto operator()() -> T;
 
   /// Deference operator overloading
-  T operator*() { return current_value_; };
+  auto operator*() -> T { return current_value_; };
 
   /// Infix increment
-  LinSpace& operator++();
+  auto operator++() -> LinSpace&;
 
   /// Postfix increment
-  LinSpace operator++(int);
+  auto operator++(int) -> LinSpace;
 
   /// Returns a LinSpace at the beginning of the interval
-  LinSpace begin();
+  auto begin() -> LinSpace;
 
   /// Returns a LinSpace at the end of the interval
-  LinSpace end();
+  auto end() -> LinSpace;
 
   /// Return a vector filled with values
-  std::vector<T> Collect(unsigned long n);
+  auto Collect(unsigned long n) -> std::vector<T>;
 
 protected:
 private:
@@ -71,13 +71,13 @@ private:
   unsigned long nsteps_;
 
   /// The actual step
-  unsigned long step_;
+  unsigned long step_{ 0 };
 
   /// Compare two LinSpaces and check for equality
-  friend bool operator==(const LinSpace<T>& a, const LinSpace<T>& b);
+  friend auto operator==(const LinSpace<T>& a, const LinSpace<T>& b) -> bool;
 
   /// Compare two LinSpaces and check for inequality
-  friend bool operator!=(const LinSpace<T>& a, const LinSpace<T>& b);
+  friend auto operator!=(const LinSpace<T>& a, const LinSpace<T>& b) -> bool;
 }; // class LinSpace
 
 template<typename T>
@@ -86,15 +86,15 @@ LinSpace<T>::LinSpace(T first, T last, unsigned long steps)
   , first_(first)
   , last_(last)
   , nsteps_(steps)
-  , step_(0)
+
 {
   assert(first < last);
   stepsize_ = (last - first) / static_cast<T>(nsteps_);
 }
 
 template<typename T>
-T
-LinSpace<T>::operator()()
+auto
+LinSpace<T>::operator()() -> T
 {
   T retval = current_value_;
   operator++();
@@ -102,8 +102,8 @@ LinSpace<T>::operator()()
 }
 
 template<typename T>
-LinSpace<T>&
-LinSpace<T>::operator++()
+auto
+LinSpace<T>::operator++() -> LinSpace<T>&
 {
   ++step_;
   current_value_ = first_ + stepsize_ * static_cast<T>(step_);
@@ -111,8 +111,8 @@ LinSpace<T>::operator++()
 }
 
 template<typename T>
-LinSpace<T>
-LinSpace<T>::operator++(int)
+auto
+LinSpace<T>::operator++(int) -> LinSpace<T>
 {
   LinSpace<T> tmp(*this);
   operator++();
@@ -120,8 +120,8 @@ LinSpace<T>::operator++(int)
 }
 
 template<typename T>
-LinSpace<T>
-LinSpace<T>::begin()
+auto
+LinSpace<T>::begin() -> LinSpace<T>
 {
   LinSpace<T> tmp(*this);
   tmp.current_value_ = first_;
@@ -130,8 +130,8 @@ LinSpace<T>::begin()
 }
 
 template<typename T>
-LinSpace<T>
-LinSpace<T>::end()
+auto
+LinSpace<T>::end() -> LinSpace<T>
 {
   LinSpace<T> tmp(*this);
   tmp.current_value_ = last_;
@@ -140,8 +140,8 @@ LinSpace<T>::end()
 }
 
 template<typename T>
-std::vector<T>
-LinSpace<T>::Collect(unsigned long n)
+auto
+LinSpace<T>::Collect(unsigned long n) -> std::vector<T>
 {
   std::vector<T> retval;
   retval.reserve(n);
@@ -150,15 +150,15 @@ LinSpace<T>::Collect(unsigned long n)
 }
 
 template<typename T>
-bool
-operator==(const LinSpace<T>& a, const LinSpace<T>& b)
+auto
+operator==(const LinSpace<T>& a, const LinSpace<T>& b) -> bool
 {
   return a.step_ == b.step_;
 };
 
 template<typename T>
-bool
-operator!=(const LinSpace<T>& a, const LinSpace<T>& b)
+auto
+operator!=(const LinSpace<T>& a, const LinSpace<T>& b) -> bool
 {
   return !(a == b);
 }

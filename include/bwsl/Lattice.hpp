@@ -73,7 +73,7 @@ public:
   auto operator=(Lattice&& that) -> Lattice& = default;
 
   /// Default destructor
-  virtual ~Lattice() = default;
+  ~Lattice() override = default;
 
   /// Get nearest neighbors of site i
   [[nodiscard]] auto GetNeighbors(index_t i) const -> vectorindex_t const&

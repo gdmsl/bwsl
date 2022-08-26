@@ -41,24 +41,28 @@ namespace boost::serialization {
 
 template<typename Ar, MT_TPARAMS>
 inline auto
-load(Ar& ar, std::mersenne_twister_engine<MT_TARGLIST>& mt, unsigned) -> void
+load(Ar& ar, std::mersenne_twister_engine<MT_TARGLIST>& mt, unsigned /*unused*/)
+  -> void
 {
   std::string text;
   ar& text;
   std::istringstream iss(text);
 
-  if (!(iss >> mt))
+  if (!(iss >> mt)) {
     throw std::invalid_argument("mersenne_twister_engine state");
+  }
 }
 
 template<typename Ar, MT_TPARAMS>
 inline auto
-save(Ar& ar, std::mersenne_twister_engine<MT_TARGLIST> const& mt, unsigned)
-  -> void
+save(Ar& ar,
+     std::mersenne_twister_engine<MT_TARGLIST> const& mt,
+     unsigned /*unused*/) -> void
 {
   std::ostringstream oss;
-  if (!(oss << mt))
+  if (!(oss << mt)) {
     throw std::invalid_argument("mersenne_twister_engine state");
+  }
   std::string text = oss.str();
   ar& text;
 }
@@ -69,10 +73,11 @@ serialize(Ar& ar,
           std::mersenne_twister_engine<MT_TARGLIST>& mt,
           unsigned version) -> void
 {
-  if (typename Ar::is_saving())
+  if (typename Ar::is_saving()) {
     save(ar, mt, version);
-  else
+  } else {
     load(ar, mt, version);
+  }
 }
 
 #undef MT_TPARAMS

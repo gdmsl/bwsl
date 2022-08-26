@@ -333,14 +333,14 @@ index_to_array(size_t index, D const& size) -> C
   static_assert(std::is_integral<typename C::value_type>::value,
                 "Integral required.");
   auto dim = size.size();
-  auto prod = 1ul;
+  auto prod = 1UL;
 
   auto d = C(dim, 0);
 
-  for (auto i = 1ul; i < dim; i++) {
+  for (auto i = 1UL; i < dim; i++) {
     prod *= size[dim - i];
   }
-  for (auto i = 0ul; i < dim; i++) {
+  for (auto i = 0UL; i < dim; i++) {
     d[i] = static_cast<typename C::value_type>(index / prod);
     index = index % prod;
 
@@ -368,7 +368,8 @@ upper_bound(ForwardIt first, ForwardIt last, const T& value) -> ForwardIt
     // check if the value is outside the lower bound of the search interval
     if (value < itval) {
       return it;
-    } else if (!(itval < value)) { // value <= it (so only if they are equal)
+    }
+    if (!(itval < value)) { // value <= it (so only if they are equal)
       return ++it;
     }
 
@@ -420,7 +421,8 @@ heaviside2(Floating x) -> Floating
 {
   if (x == 0.0) {
     return 0.5;
-  } else if (x > 0.0) {
+  }
+  if (x > 0.0) {
     return 1.0;
   }
 

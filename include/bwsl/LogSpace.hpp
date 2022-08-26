@@ -39,25 +39,25 @@ public:
   LogSpace(T first, T last, unsigned long steps);
 
   /// Function call operator for generate usage
-  T operator()();
+  auto operator()() -> T;
 
   /// Deference operator overloading
-  T operator*() { return current_value_; };
+  auto operator*() -> T { return current_value_; };
 
   /// Infix increment
-  LogSpace& operator++();
+  auto operator++() -> LogSpace&;
 
   /// Postfix increment
-  LogSpace operator++(int);
+  auto operator++(int) -> LogSpace;
 
   /// Returns a LogSpace at the beginning of the interval
-  LogSpace begin();
+  auto begin() -> LogSpace;
 
   /// Returns a LogSpace at the end of the interval
-  LogSpace end();
+  auto end() -> LogSpace;
 
   /// Return a vector filled with values
-  std::vector<T> Collect(unsigned long n);
+  auto Collect(unsigned long n) -> std::vector<T>;
 
 protected:
 private:
@@ -80,13 +80,13 @@ private:
   unsigned long step_;
 
   /// Compare two LogSpaces and check for equality
-  friend bool operator==(const LogSpace<T>& a, const LogSpace<T>& b)
+  friend auto operator==(const LogSpace<T>& a, const LogSpace<T>& b) -> bool
   {
     return static_cast<bool>(a.step_ == b.step_);
   };
 
   /// Compare two LogSpaces and check for inequality
-  friend bool operator!=(const LogSpace<T>& a, const LogSpace<T>& b)
+  friend auto operator!=(const LogSpace<T>& a, const LogSpace<T>& b) -> bool
   {
     return !(a == b);
   }
@@ -117,8 +117,8 @@ LogSpace<T>::LogSpace(T first, T last, unsigned long steps)
 }
 
 template<typename T>
-T
-LogSpace<T>::operator()()
+auto
+LogSpace<T>::operator()() -> T
 {
   T retval = current_value_;
   operator++();
@@ -126,8 +126,8 @@ LogSpace<T>::operator()()
 }
 
 template<typename T>
-LogSpace<T>&
-LogSpace<T>::operator++()
+auto
+LogSpace<T>::operator++() -> LogSpace<T>&
 {
   current_value_ *= base_;
   ++step_;
@@ -135,8 +135,8 @@ LogSpace<T>::operator++()
 }
 
 template<typename T>
-LogSpace<T>
-LogSpace<T>::operator++(int)
+auto
+LogSpace<T>::operator++(int) -> LogSpace<T>
 {
   LogSpace<T> tmp(*this);
   operator++();
@@ -144,8 +144,8 @@ LogSpace<T>::operator++(int)
 }
 
 template<typename T>
-LogSpace<T>
-LogSpace<T>::begin()
+auto
+LogSpace<T>::begin() -> LogSpace<T>
 {
   LogSpace<T> tmp(*this);
   tmp.current_value_ = first_;
@@ -154,8 +154,8 @@ LogSpace<T>::begin()
 }
 
 template<typename T>
-LogSpace<T>
-LogSpace<T>::end()
+auto
+LogSpace<T>::end() -> LogSpace<T>
 {
   LogSpace<T> tmp(*this);
   tmp.current_value_ = last_;
@@ -164,8 +164,8 @@ LogSpace<T>::end()
 }
 
 template<typename T>
-std::vector<T>
-LogSpace<T>::Collect(unsigned long n)
+auto
+LogSpace<T>::Collect(unsigned long n) -> std::vector<T>
 {
   std::vector<T> retval;
   retval.reserve(n);

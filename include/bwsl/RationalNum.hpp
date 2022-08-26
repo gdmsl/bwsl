@@ -40,13 +40,13 @@ public:
   RationalNum(const RationalNum&) = default;
 
   /// Copy assignment operator
-  RationalNum& operator=(const RationalNum&) = default;
+  auto operator=(const RationalNum&) -> RationalNum& = default;
 
   /// Move constructor
-  RationalNum(RationalNum&&) = default;
+  RationalNum(RationalNum&&) noexcept = default;
 
   /// Move assignment operator
-  RationalNum& operator=(RationalNum&&) = default;
+  auto operator=(RationalNum&&) noexcept -> RationalNum& = default;
 
   /// Default destructor
   virtual ~RationalNum() = default;
@@ -63,78 +63,88 @@ public:
   /// @name Relational Operators
   /// @{
   template<class G>
-  friend bool operator<(RationalNum<G> const& rhs, RationalNum<G> const& lhs);
+  friend auto operator<(RationalNum<G> const& rhs, RationalNum<G> const& lhs)
+    -> bool;
 
   template<class G>
-  friend bool operator<(RationalNum<G> const& rhs, G const& lhs);
+  friend auto operator<(RationalNum<G> const& rhs, G const& lhs) -> bool;
 
   template<class G>
-  friend bool operator<(G const& rhs, RationalNum<G> const& lhs);
+  friend auto operator<(G const& rhs, RationalNum<G> const& lhs) -> bool;
   /// @}
 
   /// @name Arithmetic operations
   /// @{
   template<class G>
-  friend RationalNum<G> operator+(RationalNum<G> const& lhs,
-                                  RationalNum<G> const& rhs);
+  friend auto operator+(RationalNum<G> const& lhs, RationalNum<G> const& rhs)
+    -> RationalNum<G>;
 
   template<class G>
-  friend RationalNum<G> operator-(RationalNum<G> const& lhs,
-                                  RationalNum<G> const& rhs);
+  friend auto operator-(RationalNum<G> const& lhs, RationalNum<G> const& rhs)
+    -> RationalNum<G>;
 
   template<class G>
-  friend RationalNum<G> operator/(RationalNum<G> const& lhs,
-                                  RationalNum<G> const& rhs);
+  friend auto operator/(RationalNum<G> const& lhs, RationalNum<G> const& rhs)
+    -> RationalNum<G>;
 
   template<class G>
-  friend RationalNum<G> operator*(RationalNum<G> const& lhs,
-                                  RationalNum<G> const& rhs);
+  friend auto operator*(RationalNum<G> const& lhs, RationalNum<G> const& rhs)
+    -> RationalNum<G>;
 
   template<class G>
-  friend RationalNum<G> operator+(RationalNum<G> const& lhs, G const& rhs);
+  friend auto operator+(RationalNum<G> const& lhs, G const& rhs)
+    -> RationalNum<G>;
 
   template<class G>
-  friend RationalNum<G> operator-(RationalNum<G> const& lhs, G const& rhs);
+  friend auto operator-(RationalNum<G> const& lhs, G const& rhs)
+    -> RationalNum<G>;
 
   template<class G>
-  friend RationalNum<G> operator/(RationalNum<G> const& lhs, G const& rhs);
+  friend auto operator/(RationalNum<G> const& lhs, G const& rhs)
+    -> RationalNum<G>;
 
   template<class G>
-  friend RationalNum<G> operator*(RationalNum<G> const& lhs, G const& rhs);
+  friend auto operator*(RationalNum<G> const& lhs, G const& rhs)
+    -> RationalNum<G>;
 
   template<class G>
-  friend RationalNum<G> operator+(G const& lhs, RationalNum<G> const& rhs);
+  friend auto operator+(G const& lhs, RationalNum<G> const& rhs)
+    -> RationalNum<G>;
 
   template<class G>
-  friend RationalNum<G> operator-(G const& lhs, RationalNum<G> const& rhs);
+  friend auto operator-(G const& lhs, RationalNum<G> const& rhs)
+    -> RationalNum<G>;
 
   template<class G>
-  friend RationalNum<G> operator/(G const& lhs, RationalNum<G> const& rhs);
+  friend auto operator/(G const& lhs, RationalNum<G> const& rhs)
+    -> RationalNum<G>;
 
   template<class G>
-  friend RationalNum<G> operator*(G const& lhs, RationalNum<G> const& rhs);
+  friend auto operator*(G const& lhs, RationalNum<G> const& rhs)
+    -> RationalNum<G>;
   /// @}
 
   /// @name Stream operators
   /// @{
   template<class G>
-  friend std::ostream& operator<<(std::ostream& out, RationalNum<G> const&);
+  friend auto operator<<(std::ostream& out, RationalNum<G> const&)
+    -> std::ostream&;
 
   template<class G>
-  friend std::istream& operator>>(std::istream& in, RationalNum<G>&);
+  friend auto operator>>(std::istream& in, RationalNum<G>&) -> std::istream&;
   /// @}
 
   /// Check if the number is an integer
-  bool IsInt() const { return num_ % den_ == 0; }
+  [[nodiscard]] auto IsInt() const -> bool { return num_ % den_ == 0; }
 
   /// Simplify the stored values
   void Simplify();
 
   /// Get the numerator
-  T GetNum() const { return num_; };
+  auto GetNum() const -> T { return num_; };
 
   /// Get the denominator
-  T GetDen() const { return den_; };
+  auto GetDen() const -> T { return den_; };
 
 protected:
 private:
@@ -149,16 +159,16 @@ using RationalLong = RationalNum<long>;
 using RationalInt = RationalNum<int>;
 
 template<class T>
-inline std::ostream&
-operator<<(std::ostream& out, RationalNum<T> const& rhs)
+inline auto
+operator<<(std::ostream& out, RationalNum<T> const& rhs) -> std::ostream&
 {
   out << rhs.num_ << "//" << rhs.den_;
   return out;
 }
 
 template<class T>
-inline std::istream&
-operator>>(std::istream& in, RationalNum<T>& rhs)
+inline auto
+operator>>(std::istream& in, RationalNum<T>& rhs) -> std::istream&
 {
   auto sep = char{};
   in >> rhs.num_;
@@ -192,22 +202,22 @@ RationalNum<T>::Simplify()
 }
 
 template<class G>
-inline bool
-operator<(const RationalNum<G>& lhs, const RationalNum<G>& rhs)
+inline auto
+operator<(const RationalNum<G>& lhs, const RationalNum<G>& rhs) -> bool
 {
   return lhs.num_ * rhs.den_ < rhs.num_ * lhs.den_;
 }
 
 template<class G>
-inline bool
-operator<(const RationalNum<G>& lhs, const G& rhs)
+inline auto
+operator<(const RationalNum<G>& lhs, const G& rhs) -> bool
 {
   return lhs.num_ / lhs.den_ < rhs;
 }
 
 template<class G>
-inline bool
-operator<(const G& lhs, const RationalNum<G>& rhs)
+inline auto
+operator<(const G& lhs, const RationalNum<G>& rhs) -> bool
 {
   return lhs < rhs.num_ / rhs.den_;
 }
@@ -217,87 +227,91 @@ TEMPLATEOVERLOADRELATIONAL(RationalNum<G>, G, G)
 TEMPLATEOVERLOADRELATIONAL(G, RationalNum<G>, G)
 
 template<class G>
-inline RationalNum<G>
+inline auto
 operator+(RationalNum<G> const& lhs, RationalNum<G> const& rhs)
+  -> RationalNum<G>
 {
   return RationalNum<G>(lhs.num_ * rhs.den_ + rhs.num_ * lhs.den_,
                         lhs.den_ * rhs.den_);
 }
 
 template<class G>
-inline RationalNum<G>
+inline auto
 operator-(RationalNum<G> const& lhs, RationalNum<G> const& rhs)
+  -> RationalNum<G>
 {
   return RationalNum<G>(lhs.num_ * rhs.den_ - rhs.num_ * lhs.den_,
                         lhs.den_ * rhs.den_);
 }
 
 template<class G>
-inline RationalNum<G>
+inline auto
 operator/(RationalNum<G> const& lhs, RationalNum<G> const& rhs)
+  -> RationalNum<G>
 {
   return RationalNum<G>(lhs.num_ * rhs.den_, rhs.num_ * lhs.den_);
 }
 
 template<class G>
-inline RationalNum<G>
+inline auto
 operator*(RationalNum<G> const& lhs, RationalNum<G> const& rhs)
+  -> RationalNum<G>
 {
   return RationalNum<G>(lhs.num_ * rhs.num_, lhs.den_ * rhs.den_);
 }
 
 template<class G>
-inline RationalNum<G>
-operator+(RationalNum<G> const& lhs, G const& rhs)
+inline auto
+operator+(RationalNum<G> const& lhs, G const& rhs) -> RationalNum<G>
 {
   return RationalNum<G>(lhs.num_ + rhs * lhs.den_, lhs.den_);
 }
 
 template<class G>
-inline RationalNum<G>
-operator-(RationalNum<G> const& lhs, G const& rhs)
+inline auto
+operator-(RationalNum<G> const& lhs, G const& rhs) -> RationalNum<G>
 {
   return RationalNum<G>(lhs.num_ - rhs * lhs.den_, lhs.den_);
 }
 
 template<class G>
-inline RationalNum<G>
-operator/(RationalNum<G> const& lhs, G const& rhs)
+inline auto
+operator/(RationalNum<G> const& lhs, G const& rhs) -> RationalNum<G>
 {
   return RationalNum<G>(lhs.num_, lhs.den_ * rhs);
 }
 
 template<class G>
-inline RationalNum<G>
-operator*(RationalNum<G> const& lhs, G const& rhs)
+inline auto
+operator*(RationalNum<G> const& lhs, G const& rhs) -> RationalNum<G>
 {
   return RationalNum<G>(lhs.num_ * rhs, lhs.den_);
 }
 
 template<class G>
-inline RationalNum<G>
-operator+(G const& lhs, RationalNum<G> const& rhs)
+inline auto
+operator+(G const& lhs, RationalNum<G> const& rhs) -> RationalNum<G>
 {
   return rhs + lhs;
 }
 
 template<class G>
-inline RationalNum<G>
-operator-(G const& lhs, RationalNum<G> const& rhs)
+inline auto
+operator-(G const& lhs, RationalNum<G> const& rhs) -> RationalNum<G>
 {
   return RationalNum<G>{ lhs * rhs.den_ - rhs.num_, rhs.den_ };
 }
 
 template<class G>
-inline RationalNum<G>
-operator*(G const& lhs, RationalNum<G> const& rhs)
+inline auto
+operator*(G const& lhs, RationalNum<G> const& rhs) -> RationalNum<G>
 {
   return rhs * lhs;
 }
 
 template<class G>
-inline RationalNum<G>
-operator/(G const& lhs, RationalNum<G> const& rhs)
+inline auto
+operator/(G const& lhs, RationalNum<G> const& rhs) -> RationalNum<G>
 {
   return RationalNum<G>{ lhs * rhs.den_, rhs.num_ };
 }
@@ -315,8 +329,8 @@ FromString(std::string const& str, RationalNum<T>& rhs)
 }
 
 template<class T>
-inline std::string
-ToString(RationalNum<T> const& rhs)
+inline auto
+ToString(RationalNum<T> const& rhs) -> std::string
 {
   return fmt::format("{}", rhs);
 }

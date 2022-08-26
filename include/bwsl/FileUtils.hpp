@@ -25,8 +25,8 @@ namespace bwsl {
 /// This code is based on this answer
 /// http://stackoverflow.com/a/37575457/4477378
 ///
-bool
-compare_files(const std::string& p1, const std::string& p2)
+auto
+compare_files(const std::string& p1, const std::string& p2) -> bool
 {
   std::ifstream f1(p1, std::ifstream::binary | std::ifstream::ate);
   std::ifstream f2(p2, std::ifstream::binary | std::ifstream::ate);

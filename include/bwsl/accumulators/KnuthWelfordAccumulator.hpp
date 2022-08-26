@@ -97,7 +97,7 @@ private:
 
   /// Serialization method for the class
   template<class Archive>
-  void serialize(Archive& ar, const unsigned int version);
+  void serialize(Archive& ar, unsigned int version);
 }; // class KnuthWelfordAccumulator
 
 inline auto
@@ -110,7 +110,7 @@ KnuthWelfordAccumulator::Add(double x) -> void
   }
 #endif // BWSL_ACCUMULATORS_CHECKS
 
-  count_ += 1ul;
+  count_ += 1UL;
 
   double delta = x - mean_;
   mean_ += delta / count_;

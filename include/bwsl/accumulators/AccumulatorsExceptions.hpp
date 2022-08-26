@@ -21,7 +21,7 @@ namespace bwsl::exception {
 
 class AccumulatorOverflow : public std::exception
 {
-  const char* what() const throw()
+  [[nodiscard]] auto what() const noexcept -> const char* override
   {
     return "Too many measurements added to the accumulator";
   }

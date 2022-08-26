@@ -53,7 +53,7 @@ public:
   auto operator=(NaiveInteger&& that) -> NaiveInteger& = default;
 
   /// Add a measurement with unit weight
-  auto Add(long) -> void;
+  auto Add(long /*x*/) -> void;
 
   /// Sum of the accumulated values
   [[nodiscard]] auto Sum() const -> long { return sum_; };
@@ -95,7 +95,7 @@ private:
 
   /// Serialization method for the class
   template<class Archive>
-  void serialize(Archive& ar, const unsigned int version);
+  void serialize(Archive& ar, unsigned int version);
 }; // class NaiveInteger
 
 inline auto
@@ -114,7 +114,7 @@ NaiveInteger::Add(long x) -> void
   }
 #endif // BWSL_ACCUMULATORS_CHECKS
 
-  count_ += 1ul;
+  count_ += 1UL;
 
   sum_ += x;
   sum2_ += x * x;
