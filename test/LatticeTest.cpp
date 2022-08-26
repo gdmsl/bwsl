@@ -2,7 +2,7 @@
 //
 //                       BeagleWarlord's Support Library
 //
-// Copyright 2017-2019 Guido Masella. All Rights Reserved.
+// Copyright 2016-2022 Guido Masella. All Rights Reserved.
 // See LICENSE file for details
 //
 //===---------------------------------------------------------------------===//
@@ -21,11 +21,11 @@
 #include <random>
 
 // catch
-#define CATCH_CONFIG_MAIN
-#include <catch2/catch.hpp>
+#include <catch2/catch_approx.hpp>
+#include <catch2/catch_test_macros.hpp>
 
 using namespace bwsl;
-using CApprox = Catch::Detail::Approx;
+using CApprox = Catch::Approx;
 
 // TDD example
 TEST_CASE("Square Lattice", "[lattice]")

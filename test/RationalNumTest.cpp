@@ -2,7 +2,7 @@
 //
 //                       BeagleWarlord's Support Library
 //
-// Copyright 2016-2019 Guido Masella. All Rights Reserved.
+// Copyright 2016-2022 Guido Masella. All Rights Reserved.
 // See LICENSE file for details
 //
 //===---------------------------------------------------------------------===//
@@ -20,8 +20,8 @@
 #include <vector>
 
 // catch
-#define CATCH_CONFIG_MAIN
-#include <catch2/catch.hpp>
+#include <catch2/catch_approx.hpp>
+#include <catch2/catch_test_macros.hpp>
 
 using namespace bwsl;
 

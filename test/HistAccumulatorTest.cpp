@@ -2,17 +2,17 @@
 //
 //                       BeagleWarlord's Support Library
 //
-// Copyright 2016-2018 Guido Masella. All Rights Reserved.
+// Copyright 2016-2022 Guido Masella. All Rights Reserved.
 // See LICENSE file for details
 //
 //===---------------------------------------------------------------------===//
 ///
-/// \file
-/// \author     Guido Masella (guido.masella@gmail.com)
-/// \date       July, 2018
-/// \brief      Tests for the HistAccumulator Class
+/// @file
+/// @author     Guido Masella (guido.masella@gmail.com)
+/// @brief      Tests for the HistAccumulator Class
 ///
 //===---------------------------------------------------------------------===//
+
 // bwsl
 #include <bwsl/HistAccumulator.hpp>
 
@@ -23,10 +23,11 @@
 #include <cmath>
 
 // catch
-#define CATCH_CONFIG_MAIN
-#include <catch2/catch.hpp>
+#include <catch2/catch_approx.hpp>
+#include <catch2/catch_test_macros.hpp>
 
 using namespace bwsl;
+using Catch::Approx;
 
 auto factorial(int n) -> int
 {

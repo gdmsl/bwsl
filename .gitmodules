@@ -2,5 +2,5 @@
 	path = libs/fmt
 	url = https://github.com/fmtlib/fmt.git
 [submodule "libs/catch2"]
-	path = libs/catch2
+	path = libs/catch
 	url = https://github.com/catchorg/Catch2.git
