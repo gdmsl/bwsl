@@ -310,12 +310,11 @@ array_to_index(C const& a, D const& size) -> size_t
   assert(a.size() == dim && "Dimensions not matching");
 
   auto index = 0UL;
-  auto prod = std::accumulate(
-    std::next(std::begin(size)), end(size), 1UL, std::multiplies<size_t>());
+  auto prod = accumulate_product(size);
 
   for (auto i = 0UL; i < dim; i++) {
+    prod /= size[i];
     index += prod * static_cast<size_t>(a[i]);
-    prod /= size[dim - (i + 1UL)];
   }
 
   return index;
@@ -333,21 +332,17 @@ index_to_array(size_t index, D const& size) -> C
   static_assert(std::is_integral<typename C::value_type>::value,
                 "Integral required.");
   auto dim = size.size();
-  auto prod = 1UL;
+  auto prod = accumulate_product(size);
 
-  auto d = C(dim, 0);
+  auto result = C(dim, 0);
 
-  for (auto i = 1UL; i < dim; i++) {
-    prod *= size[dim - i];
-  }
   for (auto i = 0UL; i < dim; i++) {
-    d[i] = static_cast<typename C::value_type>(index / prod);
+    prod /= size[i];
+    result[i] = static_cast<typename C::value_type>(index / prod);
     index = index % prod;
-
-    prod /= size[dim - (i + 1UL)];
   }
 
-  return d;
+  return result;
 }
 
 /// Interpolation-Binary search.
