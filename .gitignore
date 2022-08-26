@@ -16,3 +16,4 @@ debug*
 <Plug>*
 .vscode
 .cache
+cmake-build-debug/
