@@ -70,6 +70,7 @@ target_link_libraries(RationalNumTest
   PRIVATE
     bwsl
     Catch2::Catch2WithMain
+    fmt-header-only
   )
 target_compile_options(RationalNumTest
   PRIVATE
