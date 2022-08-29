@@ -11,6 +11,20 @@
 #
 #==------------------------------------------------------------------------==#
 
+# BravaisTest
+add_executable(BravaisTest BravaisTest.cpp)
+target_link_libraries(BravaisTest
+  PRIVATE
+    bwsl
+    Catch2::Catch2WithMain
+    fmt-header-only
+  )
+target_compile_options(BravaisTest
+  PRIVATE
+    -W -Wall -Wpedantic -Wextra
+  )
+add_test(NAME bwsl.Bravais COMMAND $<TARGET_FILE:BravaisTest>)
+
 # LatticeTest
 add_executable(LatticeTest LatticeTest.cpp)
 target_link_libraries(LatticeTest
