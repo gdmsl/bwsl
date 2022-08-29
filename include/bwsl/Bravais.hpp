@@ -136,7 +136,7 @@ Bravais::GetRealSpace(coords_t const& coords) const -> Bravais::realvec_t
   auto p = Bravais::realvec_t(dim_, 0.0);
   for (auto i = 0UL; i < dim_; i++) {
     for (auto j = 0UL; j < dim_; j++) {
-      p[i] += coords[i] * pvectors_[i * dim_ + j];
+      p[i] += coords[j] * pvectors_[i + j*dim_];
     }
   }
   return p;
@@ -163,7 +163,7 @@ Bravais::GetReciprocalSpace(coords_t const& coords) const -> Bravais::realvec_t
   auto p = Bravais::realvec_t(dim_, 0.0);
   for (auto i = 0UL; i < dim_; i++) {
     for (auto j = 0UL; j < dim_; j++) {
-      p[i] += coords[i] * 2 * M_PI * pivectors_[i * dim_ + j];
+      p[i] += coords[j] * 2 * M_PI * pivectors_[i + j*dim_];
     }
   }
   return p;
@@ -246,7 +246,7 @@ const auto CubicLattice = Bravais(
 const auto TriangularLattice = Bravais(
   2UL,
   6UL,
-  { 1.0, 0.5, 0.0, std::sqrt(3.0) / 2.0 },
+  { 1.0, 0.0, 0.5, std::sqrt(3.0) / 2.0 },
   { 1.0, -1.0 / std::sqrt(3), 0, 2.0 / std::sqrt(3) },
   { 1, 0, 0, 1, 1, -1 }
 );
