@@ -8,7 +8,8 @@
 //===---------------------------------------------------------------------===//
 ///
 /// @file
-/// @author     Guido Masella (guido.masella@gmail.com)
+/// @author     Guido Masella (guido.masella@gmail.com),
+///             Tanul Gupta (tanulgupta123@gmail.com)
 /// @brief      Definitions for the Bravais Class
 ///
 //===---------------------------------------------------------------------===//
@@ -136,7 +137,7 @@ Bravais::GetRealSpace(coords_t const& coords) const -> Bravais::realvec_t
   auto p = Bravais::realvec_t(dim_, 0.0);
   for (auto i = 0UL; i < dim_; i++) {
     for (auto j = 0UL; j < dim_; j++) {
-      p[i] += coords[j] * pvectors_[i + j*dim_];
+      p[i] += coords[j] * pvectors_[i + j * dim_];
     }
   }
   return p;
@@ -163,7 +164,7 @@ Bravais::GetReciprocalSpace(coords_t const& coords) const -> Bravais::realvec_t
   auto p = Bravais::realvec_t(dim_, 0.0);
   for (auto i = 0UL; i < dim_; i++) {
     for (auto j = 0UL; j < dim_; j++) {
-      p[i] += coords[j] * 2 * M_PI * pivectors_[i + j*dim_];
+      p[i] += coords[j] * 2 * M_PI * pivectors_[i + j * dim_];
     }
   }
   return p;

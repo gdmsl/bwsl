@@ -30,7 +30,6 @@ using CApprox = Catch::Approx;
 // TDD example
 TEST_CASE("Square Lattice", "[lattice]")
 {
-
   auto structure = Lattice(SquareLattice, std::vector<size_t>{ 3ul, 3ul });
 
   SECTION("neighbors are correct")
