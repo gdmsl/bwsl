@@ -87,10 +87,6 @@ public:
   /// Get the vector spawning from site @p a to site @p b .
   [[nodiscard]] auto GetVector(index_t a, index_t b) const -> realvec_t;
 
-  /// Get the winding number times the system size for a hopping between the
-  /// sites @p a and @p b .
-  [[nodiscard]] auto GetJump(size_t a, size_t b) const -> coords_t;
-
   /// Given an accumulator for the winding number return the total winding.
   /// The total winding is defined as the number of times we jump around the
   /// boundaries.
@@ -139,18 +135,27 @@ public:
 
 protected:
   /// Compute the positions of all the lattice points
+  /// NOTE: the positions stored are in real space.
   [[nodiscard]] auto ComputePositions(Bravais const& bravais) const
     -> std::vector<realvec_t>;
 
-  /// Compute the distance vectors
+  /// Compute the distance vectors.
+  /// It is composed of vectors in real space between site 0 and site i.
+  /// Here, i ∈ [0,1,...,N] where N is the largest site index.
+  /// For closed boundary conditions each vector is chosen in such a manner
+  /// that it represents the shortest distance between the two sites.
   [[nodiscard]] auto ComputeVectors(Bravais const& bravais) const
     -> std::vector<realvec_t>;
 
   /// Compute the vector of distances
+  /// It is composed of magnitudes of distance vectors computed using
+  /// ComputeVectors() above.
   [[nodiscard]] auto ComputeDistances(Bravais const& /*bravais*/) const
     -> realvec_t;
 
-  /// Create the vector of neighbors
+  /// Create the vector storing vector of neighbors for each lattice site.
+  /// The vector of neighbors store the site indices of neighbors.
+  /// It also takes into account the boundary conditions.
   [[nodiscard]] auto ComputeNeighbors(Bravais const& bravais) const
     -> neighbors_t;
 
@@ -216,28 +221,6 @@ Lattice::GetVector(size_t a, size_t b) const -> realvec_t
   assert(IndexIsValid(a) && IndexIsValid(b));
   auto s = GetMappedSite(a, b);
   return vectors_[s];
-}
-
-inline auto
-Lattice::GetJump(size_t a, size_t b) const -> coords_t
-{
-  assert(IndexIsValid(a) && IndexIsValid(b));
-  auto cb = GetCoordinates(b);
-  subtract_into(cb, GetCoordinates(a));
-
-  for (auto i = 0UL; i < GetDim(); i++) {
-    auto& cbi = cb[i];
-    auto si = GetSize()[i];
-
-    if (cbi > static_cast<int>(si / 2)) {
-      cbi -= si;
-    }
-    if (cbi <= -static_cast<int>(si / 2)) {
-      cbi += si;
-    }
-  }
-
-  return cb;
 }
 
 inline auto
@@ -378,7 +361,7 @@ Lattice::ComputeMomenta(Bravais const& bravais) const
   for (auto i = 0UL; i < GetNumSites(); i++) {
     auto ci = GetCoordinates(i);
     for (auto k = 0UL; k < ci.size(); k++) {
-      ci[k] -= GetSize()[k] / 2UL - 1;
+      ci[k] -= GetSize()[k] / 2UL;
     }
     auto kappa = bravais.GetReciprocalSpace(ci);
     for (auto k = 0UL; k < kappa.size(); k++) {

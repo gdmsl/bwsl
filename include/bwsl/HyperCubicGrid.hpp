@@ -127,6 +127,10 @@ public:
     return boundaries_;
   }
 
+  /// Get the winding number times the system size for a hopping between the
+  /// sites @p a and @p b .
+  [[nodiscard]] auto GetJump(size_t a, size_t b) const -> coords_t;
+
   /// Get this
   [[nodiscard]] auto GetGrid() const -> HyperCubicGrid { return *this; }
 
@@ -235,6 +239,31 @@ HyperCubicGrid::GetIndividualIndices(size_t pair) const
   -> std::pair<index_t, index_t>
 {
   return bwsl::pairs::GetPair(pair, numsites_);
+}
+
+inline auto
+HyperCubicGrid::GetJump(size_t a, size_t b) const -> coords_t
+{
+  assert(IndexIsValid(a) && IndexIsValid(b));
+  auto cb = GetCoordinates(b);
+  subtract_into(cb, GetCoordinates(a));
+
+  if (HasClosedBoundaries()) {
+    for (auto i = 0UL; i < GetDim(); i++) {
+      auto& cbi = cb[i];
+      auto si = GetSize()[i];
+
+      if (cbi > static_cast<int>(si / 2)) {
+        cbi -= si;
+      }
+      if ((cbi < -static_cast<int>(si / 2)) ||
+          (si % 2 == 0 && cbi == -static_cast<int>(si / 2))) {
+        cbi += si;
+      }
+    }
+  }
+
+  return cb;
 }
 
 } // namespace bwsl
