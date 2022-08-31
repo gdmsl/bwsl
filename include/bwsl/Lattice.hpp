@@ -143,11 +143,14 @@ protected:
   /// It is composed of vectors in real space between site 0 and site i.
   /// Here, i ∈ [0,1,...,N] where N is the largest site index.
   /// For closed boundary conditions each vector is chosen in such a manner
-  /// that it represents the shortest distance between the two sites.
+  /// that it represents the shortest distance between the first site and all
+  /// the periodic images of the second one (or vice versa).
+  /// [minimum distance convention]
   [[nodiscard]] auto ComputeVectors(Bravais const& bravais) const
     -> std::vector<realvec_t>;
 
-  /// Compute the vector of distances
+  /// Compute the vector of distances respecting the minimum
+  /// distance convention (if with closed boundaries).
   /// It is composed of magnitudes of distance vectors computed using
   /// ComputeVectors() above.
   [[nodiscard]] auto ComputeDistances(Bravais const& /*bravais*/) const

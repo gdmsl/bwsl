@@ -252,12 +252,13 @@ HyperCubicGrid::GetJump(size_t a, size_t b) const -> coords_t
     for (auto i = 0UL; i < GetDim(); i++) {
       auto& cbi = cb[i];
       auto si = GetSize()[i];
-
-      if (cbi > static_cast<int>(si / 2)) {
+      // half distance (integer division)
+      auto si_half = static_cast<int>(si / 2);
+      if (cbi > si_half) {
         cbi -= si;
       }
-      if ((cbi < -static_cast<int>(si / 2)) ||
-          (si % 2 == 0 && cbi == -static_cast<int>(si / 2))) {
+      if ((cbi < -si_half) ||
+          (si % 2 == 0 && cbi == -si_half)) {
         cbi += si;
       }
     }
