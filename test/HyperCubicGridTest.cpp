@@ -23,6 +23,7 @@
 #include <catch2/catch_test_macros.hpp>
 
 using namespace bwsl;
+using namespace std;
 
 TEST_CASE("Grid with closed boundaries addressed with indices and coordinates",
           "[index][coordinates]")
@@ -78,6 +79,20 @@ TEST_CASE("Grid with closed boundaries addressed with indices and coordinates",
         REQUIRE(h.GetUnMappedSite(h.GetMappedSite(i, j), i) == j);
     }
   }
+
+  SECTION("Checking for jumps")
+  {
+    auto idxpair =
+      vector<vector<size_t>>{ { 1, 8 }, { 8, 1 }, { 0, 6 }, { 6, 0 } };
+    auto jumps = vector<HyperCubicGrid::coords_t>{
+      { -1, -1 }, { 1, 1 }, { 1, 2 }, { -1, 2 }
+    };
+    for (auto i = 0; i < idxpair.size(); i++) {
+      auto site1 = idxpair[i][0];
+      auto site2 = idxpair[i][1];
+      REQUIRE(h.GetJump(site1, site2) == jumps[i]);
+    }
+  }
 }
 
 TEST_CASE("Grid with open boundaries addressed with indices and coordinates",
@@ -100,6 +115,20 @@ TEST_CASE("Grid with open boundaries addressed with indices and coordinates",
       for (auto j = 0UL; j < h.GetDim(); j++) {
         REQUIRE(cc[j] == c[j]);
       }
+    }
+  }
+
+  SECTION("Checking for jumps")
+  {
+    auto idxpair =
+      vector<vector<size_t>>{ { 1, 8 }, { 8, 1 }, { 0, 6 }, { 6, 0 } };
+    auto jumps = vector<HyperCubicGrid::coords_t>{
+      { 2, -1 }, { -2, 1 }, { 1, 2 }, { -1, -2 }
+    };
+    for (auto i = 0; i < idxpair.size(); i++) {
+      auto site1 = idxpair[i][0];
+      auto site2 = idxpair[i][1];
+      REQUIRE(h.GetJump(site1, site2) == jumps[i]);
     }
   }
 }
