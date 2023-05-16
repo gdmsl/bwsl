@@ -227,6 +227,13 @@ Lattice::GetVector(size_t a, size_t b) const -> realvec_t
 }
 
 inline auto
+Lattice::GetMomentum(size_t a) const -> realvec_t
+{
+  assert(IndexIsValid(a));
+  return momenta_[a];
+}
+
+inline auto
 Lattice::GetWinding(coords_t jumps) const -> coords_t
 {
   assert(HasSameDimension(jumps));
